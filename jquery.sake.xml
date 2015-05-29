@@ -1,0 +1,1065 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jquery.sake>
+	<version>3.10.0</version>
+	<authors>
+		<person>Kevin Lucich</person>
+	</authors>
+	<employees>
+		<person>Salvatore Caputi</person>
+	</employees>
+	<compatibility>
+		<jquery>
+			<version>1.8.3+</version>
+		</jquery>
+	</compatibility>
+
+	<method>
+		<name>.scrollTo()</name>
+		<version>2.2</version>
+		<author>Kevin Lucich</author>
+		<description>Performs scrolling the page using the parameters passed (or the default).
+&lt;br&gt;&lt;br&gt;The selector passed can be an exists element or one of the this words: 'top','right','bottom','left'
+		</description>
+		<available_from>1.0.0</available_from>
+		<return>Object</return>
+
+		<declaration>
+			<format>.scrollTo( params )</format>
+			<available_from>1.0.0</available_from>
+			<arguments>params</arguments>
+		</declaration>
+		<declaration>
+			<format>.scrollTo( [speed ][, easing] )</format>
+			<available_from>1.1.0</available_from>
+			<arguments>speed,easing</arguments>
+		</declaration>
+
+		<params>
+<!--
+			<dynamic>
+				<type>Boolean</type>
+				<default>false</default>
+				<description>.</description>
+			</dynamic>
+-->
+			<easing>
+				<type>String</type>
+				<default>linear</default>
+				<description>Type of easing to animate the window</description>
+			</easing>
+			<speed>
+				<type>Int / String</type>
+				<default>500</default>
+				<description>Speed of animation</description>
+			</speed>
+			<scrollx>
+				<type>Boolean</type>
+				<default>false</default>
+				<description>Enable animation on the X axis</description>
+			</scrollx>
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+	</method>
+
+	<method>
+		<name>.random()</name>
+		<version>1.0</version>
+		<author>Kevin Lucich</author>
+		<description>Randomly choose one or more elements from a selection of elements</description>
+		<available_from>2.7.0</available_from>
+		<return>Object</return>
+
+		<declaration>
+			<format>.random( params )</format>
+			<available_from>2.7.0</available_from>
+			<arguments>params</arguments>
+		</declaration>
+
+		<params>
+			<count>
+				<type>Number</type>
+				<default>false</default>
+				<description>Number of elements inside of __ELEMENT__ to keep</description>
+			</count>
+			<remove>
+				<type>Boolean</type>
+				<default>false</default>
+				<description>Discriminate if elements inside will be hidded (false) or removed (true)</description>
+			</remove>
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+	</method>
+	
+	<method>
+		<name>.getEvents()</name>
+		<version>1.0</version>
+		<author>Kevin Lucich</author>
+		<description>Return a map with all elements selected: each of these is object with a two attributes: "el" and "events"</description>
+		<available_from>2.7.0</available_from>
+		<return>Object</return>
+
+		<declaration>
+			<format>.getEvents()</format>
+			<available_from>2.7.0</available_from>
+			<arguments></arguments>
+		</declaration>
+		
+		<params></params>
+	</method>
+
+	<method>
+		<name>jQuery.hash()</name>
+		<version>1.0</version>
+		<author>Kevin Lucich</author>
+		<description>Return a int hash of string</description>
+		<available_from>2.8.0</available_from>
+		<return>Integer</return>
+
+		<declaration>
+			<format>jQuery.hash( string )</format>
+			<available_from>2.8.0</available_from>
+			<arguments>string</arguments>
+		</declaration>
+
+		<params>
+			<string>
+				<type>String</type>
+				<default>undefined</default>
+				<description>The string to convert in int hash</description>
+			</string>
+		</params>
+	</method>
+
+	<method>
+		<name>.hash()</name>
+		<version>1.0</version>
+		<author>Kevin Lucich</author>
+		<description>Return a int hash of the value of element</description>
+		<available_from>2.8.0</available_from>
+		<return>Integer</return>
+
+		<declaration>
+			<format>.hash()</format>
+			<available_from>2.8.0</available_from>
+			<arguments></arguments>
+		</declaration>
+
+		<params></params>
+	</method>
+
+	<method>
+		<name>.MD5()</name>
+		<version>1.0.0</version>
+		<author>Paul Johnston, Greg Holt</author>
+		<description>Return a string cripted with MD5 method</description>
+		<available_from>2.8.0</available_from>
+		<return>String</return>
+
+		<declaration>
+			<format>.MD5( string )</format>
+			<available_from>2.8.0</available_from>
+			<arguments>string</arguments>
+		</declaration>
+		
+		<params>
+			<string>
+				<type>String</type>
+				<default>undefined</default>
+				<description>String to cript</description>
+			</string>
+		</params>
+	</method>
+
+	<method>
+		<name>.getAllStyle()</name>
+		<version>1.3</version>
+		<author>Kevin Lucich</author>
+		<description>Return an object with all style css of the element</description>
+		<available_from>1.6.0</available_from>
+		<return>Object</return>
+
+		<declaration>
+			<format>.getAllStyle()</format>
+			<available_from>1.6.0</available_from>
+			<arguments></arguments>
+		</declaration>
+
+		<declaration>
+			<format>.getAllStyle( [attrs] [, no_obj] )</format>
+			<available_from>1.6.0</available_from>
+			<arguments>attrs,no_obj</arguments>
+		</declaration>
+		
+		<params>
+			<attrs>
+				<type>Array</type>
+				<default>['font-family','font-size','font-weight','font-style','color','text-transform','text-decoration','letter-spacing','word-spacing','line-height','text-align','vertical-align','direction','background-color','background-image','background-repeat','background-position','background-attachment','opacity','width','height','top','right','bottom','left','margin-top','margin-right','margin-bottom','margin-left','padding-top','padding-right','padding-bottom','padding-left','border-top-width','border-right-width','border-bottom-width','border-left-width','border-top-color','border-right-color','border-bottom-color','border-left-color','border-top-style','border-right-style','border-bottom-style','border-left-style','position','display','visibility','z-index','overflow-x','overflow-y','white-space','clip','float','clear','cursor','list-style-image','list-style-position','list-style-type','marker-offset']</default>
+				<description>.</description>
+			</attrs>
+			<no_obj>
+				<type>Boolean</type>
+				<default>false</default>
+				<description>.</description>
+			</no_obj>
+		</params>
+	</method>
+
+	<method>
+		<name>.setPositionTo()</name>
+		<version>1.4</version>
+		<author>Kevin Lucich</author>
+		<description>Set the position of element(s) to another element</description>
+		<available_from>2.4.0</available_from>
+		<return>Object</return>
+
+		<declaration>
+			<format>.setPositionTo( target [, params] )</format>
+			<available_from>2.4.0</available_from>
+			<arguments>target,params</arguments>
+		</declaration>
+
+		<params>
+			<target>
+				<type>DOM Element</type>
+				<default>Body</default>
+				<description>If element destination has the value ":reset" elemenets return in original position</description>
+			</target>
+			<animate>
+				<type>Boolean False or map for specificing an easing and/or duration of animation</type>
+				<default>false</default>
+				<description>.</description>
+			</animate>
+			<my>
+				<type>String</type>
+				<default>left top</default>
+				<description>String with x and y coordinates with respect to elements</description>
+			</my>
+			<at>
+				<type>String</type>
+				<default></default>
+				<description>String with x and y coordinates with respect to the target</description>
+			</at>
+			<offset>
+				<type>Object</type>
+				<default>{'top': 0, 'left': 0}</default>
+				<description>Map with top and left offset</description>
+			</offset>
+
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+	</method>
+
+	<method>
+		<name>.tooltip()</name>
+		<version>3.0</version>
+		<author>Kevin Lucich</author>
+		<description>Show near the element a tooltip</description>
+		<available_from>1.2.0</available_from>
+		<return>Object</return>
+
+		<declaration>
+			<format>.tooltip( method [, params] )</format>
+			<available_from>1.2.0</available_from>
+			<arguments>method,params</arguments>
+		</declaration>
+		
+		<params>
+			<method>
+				<type>String</type>
+				<default>show</default>
+				<description>The method to execute:
+&lt;ul&gt;
+	&lt;li&gt;	create: Create a HTML code of Tooltip and append it to body
+	&lt;/li&gt;
+	&lt;li&gt;	setContent: Set the content of Tooltip
+	&lt;/li&gt;
+	&lt;li&gt;	show: Show the Tooltip
+	&lt;/li&gt;
+	&lt;li&gt;	hide: Hide the Tooltip
+	&lt;/li&gt;
+	&lt;li&gt;	remove: Remove the HTML code of Tooltip
+	&lt;/li&gt;			
+	&lt;li&gt;	attach: Call "Create" and "setContent" methods and attach "mouseover" and "mouseleave" events
+	&lt;/li&gt; 
+&lt;/ul&gt;
+				</description>
+			</method>
+
+			<content>
+				<type>HTML code</type>
+				<default>''</default>
+				<description>The content of Tooltip</description>
+			</content>
+			<side>
+				<type>String</type>
+				<default>top</default>
+				<description>The side of element will be positioned Tooltip</description>
+			</side>
+			<position>
+				<type>String</type>
+				<default>left</default>
+				<description>The position rispect a side (can be "left,center,right" if the side is set to "top or bottom", "top,center,bottom" if the side is set to "left or right")</description>
+			</position>
+			<offset>
+				<type>Object</type>
+				<default>{'top': 0,'left': 0}</default>
+				<description>Object with two attributes, "top" and "left", represents the custom offset to be applied to the tooltip</description>
+			</offset>
+			<classes>
+				<type>String</type>
+				<default>empty string</default>
+				<description>List of classes to associate a Tooltip (separated from spaces)</description>
+			</classes>
+			<showArrow>
+				<type>Boolean</type>
+				<default>True</default>
+				<description>Discriminate if the arrow will be show or hide</description>
+			</showArrow>
+			<useMousePosition>
+				<type>Boolean</type>
+				<default>False</default>
+				<description>Discriminate if the Tooltip will be positioning at mouse position</description>
+			</useMousePosition>
+			<bgColor>
+				<type>HEX String</type>
+				<default>#FFFFFF</default>
+				<description>The color of background</description>
+			</bgColor>
+			<borderColor>
+				<type>HEX String</type>
+				<default>#FF8800</default>
+				<description>The color of border</description>
+			</borderColor>
+			<borderWidth>
+				<type>String</type>
+				<default>2px</default>
+				<description>The width of border</description>
+			</borderWidth>
+			<animation>
+				<type>Object</type>
+				<default>false</default>
+				<description>For specificing an easing and/or duration of animation</description>
+			</animation>
+			<arrowSize>
+				<type>String</type>
+				<default>10px</default>
+				<description>The size of arrow</description>
+			</arrowSize>
+			<callbacks>
+				<type>Object</type>
+				<default>function empty</default>
+				<description>Map of callbacks to call before and/or after each method, the name of callback is "Before[methodname]" and "After[methodname]"</description>
+			</callbacks>
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+	</method>
+	
+	<method>
+		<name>.check()</name>
+		<version>1.2</version>
+		<author>Kevin Lucich</author>
+		<description>Check the value with params passed, in ".check()" declaration will be used the value of the element</description>
+		<available_from>2.0.0</available_from>
+		<return>Boolean</return>
+
+		<declaration>
+			<format>jQuery.check( type, value, subtype )</format>
+			<available_from>2.0.0</available_from>
+			<arguments>type,value,subtype</arguments>
+		</declaration>
+		<declaration>
+			<format>jQuery.check( params )</format>
+			<available_from>2.0.0</available_from>
+			<arguments>params</arguments>
+		</declaration>
+		<declaration>
+			<format>.check( type, subtype )</format>
+			<available_from>2.1.0</available_from>
+			<arguments>type,subtype</arguments>
+		</declaration>
+		<declaration>
+			<format>.check( params )</format>
+			<available_from>2.1.0</available_from>
+			<arguments>params</arguments>
+		</declaration>
+		
+		<params>
+			<type>
+				<type>String</type>
+				<default>'text'</default>
+				<description>Type to check the value</description>
+			</type>
+			<value>
+				<type>Mixed</type>
+				<default>undefined</default>
+				<description>Value to check with the type</description>
+			</value>
+			<subtype>
+				<type>String</type>
+				<default>'all'</default>
+				<description>A specific subcategory of the type (view list for more info)</description>
+			</subtype>
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+	</method>
+
+	<method>
+		<name>.tips()</name>
+		<version>1.0</version>
+		<author>Kevin Lucich</author>
+		<description>Show a tip</description>
+		<available_from>2.8.0</available_from>
+		<return>Object</return>
+
+		<declaration>
+			<format>.tips( method [, params] )</format>
+			<available_from>2.8.0</available_from>
+			<arguments>method,params</arguments>
+		</declaration>
+
+		<params>
+			<content>
+				<type>HTML code</type>
+				<default>Empty code</default>
+				<description>The content of tip</description>
+			</content>
+			<classes>
+				<type>String</type>
+				<default>Empty string</default>
+				<description>List of classes to associate a tip (separated from spaces)</description>
+			</classes>
+			<position>
+				<type>String</type>
+				<default>'right bottom'</default>
+				<description>String with position rispect a window</description>
+			</position>
+			<offset>
+				<type>Object</type>
+				<default></default>
+				<description>Object with two attributes, top and left, custom offset</description>
+			</offset>
+			<delay>
+				<type>Integer</type>
+				<default>0</default>
+				<description>Milliseconds before of showing</description>
+			</delay>
+			<animation>
+				<type>Object</type>
+				<default></default>
+				<description>For specificing an easing and/or duration of animation</description>
+			</animation>
+			<closing>
+				<type>Function</type>
+				<default>Empty function</default>
+				<description>Function execute when called a "close" method</description>
+			</closing>
+			<method>
+				<type>String</type>
+				<default>'show'</default>
+				<description>Method to execute</description>
+			</method>
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+	</method>
+
+	<method>
+		<name>.sakebuttons()</name>
+		<version>1.0</version>
+		<author>Kevin Lucich</author>
+		<description>Converter a checkbox in Apple's button</description>
+		<available_from>2.8.0</available_from>
+		<return>Object</return>
+
+		<declaration>
+			<format>.sakebuttons( params )</format>
+			<available_from>2.8.0</available_from>
+			<arguments>params</arguments>
+		</declaration>
+		
+		<params>
+			<classes>
+				<type>String</type>
+				<default>Empty string</default>
+				<description>List of classes</description>
+			</classes>
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+	</method>
+
+	<method>
+		<name>.whenChange()</name>
+		<version>1.0</version>
+		<author>Kevin Lucich</author>
+		<description></description>
+		<available_from>2.8.0</available_from>
+		<return>Object</return>
+
+		<declaration>
+			<format>.whenChange( method [, params] )</format>
+			<available_from>2.8.0</available_from>
+			<arguments>method,params</arguments>
+		</declaration>
+		
+		<params>
+			<method>
+				<type>String</type>
+				<default>'start'</default>
+				<description>The method to execute</description>
+			</method>
+			<interval>
+				<type>Integer</type>
+				<default>1000</default>
+				<description>Interval in milliseconds that will be checked the content of the element</description>
+			</interval>
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+	</method>
+
+	<method>
+		<name>.loop()</name>
+		<version>1.0</version>
+		<author>Kevin Lucich</author>
+		<description>Execute the function passed a finite number of times (or infinity)</description>
+		<available_from>2.7.0</available_from>
+		<return>Object</return>
+
+		<declaration>
+			<format>.loop( fn [, howmany, delay] )</format>
+			<available_from>2.7.0</available_from>
+			<arguments>fn,howmany,delay</arguments>
+		</declaration>
+		<declaration>
+			<format>.loop( params )</format>
+			<available_from>2.7.0</available_from>
+			<arguments>params</arguments>
+		</declaration>
+
+		<params>
+			<fn>
+				<type>Function</type>
+				<default>Empty function</default>
+				<description>Function to execute</description>
+			</fn>
+			<howmany>
+				<type>Integer</type>
+				<default>1</default>
+				<description>How many the function will be execute</description>
+			</howmany>
+			<delay>
+				<type>Integer</type>
+				<default>0</default>
+				<description>Delay to execute the function</description>
+			</delay>
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+	</method>
+
+	<method>
+		<name>.lorem()</name>
+		<version>1.0</version>
+		<author>Kevin Lucich</author>
+		<description>Write in the __ELEMENT__ of paragraphs of Lorem</description>
+		<available_from>2.6.0</available_from>
+		<return>Object</return>
+
+		<declaration>
+			<format>.lorem( paragraphs, length, random )</format>
+			<available_from>2.6.0</available_from>
+			<arguments>paragraphs,length,random</arguments>
+		</declaration>
+		<declaration>
+			<format>lorem.( params )</format>
+			<available_from>2.6.0</available_from>
+			<arguments>params</arguments>
+		</declaration>
+
+		<params>
+			<paragraphs>
+				<type>Integer</type>
+				<default>1</default>
+				<description>Number of paragraphs to print</description>
+			</paragraphs>
+			<length>
+				<type>Integer</type>
+				<default>0</default>
+				<description>Number of chars to print</description>
+			</length>
+			<random>
+				<type>Boolean</type>
+				<default>False</default>
+				<description>Discriminate if the paragraph to print is chosen randomly</description>
+			</random>
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+	</method>
+
+	<method>
+		<name>.replace()</name>
+		<version>1.0</version>
+		<author>Kevin Lucich</author>
+		<description>Replace all occurrences of "__search__" with "__replacement__" inside the element</description>
+		<available_from>2.5.0</available_from>
+		<return>Object</return>
+
+		<declaration>
+			<format>.replace( search, replacement, modifier )</format>
+			<available_from>2.5.0</available_from>
+			<arguments>search,replacement,modifier</arguments>
+		</declaration>
+		<declaration>
+			<format>.replace( params )</format>
+			<available_from>2.5.0</available_from>
+			<arguments>params</arguments>
+		</declaration>
+
+		<params>
+			<search>
+				<type>String</type>
+				<default></default>
+				<description>The string or regular expression to search</description>
+			</search>
+			<modifier>
+				<type>String</type>
+				<default>''</default>
+				<description>The regular expression modifier to use</description>
+			</modifier>
+			<replacement>
+				<type>REGEX</type>
+				<default>''</default>
+				<description>The replacement string</description>
+			</replacement>
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+	</method>
+
+	<method>
+		<name>.rgbToHex()</name>
+		<version>1.0</version>
+		<author>Kevin Lucich</author>
+		<description>Converter a RGB color to HEX</description>
+		<available_from>2.4.0</available_from>
+		<return>String</return>
+
+		<declaration>
+			<format>.rgbToHex( r, g, b)</format>
+			<available_from>2.4.0</available_from>
+			<arguments>r,g,b</arguments>
+		</declaration>
+		
+		<params>
+			<r>
+				<type>Integer</type>
+				<default>0</default>
+				<description>The value of red color</description>
+			</r>
+			<g>
+				<type>Integer</type>
+				<default>0</default>
+				<description>The value of green color</description>
+			</g>
+			<b>
+				<type>Integer</type>
+				<default>0</default>
+				<description>The value of blue color</description>
+			</b>
+		</params>
+	</method>
+
+	<method>
+		<name>.hexToRgb()</name>
+		<version>1.1</version>
+		<author>Kevin Lucich</author>
+		<description>Convert a HEX color to RGB</description>
+		<available_from>2.4.0</available_from>
+		<return>Object or String</return>
+
+		<declaration>
+			<format>hexToRgb.( hex )</format>
+			<available_from>2.4.0</available_from>
+			<arguments>hex</arguments>
+		</declaration>
+		<declaration>
+			<format>hexToRgb.( hex [, return_string] )</format>
+			<available_from>2.5.0</available_from>
+			<arguments>hex,return_string</arguments>
+		</declaration>
+		
+		<params>
+			<hex>
+				<type>String</type>
+				<default>'#000000'</default>
+				<description>.</description>
+			</hex>
+			<return_string>
+				<type>Boolean</type>
+				<default>False</default>
+				<description>Discriminate if the return value will be Object (false) of String (true)</description>
+			</return_string>
+		</params>
+	</method>
+
+	<method>
+		<name>.escape()</name>
+		<version>1.2</version>
+		<author>Salvatore Caputi, Kevin Lucich</author>
+		<description>Returns the string escaped by special characters (even the selectors for jQuery), in ".escape()" declaration will be used the value of the element</description>
+		<available_from>1.1.0</available_from>
+		<return>String</return>
+
+		<declaration>
+			<format>.escape( string )</format>
+			<available_from>1.1.0</available_from>
+			<arguments>string</arguments>
+		</declaration>
+
+		<declaration>
+			<format>.escape()</format>
+			<available_from>1.1.0</available_from>
+			<arguments></arguments>
+		</declaration>
+		
+		<params>
+			<string>
+				<type>String</type>
+				<default>Empty string</default>
+				<description>The string to escape</description>
+			</string>
+		</params>
+	</method>
+
+	<method>
+		<name>.validate()</name>
+		<version>3.2</version>
+		<author>Kevin Lucich</author>
+		<description>Valid fields in a box (conteiner), using a rules passed or specified inline</description>
+		<available_from>1.2.0</available_from>
+		<return>Boolean</return>
+
+		<declaration>
+			<format>.validate( [params] )</format>
+			<available_from>1.2.0</available_from>
+			<arguments>params</arguments>
+		</declaration>
+
+		<params>
+			<showTooltip>
+				<type>Boolean</type>
+				<default>True</default>
+				<description>Discriminate if a Tooltip with error will be show</description>
+			</showTooltip>
+			<showRules>
+				<type>Boolean</type>
+				<default>False</default>
+				<description>If set print in console a list of rules for validation</description>
+			</showRules>
+			<tooltipOnFocus>
+				<type>Boolean</type>
+				<default>False</default>
+				<description>Discriminate if the tooltip will be show only when the input catch focus</description>
+			</tooltipOnFocus>
+			<rules>
+				<type>Object</type>
+				<default>{}</default>
+				<description>Map of rules of each element to check</description>
+			</rules>
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+	</method>
+
+	<method>
+		<name>.sakelightbox()</name>
+		<version>1.3</version>
+		<author>Kevin Lucich</author>
+		<description>Create and show a lightbox</description>
+		<available_from>1.5.0</available_from>
+		<return>Object</return>
+
+		<declaration>
+			<format>.sakelightbox( params )</format>
+			<available_from>1.5.0</available_from>
+			<arguments>params</arguments>
+		</declaration>
+		
+		<params>
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+
+	</method>
+
+
+	<method>
+		<name>.trim()</name>
+		<version>1.0</version>
+		<author>Kevin Lucich</author>
+		<description>Replace the value of element with the value trimmed and return it</description>
+		<available_from>3.0.0</available_from>
+		<return>String</return>
+
+		<declaration>
+			<format>.trim()</format>
+			<available_from>3.0.0</available_from>
+			<arguments></arguments>
+		</declaration>
+
+		<params>
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+	</method>
+
+
+
+	<method>
+		<name>.show()</name>
+		<version>1.0</version>
+		<author>jQuery Foundation</author>
+		<description>This is the function written by jQuery foundation, but extended for send two trigger: before and after when the animation was executed</description>
+		<available_from>3.5.2</available_from>
+		<return>jQuery Object</return>
+	</method>
+	<method>
+		<name>.hide()</name>
+		<version>1.0</version>
+		<author>jQuery Foundation</author>
+		<description>This is the function written by jQuery foundation, but extended for send two trigger: before and after when the animation was executed</description>
+		<available_from>3.5.2</available_from>
+		<return>jQuery Object</return>
+	</method>
+
+	<method>
+		<name>.template</name>
+		<version>1.0</version>
+		<author>Kevin Lucich</author>
+		<description>Copy a strcture of element selected (called template), and insert the data passed searching the attribute data-info
+		&lt;br&gt;&lt;br&gt;
+		
+		</description>
+		<available_from>3.7.0</available_from>
+		<return>jQuery Object</return>
+
+		<declaration>
+			<format>.template( selector, data [, appendTo] [, extraData] )</format>
+			<available_from>1.0.0</available_from>
+			<arguments>selector,data</arguments>
+		</declaration>
+		<declaration>
+			<format>.template( data [, appendTo] [, extraData] )</format>
+			<available_from>1.0.0</available_from>
+			<arguments>data</arguments>
+		</declaration>
+		<declaration>
+			<format>.template( params )</format>
+			<available_from>1.0.0</available_from>
+			<arguments>params</arguments>
+		</declaration>
+		
+		<params>
+			<selector>
+				<type>String</type>
+				<default>body</default>
+				<description>Specified the selector where will print the template</description>
+			</selector>
+			<data>
+				<type>Object</type>
+				<default>Empty Object</default>
+				<description>
+					Map of data to insert into template (before print it). The keys of map are the values of "data-info" into HTML tags, the value of the element in map will be insert into tag, 
+					can be a mixed value type: also a function! In case value of element is a function, the value returned will be insert into the tag.
+				</description>
+			</data>
+			<appendTo>
+				<type>Boolean</type>
+				<default>True</default>
+				<description>Specfied if the template will be append to the selector or not (content of destination element will be cancel)</description>
+			</appendTo>
+			<extraData>
+				<type>Array</type>
+				<default>Empty array</default>
+				<description>
+					If you have specified a function in a map item, this array will be available in the arguments of the specified function. Warning: the first argument will always be the data passed to the method ".template()", then in order find the data of the parameter "ExtraData." See examples to understand better.
+				</description>
+			</extraData>
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+	</method>
+
+	<method>
+		<name>.realOuterWidth</name>
+		<version>1.0</version>
+		<author>Kevin Lucich</author>
+		<description></description>
+		<available_from>3.9.0</available_from>
+		<return>Int</return>
+
+		<declaration>
+			<format>.realOuterWidth( [includeMargin] )</format>
+			<available_from>1.0.0</available_from>
+			<arguments>includeMargin</arguments>
+		</declaration>
+
+		<params>
+			<includeMargin>
+				<type>Boolean</type>
+				<default>False</default>
+				<description>A Boolean indicating whether to include the element's margin in the calculation.</description>
+			</includeMargin>
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+	</method>
+
+	<method>
+		<name>.realOuterHeight</name>
+		<version>1.0</version>
+		<author>Kevin Lucich</author>
+		<description></description>
+		<available_from>3.9.0</available_from>
+		<return>Int</return>
+
+		<declaration>
+			<format>.realOuterHeight( [includeMargin] )</format>
+			<available_from>1.0.0</available_from>
+			<arguments>includeMargin</arguments>
+		</declaration>
+
+		<params>
+			<includeMargin>
+				<type>Boolean</type>
+				<default>False</default>
+				<description>A Boolean indicating whether to include the element's margin in the calculation.</description>
+			</includeMargin>
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+	</method>
+
+	<method>
+		<name>.getDataInfo</name>
+		<version>1.0</version>
+		<author>Kevin Lucich</author>
+		<description>Returns an object with value of fields inside the $container. The key of object is the value in the attribute "data-info" of the field, it can be a "path": multi string separated with a "delimiter" string</description>
+		<available_from>3.10.0</available_from>
+		<return>Object</return>
+
+		<declaration>
+			<format>$(container).getDataInfo( [delimiter] [, ignoreHidden] [, types] )</format>
+			<available_from>1.0.0</available_from>
+			<arguments>delimiter,ignoreHidden,types</arguments>
+		</declaration>
+		<declaration>
+			<format>$(container).getDataInfo( params )</format>
+			<available_from>1.0.0</available_from>
+			<arguments>params</arguments>
+		</declaration>
+		
+		<params>
+			<delimiter>
+				<type>String</type>
+				<default>/</default>
+				<description>The string that defines a key on the other hand, the key is the value of input "data-info" attribute</description>
+			</delimiter>
+			<ignoreHidden>
+				<type>Boolean</type>
+				<default>False</default>
+				<description>If true, the fields hidden will not be catched</description>
+			</ignoreHidden>
+			<types>
+				<type>Object</type>
+				<default>{}</default>
+				<description>An object with the custom types of field value. This information is the value of attribute "data-type"</description>
+			</types>
+			<debug>
+				<type>Boolean</type>
+				<default>False</default>
+				<description>If true, enable the debug mode into the method, print in console warnings or errors occurred</description>
+			</debug>
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+	</method>
+
+
+
+
+
+<!-- 
+	<method>
+		<name> . </name>
+		<version> . </version>
+		<author>Kevin Lucich</author>
+		<description> . </description>
+		<available_from> . </available_from>
+		<return>Object</return>
+
+		<declaration>
+			<format>.( params )</format>
+			<available_from>1.0.0</available_from>
+			<arguments>params</arguments>
+		</declaration>
+		
+		<params>
+			<a>
+				<type></type>
+				<default></default>
+				<description>.</description>
+			</a>
+			<params>
+				<type>Object</type>
+				<description>A map of additional options to pass to the method</description>
+			</params>
+		</params>
+	</method>
+-->
+
+
+</jquery.sake>

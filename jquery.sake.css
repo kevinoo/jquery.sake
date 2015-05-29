@@ -1,0 +1,187 @@
+/**
+	jquery.sake
+	@plugin_version: 3.9.3.1
+	@authors: Kevin Lucich
+	@employees: Salvatore Caputi
+	thanks to:
+		Angelica - to have endured me during my raving,
+		Alberto (Bardo) - for helping me with testing on IE
+*/
+
+.invalid{
+	background-color: #fdd;
+	border-color: #f00;
+}
+
+/*
+	************************************************
+	LIGHTBOX - START
+	************************************************
+*/
+#box_sakelightbox{
+	text-align: center;
+	width: 100%;
+	height: 100%;
+	background: none repeat scroll 0% 0% rgb(0, 0, 0);
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	opacity: 0;
+	z-index: 9999;
+}
+.content_sakelightbox{
+	width: 50%;
+	height: 40%;
+	background: none repeat scroll 0% 0% rgb(255, 255, 255);
+	border: 20px solid #DDDDDD;
+	position: absolute;
+	top: 30%;
+	left: 23%;
+	padding: 25px;
+	border-radius: 10px 10px 10px 10px;
+	box-shadow: 0 0 20px #000000;
+	opacity: 0;
+	z-index: 10000;
+}
+.close_sakelightbox{
+	background-image: url('data:image/png;base64,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');
+	width: 50px;
+	height: 50px;
+	position: absolute;
+	top: -40px;
+	right: -40px;
+	cursor: pointer;
+}
+#lightboxcontentdefault{
+	text-align: center;
+	font-size: 25px;
+}
+.content_sakelightbox .content iframe{
+	width: 100%;
+	height: 100%;
+	border: none;
+}
+/*
+	************************************************
+	LIGHTBOX - END
+	************************************************
+
+	************************************************
+	TOOLTIP - START
+	************************************************
+*/
+
+.tooltipSAKE{
+	font: 13px Arial;
+	width: 150px;
+	padding: 5px;
+	border-radius: 5px;
+	z-index: 10000;
+}
+
+/*
+	************************************************
+	FINE TOOLTIP
+	************************************************
+
+	************************************************
+	TIPS - START
+	************************************************
+*/
+
+.box_tips{
+	position: absolute;
+	z-index: 9999;
+	overflow: hidden;
+	width: 12%;
+}
+
+.box_tips > .tips{
+	width: 90%;
+	background: #FFFFFF;
+	color: #FFFFFF;
+	border: 2px solid #DDDDDD;
+	border-radius: 5px;
+	padding: 5px;
+	box-shadow: 0 0 5px #000000;
+	z-index: 10000;
+	display: none;
+}
+/*
+	************************************************
+	FINE TIPS
+	************************************************
+*/
+
+#saketarget_window{
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: -100;
+}
+
+/*
+	************************************************
+	SAKEBUTTON_APPLE
+	************************************************
+*/
+
+.sakebutton_apple{
+	cursor: pointer;
+	width: 93px;
+	border-radius: 5px;
+	display: inline-block;
+	margin-left: 10px;
+	overflow: hidden;
+	position: relative;
+	border: 1px solid #CCCCCC;
+	background: #e1e1e1;
+}
+
+.sakebutton_apple,
+.sakebutton_apple .slider,
+.sakebutton_apple .divide{
+	height: 27px;
+	background: #e1e1e1;
+}
+
+.sakebutton_apple .slider_off{
+	left: -63% !important;
+}
+
+.sakebutton_apple .slider{
+	position: absolute;
+	width: 174%;
+}
+
+.sakebutton_apple .slider > div{
+	float: left;
+	position: relative;
+	height: 100%;
+	padding-top: 4px;
+	text-align: center;
+	font-weight: bold;
+}
+
+.sakebutton_apple .divide{
+	width: 22%;
+}
+.sakebutton_apple .status{
+	width: 36%;
+}
+.sakebutton_apple .on{
+	background: #548de0;
+	color: #FFF;
+}
+.sakebutton_apple .off{
+	background: #f9f9f9;
+	color: #878787;
+}
+
+/*
+	************************************************
+	FINE SAKEBUTTON_APPLE
+	************************************************
+*/
