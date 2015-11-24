@@ -1,18 +1,1532 @@
 /**
  * KUtils
- * 
- *	@version:	1.17.0
- *	@author:		Kevin Lucich
- */
-;(function(window){
-	var KUtils=null,KUtilsHelps=null,check_patterns={'text':{'all':"^(.)__OF_B__$",'alphanumeric':"^[a-zA-Z0-9 ]+$",'no_space':"^[\\S]+$",'codicefiscale':"^[a-z]{6}[0-9]{2}[a-z][0-9]{2}[a-z][0-9]{3}[a-z]$",'piva':"^[0-9]{11}$"},'number':{'all':"^(([-+]?[0-9]+)|([-+]?([0-9]__OF_B__\\.[0-9]__OF_A__)))$",'int':"^[-+]?[0-9]+$",'float':"^[-+]?([0-9]__OF_B__\\.[0-9]__OF_A__)$"},'ip':{'all':"^([1][0-9][0-9]|2[0-4][0-9]|25[0-5])\.([1][0-9][0-9]|2[0-4][0-9]|25[0-5])\.([1][0-9][0-9]|2[0-4][0-9]|25[0-5])\.([1][0-9][0-9]|2[0-4][0-9]|25[0-5])$"},'email':{'all':"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[A-Za-z]{2,4}$"},'username':{'all':"^([a-zA-Z0-9_-]__OF_B__)$"},'password':{'all':"^([a-zA-Z0-9_-]__OF_B__)$"},'phone':{'all':"^([0-9-()+]__OF_B__)$"},'date':{'all':"^(((0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9]{4}))|((0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.]([0-9]{4}))|(([0-9]{4})[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]))|(([0-9]{4})[- /.](0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])))$",'mmddyyyy':"^((0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9]{4}))$",'ddmmyyyy':"^((0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.]([0-9]{4}))$",'yyyymmdd':"^(([0-9]{4})[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]))$",'yyyyddmm':"^(([0-9]{4})[- /.](0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012]))$"},'space':{'all':"[ \t\r\n]",'onlyspaces':" ",'onlytabs':"\t",'onlybreakline':"[\n\r]"},'url':{'all':"^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$",'onlywww':"^w{3}([0-9]+)?\.([a-zA-Z0-9]([a-zA-Z0-9\-]{0,65}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}"},'creditcard':{'all':"^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$",'visa':"^4[0-9]{12}(?:[0-9]{3})?$",'mastercard':"^5[1-5][0-9]{14}$",'americaexpress':"^3[47][0-9]{13}$",'dinersclub':"^3(?:0[0-5]|[68][0-9])[0-9]{11}$",'discover':"^6(?:011|5[0-9]{2})[0-9]{12}$",'jcb':"^(?:2131|1800|35\d{3})\d{11}$",'expdate':"^(0[1-9]|1[012])\/([12][0-9])$"},'image':{'all':"([^\s]+(?=\.(jpeg|jpg|gif|png|tiff))\.\2)$",'jpeg':"([^\s]+(?=\.(jpeg))\.\2)$",'jpg':"([^\s]+(?=\.(jpg))\.\2)$",'gif':"([^\s]+(?=\.(gif))\.\2)$",'png':"([^\s]+(?=\.(png))\.\2)$",'tiff':"([^\s]+(?=\.(tiff))\.\2)$"},'color':{'all':"^(rgb\((\d+),\s*(\d+),\s*(\d+)\))|(#?([a-f0-9]{6}|[a-f0-9]{3}))$",'rgb':"^rgb\((\d+),\s*(\d+),\s*(\d+)\)$",'hex':"^#?([a-fA-Z0-9]{6}|[a-fA-Z0-9]{3})$"},'html':{'all':"(\<(/?[^\>]+)\>)"}};KUtilsHelps={'isWindow':function a(obj){return obj!=null&&obj===obj.window},'isPlainObject':function(obj){if(typeof obj!=='object'||obj.nodeType||KUtilsHelps.isWindow(obj)){return false}try{if(obj.constructor&&!core_hasOwn.call(obj.constructor.prototype,'isPrototypeOf')){return false}}catch(e){return false}return true}};KUtils={'plugins_version':{'KUtils':'1.17.0'},'version':function(plugins){if(typeof plugins!=='undefined'){for(p in plugins){KUtils.plugins_version[p]=plugins[p]}return}console.dir(KUtils.plugins_version)},'check':function(params,_value,_subtype){var methods={'check':{'init':function(params,_value,_subtype){if(!KUtils.isUndefined(params)&&typeof params!='object'){params={'type':params,'subtype':KUtils.isUndefined(_subtype)?'all':_subtype,'value':_value}}var paramsDefault={'type':'text','subtype':'all','value':false,'rules':{'range':'','of':'+','replace':false}};return KUtils.extend(true,{},paramsDefault,params)},'_do':function(params){var check_param_of_range=function(p,nameParam){if(!(/^([*]{1})$|^([0-9]+)$|^([0-9]+,[0-9]+)$/).test(p)){console_action('PRM_IGN','$.check',nameParam);return false}return true};var _regex=check_patterns[params.type][params.subtype];var __OF_A__='+';var __OF_B__=params.rules.of;if(params.rules.range!=''){__OF_B__=params.rules.range;if(params.subtype=='float'){if(/^[0-9]+,[0-9]+;[0-9]+,[0-9]+$/.test(params.rules.range)){var r_split=(params.rules.range).split(';');__OF_A__=(check_param_of_range(r_split[0],'params.rules.range'))?r_split[0]:'';__OF_B__=(check_param_of_range(r_split[1],'params.rules.range'))?r_split[1]:'+'}}else{if(/^[0-9]+$/.test(__OF_B__)){__OF_B__='0,'+__OF_B__}else{__OF_B__=(check_param_of_range(__OF_B__,'params.rules.range'))?__OF_B__:'+'}}}if(__OF_B__!='+'&&!check_param_of_range(__OF_B__,'params.rules.of')){__OF_B__='+'}if((__OF_A__!='+')&&(__OF_A__!='*'))__OF_A__='{'+__OF_A__+'}';if((__OF_B__!='+')&&(__OF_B__!='*'))__OF_B__='{'+__OF_B__+'}';_regex=_regex.replace(/__OF_A__/,__OF_A__).replace(/__OF_B__/,__OF_B__);var regex=new RegExp(_regex);return regex.test(params.value)}}};params=(methods.check['init']).apply(undefined,arguments);return(methods.check['_do']).apply(undefined,new Array(params))},'isUndefined':function(variable){return((typeof variable==='undefined')||(variable==null)||(variable=='NIL'))},'print_r':function(obj,html_format,space,iterate){if(typeof html_format!=='undefined'&&html_format.constructor!==Boolean){space=html_format;html_format=false}var str="";var new_line=(html_format)?'<br />':"\n";space=(typeof space==='undefined')?'':space;iterate=(typeof iterate==='undefined')?0:iterate;if(!KUtils.objSize(obj)){return'{}'}for(k in obj){var v=obj[k];str+=((iterate)?space:'')+'['+k+'] => ';if(v!=null){if(typeof v==='object'){var new_space=((space!='')?space+space:space+"\t");var res=(KUtils.print_r).apply(this,[v,html_format,new_space,iterate+1]);str+=((res!='')?"{\n"+res+space+"}":'{}')}else str+=(v)}else str+='null';str+=new_line}return str},'var_dump':function(obj,html_format,space){var __dump=function(v){if(v.constructor==String){return'string('+v.length+') "'+v+'"'}else{return(typeof v)+'('+v+')'}};if(typeof html_format!=='undefined'&&html_format.constructor!==Boolean){space=html_format;html_format=false}var new_line=(html_format)?'<br />':"\n";var str="";if(typeof space=='undefined'){space='';str=new_line}if(obj.constructor!=Object&&obj.constructor!=Array){return __dump(obj)}for(k in obj){var v=obj[k];str+=space+'['+k+'] => ';if(v!=null){if(typeof v==='object'){var length=(v.constructor==Object)?KUtils.objSize(v):v.length;var res=KUtils.var_dump(v,html_format,space+"	");str+='object('+length+') '+((res!='')?"{\n"+res+space+"}":'{}')}else str+=__dump(v)}else str+='null';str+=new_line}return str},'stripslashes':function(str){return(str+'').replace(/\\(.?)/g,function(s,n1){switch(n1){case'\\':return'\\';case'0':return'\u0000';case'':return'';default:return n1}})},'objSize':function(obj){if(obj==null||(obj.constructor!=Object&&obj.constructor!=Array)){return 0}return Object.keys(obj).length},'objClone':function(obj){if(null==obj||obj.constructor!=Object){return obj}var copy=obj.constructor();for(var attr in obj){if(attr in obj)copy[attr]=obj[attr]}return copy},'objMD5':function(obj){return KUtils.MD5(obj)},'objJoin':function(obj,glue,separator){obj=(typeof obj!=='undefined')?obj:{};glue=(typeof glue!=='undefined')?glue:'=';separator=(typeof separator!=='undefined')?separator:',';var pieces=[];for(i in obj){pieces.push(i+glue+obj[i])}return pieces.join(separator)},'obj2Array':function(obj){var array=[];for(k in obj){array.push(obj[k])}return array},'objKeys':function(obj){var keys=[];if((typeof obj==='undefined')||(obj==null)){return keys}switch(obj.constructor){case Object:if(typeof Object.keys!=='undefined'){return Object.keys(obj)}case Array:for(i in obj){if(obj.hasOwnProperty(i))keys.push(i)}return keys;default:return keys}},'objFlip':function(obj){var key=null,tmp={};for(key in obj){if(obj.hasOwnProperty(key)){tmp[obj[key]]=key}}return tmp},'objIntersectKey':function(){var argv=[].slice.call(arguments);var result=argv[0];var len=argv.length;for(var i=1;i<len;i++){var array=argv[i];for(var key in result){if(typeof array[key]==='undefined'){delete(result[key])}}}return result},'objKeyAllowed':function(obj,allowed){obj=obj||{};allowed=allowed||[];return KUtils.objIntersectKey(obj,KUtils.objFlip(allowed))},'trim':function(str){if(str==null||typeof str==='undefined'||str.constructor!=String){return str}if(typeof String.trim!=='undefined'){return String.trim(str)}return str.replace(/^\s+|\s+$/g,'')},'inArray':function(needle,haystack){if(typeof needle==='undefined'||haystack.constructor!=Array){return false}if(needle.constructor==Array){var len=needle.length;for(var i=0;i<len;i++){if(!KUtils.inArray(needle[i],haystack)){return false}}return true}if(typeof[].indexOf!=='undefined'){return(haystack.indexOf(needle)!=-1)}else{var len=haystack.length;for(var i=0;i<len;i++){if(haystack[i]==needle){return true}}return false}},'MD5':function(str){if((str!=null)&&(str.constructor==Array||str.constructor==Object)){var obj=str;str='';for(i in obj){str=KUtils.MD5(str+obj[i])}}var hex_chr="0123456789abcdef";function rhex(num){str="";for(var j=0;j<=3;j++)str+=hex_chr.charAt((num>>(j*8+4))&0x0F)+hex_chr.charAt((num>>(j*8))&0x0F);return str}function str2blks_MD5(str){var nblk=((str.length+8)>>6)+1;var blks=new Array(nblk*16);for(i=0;i<nblk*16;i++)blks[i]=0;for(i=0;i<str.length;i++)blks[i>>2]|=str.charCodeAt(i)<<((i%4)*8);blks[i>>2]|=0x80<<((i%4)*8);blks[nblk*16-2]=str.length*8;return blks}function add(x,y){var lsw=(x&0xFFFF)+(y&0xFFFF);var msw=(x>>16)+(y>>16)+(lsw>>16);return(msw<<16)|(lsw&0xFFFF)}function rol(num,cnt){return(num<<cnt)|(num>>>(32-cnt))}function cmn(q,a,b,x,s,t){return add(rol(add(add(a,q),add(x,t)),s),b)}function ff(a,b,c,d,x,s,t){return cmn((b&c)|((~b)&d),a,b,x,s,t)}function gg(a,b,c,d,x,s,t){return cmn((b&d)|(c&(~d)),a,b,x,s,t)}function hh(a,b,c,d,x,s,t){return cmn(b^c^d,a,b,x,s,t)}function ii(a,b,c,d,x,s,t){return cmn(c^(b|(~d)),a,b,x,s,t)}var x=str2blks_MD5(str);var a=1732584193;var b=-271733879;var c=-1732584194;var d=271733878;var xlen=x.length;for(var i=0;i<xlen;i+=16){olda=a;oldb=b;oldc=c;oldd=d;a=ff(a,b,c,d,x[i],7,-680876936);d=ff(d,a,b,c,x[i+1],12,-389564586);c=ff(c,d,a,b,x[i+2],17,606105819);b=ff(b,c,d,a,x[i+3],22,-1044525330);a=ff(a,b,c,d,x[i+4],7,-176418897);d=ff(d,a,b,c,x[i+5],12,1200080426);c=ff(c,d,a,b,x[i+6],17,-1473231341);b=ff(b,c,d,a,x[i+7],22,-45705983);a=ff(a,b,c,d,x[i+8],7,1770035416);d=ff(d,a,b,c,x[i+9],12,-1958414417);c=ff(c,d,a,b,x[i+10],17,-42063);b=ff(b,c,d,a,x[i+11],22,-1990404162);a=ff(a,b,c,d,x[i+12],7,1804603682);d=ff(d,a,b,c,x[i+13],12,-40341101);c=ff(c,d,a,b,x[i+14],17,-1502002290);b=ff(b,c,d,a,x[i+15],22,1236535329);a=gg(a,b,c,d,x[i+1],5,-165796510);d=gg(d,a,b,c,x[i+6],9,-1069501632);c=gg(c,d,a,b,x[i+11],14,643717713);b=gg(b,c,d,a,x[i],20,-373897302);a=gg(a,b,c,d,x[i+5],5,-701558691);d=gg(d,a,b,c,x[i+10],9,38016083);c=gg(c,d,a,b,x[i+15],14,-660478335);b=gg(b,c,d,a,x[i+4],20,-405537848);a=gg(a,b,c,d,x[i+9],5,568446438);d=gg(d,a,b,c,x[i+14],9,-1019803690);c=gg(c,d,a,b,x[i+3],14,-187363961);b=gg(b,c,d,a,x[i+8],20,1163531501);a=gg(a,b,c,d,x[i+13],5,-1444681467);d=gg(d,a,b,c,x[i+2],9,-51403784);c=gg(c,d,a,b,x[i+7],14,1735328473);b=gg(b,c,d,a,x[i+12],20,-1926607734);a=hh(a,b,c,d,x[i+5],4,-378558);d=hh(d,a,b,c,x[i+8],11,-2022574463);c=hh(c,d,a,b,x[i+11],16,1839030562);b=hh(b,c,d,a,x[i+14],23,-35309556);a=hh(a,b,c,d,x[i+1],4,-1530992060);d=hh(d,a,b,c,x[i+4],11,1272893353);c=hh(c,d,a,b,x[i+7],16,-155497632);b=hh(b,c,d,a,x[i+10],23,-1094730640);a=hh(a,b,c,d,x[i+13],4,681279174);d=hh(d,a,b,c,x[i],11,-358537222);c=hh(c,d,a,b,x[i+3],16,-722521979);b=hh(b,c,d,a,x[i+6],23,76029189);a=hh(a,b,c,d,x[i+9],4,-640364487);d=hh(d,a,b,c,x[i+12],11,-421815835);c=hh(c,d,a,b,x[i+15],16,530742520);b=hh(b,c,d,a,x[i+2],23,-995338651);a=ii(a,b,c,d,x[i],6,-198630844);d=ii(d,a,b,c,x[i+7],10,1126891415);c=ii(c,d,a,b,x[i+14],15,-1416354905);b=ii(b,c,d,a,x[i+5],21,-57434055);a=ii(a,b,c,d,x[i+12],6,1700485571);d=ii(d,a,b,c,x[i+3],10,-1894986606);c=ii(c,d,a,b,x[i+10],15,-1051523);b=ii(b,c,d,a,x[i+1],21,-2054922799);a=ii(a,b,c,d,x[i+8],6,1873313359);d=ii(d,a,b,c,x[i+15],10,-30611744);c=ii(c,d,a,b,x[i+6],15,-1560198380);b=ii(b,c,d,a,x[i+13],21,1309151649);a=ii(a,b,c,d,x[i+4],6,-145523070);d=ii(d,a,b,c,x[i+11],10,-1120210379);c=ii(c,d,a,b,x[i+2],15,718787259);b=ii(b,c,d,a,x[i+9],21,-343485551);a=add(a,olda);b=add(b,oldb);c=add(c,oldc);d=add(d,oldd)}return(rhex(a)+rhex(b)+rhex(c)+rhex(d))},'hash':function(str){if(!str||str.constructor!=String){return 0}var hash=0,i,c,len=str.length;if(len==0){return hash}for(i=0;i<len;i++){c=str.charCodeAt(i);hash=((hash<<5)-hash)+c;hash=hash&hash}return hash},'empty':function(variable){if(variable==null){return true}switch(variable.constructor){case Number:return(variable===0);case String:return(variable.length===0||variable==='0');case Array:case Object:return(KUtils.objSize(variable)===0);case Boolean:return(variable===false);default:return false}},'rgbToHex':function(r,g,b){var componentToHex=function(c){var hex=c.toString(16);return hex.length==1?"0"+hex:hex};return"#"+componentToHex(r)+componentToHex(g)+componentToHex(b)},'hexToRgb':function(hex,return_string){if(KUtils.isUndefined(hex))hex='#000000';if(KUtils.isUndefined(return_string))return_string=false;var result=/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);var rgb=result?{r:parseInt(result[1],16),g:parseInt(result[2],16),b:parseInt(result[3],16)}:null;if(return_string)return''+rgb.r+','+rgb.g+','+rgb.b+'';return rgb},'extend':(typeof jQuery!=='undefined'&&jQuery.extend)||function(){var options,name='',src,copy,clone,target=((typeof arguments[0]!=='undefiend')?arguments[0]:{}),i=1,length=arguments.length,copyIsArray=false,deep=false;if(typeof target==="boolean"){deep=target;target=arguments[1]||{};i=2}if(typeof target!=="object"&&!(target.constructor===Function())){target={}}for(;i<length;i++){if((options=arguments[i])!=null){for(name in options){src=target[name];copy=options[name];if(target===copy){continue}if(deep&&copy&&(KUtilsHelps.isPlainObject(copy)||(copyIsArray=copy.isArray))){if(copyIsArray){copyIsArray=false;clone=src&&src.isArray?src:[]}else{clone=src&&isPlainObject(src)?src:{}}target[name]=KUtils.extend(deep,clone,copy)}else if(copy!==undefined){target[name]=copy}}}}return target},'range':function(start,end,step){var range=[];var typeofStart=typeof start;var typeofEnd=typeof end;if(step===0){throw new TypeError("Step cannot be zero.");}if(typeofStart=="undefined"||typeofEnd=="undefined"){throw new TypeError("Must pass start and end arguments.");}else if(typeofStart!=typeofEnd){throw new TypeError("Start and end arguments must be of same type.");}typeof step=="undefined"&&(step=1);if(end<start){step=-step}if(typeofStart=="number"){while(step>0?end>=start:end<=start){range.push(start);start+=step}}else if(typeofStart=="string"){if(start.length!=1||end.length!=1){throw new TypeError("Only strings with one character are supported.");}start=start.charCodeAt(0);end=end.charCodeAt(0);while(step>0?end>=start:end<=start){range.push(String.fromCharCode(start));start+=step}}else{throw new TypeError("Only string and number types are supported");}return range},'benchmark':function(millisecond,howmany,fns){if((typeof millisecond==='undefined')){console.error('Error: missing fns param');return}if(millisecond.constructor==Object){fns=millisecond;millisecond=1000;howmany=1}if(howmany.constructor==Object){fns=howmany;howmany=1}var results={'fns':{},'statistics':{'faster':{'fn':null,'loop':Infinity},'slower':{'fn':null,'loop':-Infinity}}};for(fn_name in fns){var fn=fns[fn_name];var array_loops=[];for(var i=0;i<howmany;i++){var second=(new Date().getTime())+millisecond;var current_loop=0;while((new Date().getTime())<second){current_loop++;fn()}array_loops.push(current_loop)}number_of_execution=(function(array){var avg=0;for(a in array){avg+=array[a]}return(avg/(array.length))})(array_loops);if(results.statistics.faster.fn==null||results.statistics.faster.number_of_execution<number_of_execution){results.statistics.faster={'fn':fn_name,'number_of_execution':number_of_execution}}if(results.statistics.slower.fn==null||results.statistics.slower.number_of_execution>number_of_execution){results.statistics.slower={'fn':fn_name,'number_of_execution':number_of_execution}}results['fns'][fn_name]=number_of_execution}var tmp=(results.statistics.faster.number_of_execution/results.statistics.slower.number_of_execution);results.statistics.result='The function '+results.statistics.faster.fn+' is faster than '+results.statistics.slower.fn+' of '+((tmp*100)-100).toFixed(2)+'% ('+tmp.toFixed(2)+' times)';return results},'ucFirst':function(string){return(!string)?"":string[0].toUpperCase()+string.slice(1)},'dotdotdot':function(string,how_many_words){if(typeof string==='undefined'){return''}if(typeof how_many_words==='undefined'){how_many_words=pieces.length/2}var pieces=string.split(' ');return(pieces.slice(0,how_many_words).join(' '))+'...'},'consoleCheck':function(){if(typeof window.console!=='undefined'){return true}var c={};var fns=['log','debug','info','warn','exception','assert','dir','dirxml','trace','group','groupEnd','groupCollapsed','profile','profileEnd','count','clear','time','timeEnd','timeStamp','table','error'];for(f in fns){c[fns[f]]=function(){}}window.console=c},'stack':function(show_anonymous){show_anonymous=(!KUtils.isUndefined(show_anonymous))?show_anonymous:false;var stack=[];var _caller=arguments.callee.caller;while(_caller!=null){var fn_name=/function ([^(]*)/.exec(_caller+"")[1];if(show_anonymous&&fn_name=='')fn_name='anonymous';if(fn_name!='')stack.push(fn_name);_caller=_caller.caller}stack.reverse();if(stack.length){return stack.join('() -> ')+'()'}return null},'arrayDiff':function(a,b){var tmp=[],diff=[],i=0,len=0;len=a.length;for(i=0;i<len;i++){tmp[a[i]]=true}len=b.length;for(i=0;i<len;i++){if(tmp[b[i]]){delete tmp[b[i]]}else{tmp[b[i]]=true}}for(var k in tmp){diff.push(k)}return diff},'onEvents':function(){var arg0=arguments[0];var arg1=arguments[1];switch(arguments.length){case 0:return;break;case 1:if(typeof arg0==='object'){KUtils.onEvents(function(){},arg0);return}return;break;case 2:if(typeof arg0!=='function'||typeof arg1!=='object'){console.warn('KUtils.onEvents() called with wrong arguments ('+(typeof arg0)+', '+(typeof arg1)+') must be (function,object)');return}break}var onProgress=arg0;var struct=arg1;for(event_name in struct){for(selector in struct[event_name]){var fn=struct[event_name][selector];$(document).on(event_name,selector,fn);onProgress(event_name,selector)}}}};var PrototypeDateUtils={};PrototypeDateUtils={'getFormat':function(format){var date=this;var formated='';var length=format.length;for(var i=0;i<length;i++){switch(format[i]){case'\\':i++;break;case'j':formated+=getDate();break;case'd':var day=parseInt(date.getDate());formated+=((day<10)?'0'+day:day);break;case'N':formated+=date.getDay();break;case'n':formated+=parseInt(date.getMonth())+1;break;case'm':var month=parseInt(date.getMonth())+1;formated+=((month<10)?'0'+month:month);break;case't':var num_days={'1':31,'2':28,'3':31,'4':30,'5':31,'6':30,'7':31,'8':31,'9':30,'10':31,'11':30,'12':31};var month=parseInt(date.getMonth())+1;formated+=num_days[month];break;case'Y':formated+=date.getFullYear();break;case'y':var year=''+((new Date()).getFullYear());var y_length=year.length;formated+=year.substring(y_length-2,y_length);break;case'g':var hours=date.getHours();formated+=(hours>12)?hours-12:hours;break;case'G':formated+=date.getHours();break;case'h':var hours=date.getHours();hours=(hours>12)?(hours-12):hours;formated+=((hours<10)?'0'+hours:hours);break;case'H':var hours=date.getHours();formated+=((hours<10)?'0'+hours:hours);break;case'i':var minutes=date.getMinutes();formated+=((minutes<10)?'0'+minutes:minutes);break;case's':var seconds=date.getSeconds();formated+=((seconds<10)?'0'+seconds:seconds);break;case'c':var cents=parseInt(date.getMilliseconds()/10);formated+=((cents<10)?'0'+cents:cents);break;case'u':var milli=date.getMilliseconds();formated+=((milli<10)?'0'+milli:milli);break;default:formated+=format[i];break}}return formated},'getMillisecondsByIdentifier':function(identifier){switch(identifier){case'd':return 86400000;break;case'm':return 2592000000;break;case'y':return 31536000000;break;case'h':return 3600000;break;case'i':return 60000;break;case's':return 1000;break;case'w':return 604800000;break;default:console.warn('Identifier "'+identifier+'" undefined! :( ');return 0;break}},'getDateAfterModify':function(operator,modifier){var self=this;var milliseconds=0;var modifiers=modifier.split(' ');for(m in modifiers){var mod=modifiers[m];var pieces=mod.match(/(\d+)([a-zA-Z])/);var number=pieces[1];var identifier=pieces[2];milliseconds+=PrototypeDateUtils.getMillisecondsByIdentifier(identifier)*number}var new_date=self.getTime()+(milliseconds*operator);return(new Date(new_date))},'add':function(modifier){return(PrototypeDateUtils.getDateAfterModify).apply(this,[1,modifier])},'sub':function(modifier){return(PrototypeDateUtils.getDateAfterModify).apply(this,[-1,modifier])}};Date.prototype.getFormat=PrototypeDateUtils.getFormat;Date.prototype.add=PrototypeDateUtils.add;Date.prototype.sub=PrototypeDateUtils.sub;Object.keys=Object.keys||function(obj){var keys=[];for(k in obj){if(k!='keys'){keys.push(k)}}return keys};var console_action=function(type,nameFunction,nameParam){if(typeof console==='undefined'||typeof console.info==='undefined'||typeof console.warn==='undefined')return;var infos={},text='';switch(type){case'PRM_IGN':infos['state']='Ignored';infos['why']='Invalid value';infos['description']=["Will be use the default value"];break;case'IDENT_NOT_DEF':infos['state']='Ignored';infos['why']='Invalid value';infos['description']=["Identifier undefined :( "];break}text=["Function: "+nameFunction,((typeof nameParam!=='undefined')?"Param: "+nameParam:null),"State: "+infos['state'],"Why: "+infos['why'],(infos['description']).join("\n\t"),"Stack:\t"+KUtils.stack(),"\n"].filter(function(el){if(!KUtils.isUndefined(el)){return el}}).join("\n\t");switch(type){case'PRM_IGN':console.warn('KUTILS - WARNING'+text);break}};if(typeof jQuery!=='undefined'){KUtils.version({'jQuery':jQuery.fn.jquery});if(typeof jQuery.ui!=='undefined'){KUtils.version({'jQuery.ui':jQuery.ui.version})}}window.KUtils=KUtils;
-})(window);
+ * @version:	1.20.2
+ * @author:	Kevin Lucich
+*/
+
+(function(window){
+
+	var KUtils = null,
+			KUtilsHelps = null,
+			check_patterns = {
+				'text': {
+					'all': 				"^(.)__OF_B__$",	//	__RANGE__
+					'alphanumeric':		"^[a-zA-Z0-9 ]+$",
+					'no_space': 		"^[\\S]+$",
+					'codicefiscale':	"^[a-z]{6}[0-9]{2}[a-z][0-9]{2}[a-z][0-9]{3}[a-z]$",
+					'piva':				"^[0-9]{11}$"
+				},
+				'number': {
+					'all':		"^(([-+]?[0-9]+)|([-+]?([0-9]__OF_B__\\.[0-9]__OF_A__)))$",
+					'int':		"^[-+]?[0-9]+$",
+					'float':	"^[-+]?([0-9]__OF_B__\\.[0-9]__OF_A__)$"
+				},
+				'ip':{
+					'all':		"^([1][0-9][0-9]|2[0-4][0-9]|25[0-5])\.([1][0-9][0-9]|2[0-4][0-9]|25[0-5])\.([1][0-9][0-9]|2[0-4][0-9]|25[0-5])\.([1][0-9][0-9]|2[0-4][0-9]|25[0-5])$"
+				},
+				'email':{
+					'all':		"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[A-Za-z]{2,4}$"
+				},
+				'username':{
+					'all':		"^([a-zA-Z0-9_-]__OF_B__)$"
+				},
+				'password':{
+					'all':		"^([a-zA-Z0-9_-]__OF_B__)$"
+				},
+				'phone':{
+					'all':		"^([0-9-()+ ]__OF_B__)$"
+				},
+				'date':{
+					'all':		"^(((0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9]{4}))|((0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.]([0-9]{4}))|(([0-9]{4})[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]))|(([0-9]{4})[- /.](0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])))$",
+					'Y-m-d':	"^(([0-9]{4})[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]))$",
+					'Y-d-m':	"^(([0-9]{4})[- /.](0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012]))$",
+					'm-d-Y':	"^((0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9]{4}))$",
+					'd-m-Y':	"^((0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.]([0-9]{4}))$"
+				},
+				'space':{
+					'all':				"[ \t\r\n]",
+					'onlyspaces':		" ",
+					'onlytabs':			"\t",
+					'onlybreakline':	"[\n\r]"
+				},
+				'url':{
+					'all':		"^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$",
+					'onlywww':	"^w{3}([0-9]+)?\.([a-zA-Z0-9]([a-zA-Z0-9\-]{0,65}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}"
+				},
+				'creditcard':{
+					'all':				"^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$",
+					'visa':				"^4[0-9]{12}(?:[0-9]{3})?$",
+					'mastercard':		"^5[1-5][0-9]{14}$",
+					'americaexpress':	"^3[47][0-9]{13}$",
+					'dinersclub':		"^3(?:0[0-5]|[68][0-9])[0-9]{11}$",
+					'discover':			"^6(?:011|5[0-9]{2})[0-9]{12}$",
+					'jcb':				"^(?:2131|1800|35\d{3})\d{11}$",
+					'expdate':			"^(0[1-9]|1[012])\/([12][0-9])$"
+				},
+				'image':{
+					'all':		"([^\s]+(?=\.(jpeg|jpg|gif|png|tiff))\.\2)$",
+					'jpeg':		"([^\s]+(?=\.(jpeg))\.\2)$",
+					'jpg':		"([^\s]+(?=\.(jpg))\.\2)$",
+					'gif':		"([^\s]+(?=\.(gif))\.\2)$",
+					'png':		"([^\s]+(?=\.(png))\.\2)$",
+					'tiff':		"([^\s]+(?=\.(tiff))\.\2)$"
+				},
+				'color':{
+					'all':		"^(rgb\((\d+),\s*(\d+),\s*(\d+)\))|(#?([a-f0-9]{6}|[a-f0-9]{3}))$",
+					'rgb':		"^rgb\((\d+),\s*(\d+),\s*(\d+)\)$",
+					'hex':		"^#?([a-fA-Z0-9]{6}|[a-fA-Z0-9]{3})$"
+				},
+				'html':{
+					'all':		"(\<(/?[^\>]+)\>)"
+				}
+			};
+
+	/*******************************************************************/
+	/*******************************************************************/
+	/*******************************************************************/
+	/*******************************************************************/
+
+	//	Functions used into KUtils :)
+
+	KUtilsHelps = {
+		'isWindow': function a( obj ){
+			return obj != null && obj === obj.window;
+		},
+
+		'isPlainObject': function( obj ){
+			// Not plain objects:
+			// - Any object or value whose internal [[Class]] property is not "[object Object]"
+			// - DOM nodes
+			// - window
+			if ( typeof obj !== 'object' || obj.nodeType || KUtilsHelps.isWindow(obj) ) {
+				return false;
+			}
+
+			// Support: Firefox <20
+			// The try/catch suppresses exceptions thrown when attempting to access
+			// the "constructor" property of certain host objects, ie. |window.location|
+			// https://bugzilla.mozilla.org/show_bug.cgi?id=814622
+			try {
+				if( obj.constructor && !core_hasOwn.call(obj.constructor.prototype,'isPrototypeOf') ){
+					return false;
+				}
+			}catch( e ){
+				return false;
+			}
+
+			// If the function hasn't returned already, we're confident that
+			// |obj| is a plain object, created by {} or constructed with new Object
+			return true;
+		}
+	};
+
+	/*******************************************************************/
+	/*******************************************************************/
+	/*******************************************************************/
+	/*******************************************************************/
+
+	KUtils = {
+
+		'plugins_version': {
+			'KUtils': '1.20.0'
+		},
+
+		/**
+		 KUtils.version
+		 Ritorna una mappa con le versioni delle plugin
+		 */
+		'version': function( plugins ){
+
+			if( typeof plugins !== 'undefined' ){
+				for( p in plugins ){
+					KUtils.plugins_version[ p ] = plugins[p];
+				}
+				return;
+			}
+
+			console.dir( KUtils.plugins_version );
+		},
+
+		/**
+		 $.check( params|typeCheck, value, [, subtype] );
+		 $( __ELEMENT__ ).check( params|typeCheck, [, subtype] );	Check the value of __ELEMENT__ with the "typeCheck"
+
+		 @version	1.2
+		 @author		Kevin Lucich
+
+		 @param		params		{Object|String}	The type of will be the value or List of params
+		 @param		_subtype	{String}		A specified type (default: 'all') // it meas "all" of typeCheck
+		 @param		_value		{String|Number}	The value to check
+
+		 @return	{Boolean}	Return True if the value is valid
+		 */
+		'check': function( params, _value, _subtype ){
+
+			var methods = {
+				'check': {
+					'init': function( params, _value, _subtype ){
+
+						// Posso passare i parametri come oggetto o tre valori separati (type,value,subtype)
+						if( (typeof params !== 'undefined') && (typeof params != 'object') ){
+							params = {
+								'type': params,
+								'subtype': (typeof _subtype === 'undefined') ? 'all' : _subtype,
+								'value': _value
+							};
+						}
+
+						var paramsDefault = {
+							'type': 'text',
+							'subtype': 'all',
+							'value': false,
+							'rules': {
+								'range': '',		// {'from': 0, 'to': 1},
+								'of': '+',
+								'replace': false
+							}
+						};
+
+						return KUtils.extend( true, {}, paramsDefault, params );
+					},
+
+					'_do': function(params){
+
+						var check_param_of_range = function(p,nameParam){
+							if( !(/^([*]{1})$|^([0-9]+)$|^([0-9]+,[0-9]+)$/).test(p) ){
+								console_action('PRM_IGN','$.check',nameParam);
+								return false;
+							}
+							return true;
+						};
+
+						var _regex = check_patterns[ params.type ][ params.subtype ];
+						var __OF_A__ = '+';
+						var __OF_B__ = params.rules.of;
+
+						if( params.rules.range != '' ){
+
+							__OF_B__ = params.rules.range;
+
+							if( params.subtype == 'float' ){	// Formato: 1,2;8,9	=> range
+								if( /^[0-9]+,[0-9]+;[0-9]+,[0-9]+$/.test( params.rules.range ) ){
+									var r_split = (params.rules.range).split(';');
+									__OF_A__ = (check_param_of_range(r_split[0],'params.rules.range')) ? r_split[0] : '';
+									__OF_B__ = (check_param_of_range(r_split[1],'params.rules.range')) ? r_split[1] : '+';
+								}
+							}else{
+								// Formato: [num] => viene trasformato in 0,[num] così da diventare un range
+								if( /^[0-9]+$/.test( __OF_B__ ) ){
+									__OF_B__ = '0,'+ __OF_B__;
+								}else{
+									// Formato: 1,9	=> range
+									__OF_B__ = (check_param_of_range( __OF_B__,'params.rules.range' )) ?  __OF_B__ : '+';
+								}
+							}
+						}	// End PRR
+
+
+						if( __OF_B__ != '+' && !check_param_of_range( __OF_B__, 'params.rules.of' ) ){
+							__OF_B__ = '+';
+						}
+
+						if( (__OF_A__ != '+')&&(__OF_A__ != '*') )
+							__OF_A__ = '{'+ __OF_A__ +'}';
+						if( (__OF_B__ != '+')&&(__OF_B__ != '*') )
+							__OF_B__ = '{'+ __OF_B__ +'}';
+
+						_regex = _regex.replace(/__OF_A__/, __OF_A__ ).replace(/__OF_B__/, __OF_B__ );
+
+						var regex = new RegExp( _regex );
+
+						return regex.test( params.value );
+					}
+				}
+			};
+
+			params = (methods.check['init']).apply( undefined, arguments );
+			return (methods.check['_do']).apply( undefined, [params] );
+		},
+
+		/**
+		 *	@deprecated
+		 */
+		'isUndefined': function( variable ){
+			return ( (typeof variable === 'undefined') || (variable == null) || (variable == 'NIL') );
+		},
+
+		'print_r': function( obj, html_format, space, iterate ){
+
+			//	è stata settato oppure è il valore di "space"
+			if( typeof html_format !== 'undefined' && html_format.constructor !== Boolean ){
+				space = html_format;
+				html_format = false;
+			}
+
+			var str = "";
+			var new_line = (html_format) ? '<br />' : "\n";
+			space = (typeof space === 'undefined') ? '' : space;
+			iterate = (typeof iterate === 'undefined') ? 0 : iterate;
+
+			if( !KUtils.objSize(obj) ){
+				return '{}';
+			}
+
+			for( k in obj ){
+				var v = obj[k];
+				str += ((iterate) ? space : '') +'['+ k +'] => ';
+				if( v != null ){
+					if( typeof v === 'object' ){
+						var new_space = ((space!='') ? space+space : space+"\t");
+						var res = (KUtils.print_r).apply( this, [v, html_format, new_space, iterate+1 ] );
+						//	Se l'oggetto passato aveva qualche attributo allora lo stampo, altrimenti stampo le parentesi vuote :)
+						str += ((res != '') ? "{\n"+ res + space +"}" : '{}');
+					}else
+						str += ( v );
+				}else
+					str += 'null';
+
+				str += new_line;
+			}
+
+			return str;
+		},
+
+		'var_dump': function( obj, html_format, space ){
+
+			var __dump = function( v ){
+				if( v.constructor == String ){
+					return 'string('+ v.length +') "'+ v +'"';
+				}else{
+					return (typeof v) +'('+ v +')';
+				}
+			};
+
+			//	è stata settato oppure è il valore di "space"
+			if( typeof html_format !== 'undefined' && html_format.constructor !== Boolean ){
+				space = html_format;
+				html_format = false;
+			}
+
+			var new_line = (html_format) ? '<br />' : "\n";
+			var str = "";
+
+			if( typeof space == 'undefined' ){
+				space = '';
+				str = new_line;
+			}
+
+			if( obj.constructor != Object && obj.constructor != Array ){
+				return __dump( obj );
+			}
+
+			for( k in obj ){
+				var v = obj[k];
+				str += space +'['+ k +'] => ';
+				if( v != null ){
+					if( typeof v === 'object' ){
+						var length = (v.constructor == Object) ? KUtils.objSize(v) : v.length;
+						var res = KUtils.var_dump( v, html_format, space+"	" );	//	space+"\t"
+						//	Se l'oggetto passato aveva qualche attributo allora lo stampo, altrimenti stampo le parentesi vuote :)
+						str += 'object('+ length +') '+ ((res != '') ? "{\n"+ res +space+"}" : '{}');
+					}else
+						str += __dump( v );
+				}else
+					str += 'null';
+				str += new_line;
+			}
+
+			return str;
+		},
+
+		'stripslashes': function( str ){
+			// +	original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
+			// +	improved by: Ates Goral (http://magnetiq.com)
+			// +	fixed by: Mick@el
+			// +	improved by: marrtins
+			// +	bugfixed by: Onno Marsman
+			// +	improved by: rezna
+			// +	input by: Rick Waldron
+			// +	reimplemented by: Brett Zamir (http://brett-zamir.me)
+			// +	input by: Brant Messenger (http://www.brantmessenger.com/)
+			// +	bugfixed by: Brett Zamir (http://brett-zamir.me)
+			// *		example 1: stripslashes('Kevin\'s code');
+			// *		returns 1: "Kevin's code"
+			// *		example 2: stripslashes('Kevin\\\'s code');
+			// *		returns 2: "Kevin\'s code"
+			return (str + '').replace(/\\(.?)/g, function (s, n1) {
+				switch (n1) {
+					case '\\':
+						return '\\';
+					case '0':
+						return '\u0000';
+					case '':
+						return '';
+					default:
+						return n1;
+				}
+			});
+		},
+
+		/**
+		 Return length of Object
+		 @author 	Kevin Lucich <lucichkevin@gmail.com>
+		 @param		{Object}	obj		The Object to count
+		 @return		{int}				The lenght of Object
+		 */
+		'objSize': function( obj ){
+			if( obj == null || (obj.constructor != Object && obj.constructor != Array) ){
+				return 0;
+			}
+			return Object.keys(obj).length;
+		},
+
+		/**
+		 Return a copy of Object
+		 @author 	Kevin Lucich <lucichkevin@gmail.com>
+		 @param		{Object}	obj		The Object to count
+		 @return		{Object}			A copy of Object
+		 */
+		'objClone': function( obj ) {
+			if( null == obj || obj.constructor != Object ){
+				return obj;
+			}
+			var copy = obj.constructor();
+			for( var attr in obj ){
+				if( attr in obj ){
+					copy[attr] = obj[attr];
+				}
+			}
+			return copy;
+		},
+
+		/**
+		 @deprecated		Use KUtils.MD5(obj)
+		 @return			{String}
+		 */
+		'objMD5': function( obj ) {
+			return KUtils.MD5( obj );
+		},
+
+		'objJoin': function( obj, glue, separator ){
+
+			obj = (typeof obj !== 'undefined') ? obj : {};
+			glue = (typeof glue !== 'undefined') ? glue : '=';
+			separator = (typeof separator !== 'undefined') ? separator : ',';
+
+			var pieces = [];
+			for( i in obj ){
+				if ( obj.hasOwnProperty( i ) ){
+					pieces.push( i + glue + obj[i] );
+				}
+			}
+
+			return pieces.join( separator );
+		},
+
+		'obj2Array': function( obj ){
+			var array = [];
+			for( k in obj ){
+				array.push( obj[k] );
+			}
+			return array;
+		},
+
+		'objKeys': function( obj ){
+
+			var keys = [];
+
+			if( (typeof obj === 'undefined') || (obj == null) ){
+				return keys;
+			}
+
+			switch( obj.constructor ){
+				case Object:
+					//	If exists "Object.keys" (native method) use it, otherwise use case "Array" !
+					if( typeof Object.keys !== 'undefined' ){
+						return Object.keys(obj);
+					}
+				case Array:
+					for( i in obj ){
+						if( obj.hasOwnProperty(i) )
+							keys.push(i);
+					}
+					return keys;
+				default:
+					return keys;
+			}
+		},
+
+		'objFlip': function( obj ){
+			var key=null, tmp = {};
+			for( key in obj ){
+				if ( obj.hasOwnProperty( key ) ){
+					tmp[ obj[key] ] = key;
+				}
+			}
+			return tmp;
+		},
+
+		'objIntersectKey': function(){
+			var argv = [].slice.call(arguments);
+
+			var result = argv[0];
+
+			var len = argv.length;
+			for( var i=1; i<len; i++ ){
+				var array = argv[i];
+				for( var key in result ){
+					if( typeof array[key] === 'undefined' ){
+						delete( result[key] );
+					}
+				}
+			}
+
+			return result;
+		},
+
+		'objKeyAllowed': function( obj, allowed ){
+			obj = obj || {};
+			allowed = allowed || [];
+			return KUtils.objIntersectKey( obj, KUtils.objFlip(allowed) );
+		},
+
+		'trim': function( str ){
+			if( str == null || typeof str === 'undefined' || str.constructor != String ){
+				return str;
+			}
+			if( typeof String.trim !== 'undefined' ){
+				return String.trim(str);
+			}
+			return str.replace(/^\s+|\s+$/g,'');	//	Colpa di IE :'(
+		},
+
+		/**
+		 Return boolean if the el is in array
+		 @param	needle		{Mixed}		The searched value.
+		 @param	haystack	{Array}		The array
+		 @return	{Boolean}
+		 */
+		'inArray': function( needle, haystack ){
+
+			if( typeof needle === 'undefined' || haystack.constructor != Array ){
+				return false;
+			}
+
+			if( needle.constructor == Array ){
+				var len = needle.length;
+				for( var i=0; i<len; i++ ){
+					if( !KUtils.inArray( needle[i], haystack ) ){
+						return false;
+					}
+				}
+				return true;
+			}
+
+			if( typeof [].indexOf !== 'undefined' ){
+				return (haystack.indexOf(needle)!=-1);
+			}else{
+				var len = haystack.length;
+				for( var i=0; i<len; i++ ){
+					if( haystack[i] == needle ){
+						return true;
+					}
+				}
+				return false;
+			}
+		},
+
+		/**
+		 $.MD5( str );	 Return string cripted with MD5 method
+		 A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
+
+		 @author		Paul Johnston, Greg Holt
+		 @updated	Kevin Lucich <lucichkevin@gmail.com>
+
+		 @param		{string|Object}	str		The string (or object/array) to cript with MD5 method
+
+		 @return	{String}	String cripted with MD5 method
+		 */
+		'MD5': function( str ){
+
+			//	In this case "str" is an Object or Array
+			if( (str != null) && (str.constructor == Array || str.constructor == Object) ){
+				var obj = str;
+				str = '';
+				for( i in obj ){
+					str = KUtils.MD5( str + obj[i] );
+				}
+			}
+
+			// Convert a 32-bit number to a hex string with ls-byte first
+			var hex_chr = "0123456789abcdef";
+			function rhex(num){
+				str = "";
+				for(var j=0; j <= 3; j++)
+					str += hex_chr.charAt((num >> (j * 8 + 4)) & 0x0F) + hex_chr.charAt((num >> (j * 8)) & 0x0F);
+				return str;
+			}
+
+			// Convert a string to a sequence of 16-word blocks, stored as an array. Append padding bits and the length, as described in the MD5 standard.
+			function str2blks_MD5(str){
+				var nblk = ((str.length + 8) >> 6) + 1;
+				var blks = new Array(nblk * 16);
+				for(i=0; i < nblk * 16; i++) blks[i] = 0;
+				for(i=0; i < str.length; i++)
+					blks[i >> 2] |= str.charCodeAt(i) << ((i % 4) * 8);
+				blks[i >> 2] |= 0x80 << ((i % 4) * 8);
+				blks[nblk * 16 - 2] = str.length * 8;
+				return blks;
+			}
+
+			// Add integers, wrapping at 2^32. This uses 16-bit operations internally to work around bugs in some JS interpreters.
+			function add(x, y){
+				var lsw = (x & 0xFFFF) + (y & 0xFFFF);
+				var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+				return (msw << 16) | (lsw & 0xFFFF);
+			}
+
+			// Bitwise rotate a 32-bit number to the left
+			function rol(num, cnt){ return (num << cnt) | (num >>> (32 - cnt)); }
+			// These functions implement the basic operation for each round of the algorithm.
+			function cmn(q, a, b, x, s, t){ return add(rol(add(add(a, q), add(x, t)), s), b); }
+			function ff(a, b, c, d, x, s, t){ return cmn((b & c) | ((~b) & d), a, b, x, s, t); }
+			function gg(a, b, c, d, x, s, t){ return cmn((b & d) | (c & (~d)), a, b, x, s, t); }
+			function hh(a, b, c, d, x, s, t){ return cmn(b ^ c ^ d, a, b, x, s, t); }
+			function ii(a, b, c, d, x, s, t){ return cmn(c ^ (b | (~d)), a, b, x, s, t); }
+
+			// Take a string and return the hex representation of its MD5.
+			var x = str2blks_MD5(str);
+			var a =	1732584193;
+			var b = -271733879;
+			var c = -1732584194;
+			var d =	271733878;
+			var xlen = x.length;
+			for(var i=0; i < xlen; i += 16){
+				olda = a;
+				oldb = b;
+				oldc = c;
+				oldd = d;
+
+				a = ff(a, b, c, d, x[i], 7 , -680876936);
+				d = ff(d, a, b, c, x[i+ 1], 12, -389564586);
+				c = ff(c, d, a, b, x[i+ 2], 17,	606105819);
+				b = ff(b, c, d, a, x[i+ 3], 22, -1044525330);
+				a = ff(a, b, c, d, x[i+ 4], 7 , -176418897);
+				d = ff(d, a, b, c, x[i+ 5], 12,	1200080426);
+				c = ff(c, d, a, b, x[i+ 6], 17, -1473231341);
+				b = ff(b, c, d, a, x[i+ 7], 22, -45705983);
+				a = ff(a, b, c, d, x[i+ 8], 7 ,	1770035416);
+				d = ff(d, a, b, c, x[i+ 9], 12, -1958414417);
+				c = ff(c, d, a, b, x[i+10], 17, -42063);
+				b = ff(b, c, d, a, x[i+11], 22, -1990404162);
+				a = ff(a, b, c, d, x[i+12], 7 ,	1804603682);
+				d = ff(d, a, b, c, x[i+13], 12, -40341101);
+				c = ff(c, d, a, b, x[i+14], 17, -1502002290);
+				b = ff(b, c, d, a, x[i+15], 22,	1236535329);
+
+				a = gg(a, b, c, d, x[i+ 1], 5 , -165796510);
+				d = gg(d, a, b, c, x[i+ 6], 9 , -1069501632);
+				c = gg(c, d, a, b, x[i+11], 14,	643717713);
+				b = gg(b, c, d, a, x[i], 20, -373897302);
+				a = gg(a, b, c, d, x[i+ 5], 5 , -701558691);
+				d = gg(d, a, b, c, x[i+10], 9 ,	38016083);
+				c = gg(c, d, a, b, x[i+15], 14, -660478335);
+				b = gg(b, c, d, a, x[i+ 4], 20, -405537848);
+				a = gg(a, b, c, d, x[i+ 9], 5 ,	568446438);
+				d = gg(d, a, b, c, x[i+14], 9 , -1019803690);
+				c = gg(c, d, a, b, x[i+ 3], 14, -187363961);
+				b = gg(b, c, d, a, x[i+ 8], 20,	1163531501);
+				a = gg(a, b, c, d, x[i+13], 5 , -1444681467);
+				d = gg(d, a, b, c, x[i+ 2], 9 , -51403784);
+				c = gg(c, d, a, b, x[i+ 7], 14,	1735328473);
+				b = gg(b, c, d, a, x[i+12], 20, -1926607734);
+
+				a = hh(a, b, c, d, x[i+ 5], 4 , -378558);
+				d = hh(d, a, b, c, x[i+ 8], 11, -2022574463);
+				c = hh(c, d, a, b, x[i+11], 16,	1839030562);
+				b = hh(b, c, d, a, x[i+14], 23, -35309556);
+				a = hh(a, b, c, d, x[i+ 1], 4 , -1530992060);
+				d = hh(d, a, b, c, x[i+ 4], 11,	1272893353);
+				c = hh(c, d, a, b, x[i+ 7], 16, -155497632);
+				b = hh(b, c, d, a, x[i+10], 23, -1094730640);
+				a = hh(a, b, c, d, x[i+13], 4 ,	681279174);
+				d = hh(d, a, b, c, x[i], 11, -358537222);
+				c = hh(c, d, a, b, x[i+ 3], 16, -722521979);
+				b = hh(b, c, d, a, x[i+ 6], 23,	76029189);
+				a = hh(a, b, c, d, x[i+ 9], 4 , -640364487);
+				d = hh(d, a, b, c, x[i+12], 11, -421815835);
+				c = hh(c, d, a, b, x[i+15], 16,	530742520);
+				b = hh(b, c, d, a, x[i+ 2], 23, -995338651);
+
+				a = ii(a, b, c, d, x[i], 6 , -198630844);
+				d = ii(d, a, b, c, x[i+ 7], 10,	1126891415);
+				c = ii(c, d, a, b, x[i+14], 15, -1416354905);
+				b = ii(b, c, d, a, x[i+ 5], 21, -57434055);
+				a = ii(a, b, c, d, x[i+12], 6 ,	1700485571);
+				d = ii(d, a, b, c, x[i+ 3], 10, -1894986606);
+				c = ii(c, d, a, b, x[i+10], 15, -1051523);
+				b = ii(b, c, d, a, x[i+ 1], 21, -2054922799);
+				a = ii(a, b, c, d, x[i+ 8], 6 ,	1873313359);
+				d = ii(d, a, b, c, x[i+15], 10, -30611744);
+				c = ii(c, d, a, b, x[i+ 6], 15, -1560198380);
+				b = ii(b, c, d, a, x[i+13], 21,	1309151649);
+				a = ii(a, b, c, d, x[i+ 4], 6 , -145523070);
+				d = ii(d, a, b, c, x[i+11], 10, -1120210379);
+				c = ii(c, d, a, b, x[i+ 2], 15,	718787259);
+				b = ii(b, c, d, a, x[i+ 9], 21, -343485551);
+
+				a = add(a, olda);
+				b = add(b, oldb);
+				c = add(c, oldc);
+				d = add(d, oldd);
+			}
+
+			return (rhex(a) + rhex(b) + rhex(c) + rhex(d));
+		},
+
+		/**
+		 .hash( str );	 Return hash of string
+
+		 @version	1.0
+		 @author		Kevin Lucich
+
+		 @param		{String}	str		The string to conver in hash
+
+		 @return	{Number}	The hash
+		 */
+		'hash': function( str ){
+
+			if( !str || str.constructor != String ){
+				return 0;
+			}
+
+			var hash = 0, i, c,
+					len = str.length;
+			if( len == 0 ){
+				return hash;
+			}
+			for( i=0; i < len; i++ ){
+				c = str.charCodeAt(i);
+				hash = ((hash<<5)-hash)+c;
+				hash = hash & hash; // Convert to 32bit integer
+			}
+
+			return hash;
+		},
+
+		/**
+		 Return if a variable is empty
+		 @version	1.0
+		 @return	{Boolean}
+		 */
+		'empty': function( variable ){
+
+			if( variable == null ){
+				return true;
+			}
+
+			switch( variable.constructor ){
+				case Number:
+					return (isNaN(variable)) || (variable === 0);
+				case String:
+					return (variable.length === 0 || variable==='0');
+				case Array:
+				case Object:
+					return (KUtils.objSize(variable) === 0);
+				case Boolean:
+					return (variable === false);
+				default:
+					return false;
+			}
+		},
+
+		/**
+		 .rgbToHex()
+
+		 @version	1.0
+		 @author		Kevin Lucich
+
+		 @desc	$.rgbToHex( r, g, b );
+		 Converter a RGB color to HEX
+
+		 @param	{String}	r	Code for red color
+		 @param	{String}	g	Code for green color
+		 @param	{String}	b	Code for blue color
+
+		 @return	{String}	HEX color	(es. #00FF00 )
+		 */
+		'rgbToHex': function( r, g, b ){
+			var componentToHex = function (c){
+				var hex = c.toString(16);
+				return hex.length == 1 ? "0" + hex : hex;
+			};
+			return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+		},
+
+		/**
+		 .hexToRgb()
+
+		 @version	1.1
+		 @author		Kevin Lucich
+
+		 @desc		$.hexToRgb( hex [, return_string] );
+		 Converter a HEX color to RBG
+
+		 @param		{String}			hex				The color in hex code
+		 @param		{(Boolean|null)}	return_string	False will return an obj {r,g,b}, if true return a string
+
+		 @return	{Object} {r,g,b}
+		 @return	{String} if var return_string is True, format r,g,b
+		 */
+		'hexToRgb': function( hex, return_string ){
+
+			if( KUtils.isUndefined(hex) )
+				hex = '#000000';
+			if( KUtils.isUndefined(return_string) )
+				return_string = false;
+
+			var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec( hex );
+
+			var rgb = result ? {
+				r: parseInt(result[1], 16),
+				g: parseInt(result[2], 16),
+				b: parseInt(result[3], 16)
+			} : null;
+
+			if( return_string )
+				return ''+ rgb.r +','+ rgb.g +','+ rgb.b +'';
+
+			return rgb;
+		},
+
+		/**
+		 .extend()
+		 @version	1.0
+		 @author		jQuery Foundation
+		 */
+		'extend': (typeof jQuery !== 'undefined' && jQuery.extend) || function(){
+
+			var isPlainObject = function( obj ){
+				// Not plain objects:
+				// - Any object or value whose internal [[Class]] property is not "[object Object]"
+				// - DOM nodes
+				// - window
+				if ( jQuery.type( obj ) !== "object" || obj.nodeType || jQuery.isWindow( obj ) ) {
+					return false;
+				}
+
+				if ( obj.constructor &&
+						!hasOwn.call( obj.constructor.prototype, "isPrototypeOf" ) ) {
+					return false;
+				}
+
+				// If the function hasn't returned already, we're confident that
+				// |obj| is a plain object, created by {} or constructed with new Object
+				return true;
+			};
+
+			var options, name, src, copy, copyIsArray, clone,
+					target = arguments[0] || {},
+					i = 1,
+					length = arguments.length,
+					deep = false;
+
+			// Handle a deep copy situation
+			if ( typeof target === "boolean" ) {
+				deep = target;
+
+				// Skip the boolean and the target
+				target = arguments[ i ] || {};
+				i++;
+			}
+
+			// Handle case when target is a string or something (possible in deep copy)
+			if ( typeof target !== "object" && !jQuery.isFunction(target) ) {
+				target = {};
+			}
+
+			// Extend jQuery itself if only one argument is passed
+			if ( i === length ) {
+				target = this;
+				i--;
+			}
+
+			for ( ; i < length; i++ ) {
+				// Only deal with non-null/undefined values
+				if ( (options = arguments[ i ]) != null ) {
+					// Extend the base object
+					for ( name in options ) {
+						src = target[ name ];
+						copy = options[ name ];
+
+						// Prevent never-ending loop
+						if ( target === copy ) {
+							continue;
+						}
+
+						// Recurse if we're merging plain objects or arrays
+						if ( deep && copy && ( isPlainObject(copy) || (copyIsArray = Array.isArray(copy)) ) ) {
+							if( copyIsArray ){
+								copyIsArray = false;
+								clone = src && Array.isArray(src) ? src : [];
+							}else{
+								clone = src && isPlainObject(src) ? src : {};
+							}
+
+							// Never move original objects, clone them
+							target[ name ] = KUtils.extend( deep, clone, copy );
+
+							// Don't bring in undefined values
+						} else if ( copy !== undefined ) {
+							target[ name ] = copy;
+						}
+					}
+				}
+			}
+
+			// Return the modified object
+			return target;
+		},
+
+		/**
+		 .range()
+
+		 @param	start	{Mixed}
+		 @param	end		{Mixed}
+		 @param	step	{Number}
+
+		 @return array
+		 */
+		'range': function( start, end, step ){
+			var range = [];
+			var typeofStart = typeof start;
+			var typeofEnd = typeof end;
+			if (step === 0) {
+				throw new TypeError("Step cannot be zero.");
+			}
+			if (typeofStart == "undefined" || typeofEnd == "undefined") {
+				throw new TypeError("Must pass start and end arguments.");
+			} else if (typeofStart != typeofEnd) {
+				throw new TypeError("Start and end arguments must be of same type.");
+			}
+			typeof step == "undefined" && (step = 1);
+			if (end < start) {
+				step = -step;
+			}
+			if (typeofStart == "number") {
+				while (step > 0 ? end >= start : end <= start) {
+					range.push(start);
+					start += step;
+				}
+			}else if (typeofStart == "string") {
+				if (start.length != 1 || end.length != 1) {
+					throw new TypeError("Only strings with one character are supported.");
+				}
+				start = start.charCodeAt(0);
+				end = end.charCodeAt(0);
+				while (step > 0 ? end >= start : end <= start) {
+					range.push(String.fromCharCode(start));
+					start += step;
+				}
+			}else{
+				throw new TypeError("Only string and number types are supported");
+			}
+			return range;
+		},
+
+		/**
+		 var test_fns = {
+		'ucFirst1': function(){
+			var string = 'aaaaaaaaaaa';
+			return string.charAt(0).toUpperCase() + string.slice(1);
+		},
+		'ucFirst2': function(){
+			var string = 'aaaaaaaaaaa';
+			return string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
+		},
+		'LOL': function(){
+			var string = 'aaaaaaaaaaa';
+			return string;
+		},
+	};
+
+		 console.dir( KUtils.benchmark( test_fns) );
+		 */
+		'benchmark': function( millisecond, howmany, fns ){
+
+			//	function( )	=> error
+			if( (typeof millisecond === 'undefined') ){
+				console.error('Error: missing fns param');
+				return;
+			}
+			//	function( fns )
+			if( millisecond.constructor == Object ){
+				fns = millisecond;
+				millisecond = 1000; //  one second
+				howmany = 1;
+			}
+			//	function( millisecond, fns )
+			if( howmany.constructor == Object ){
+				fns = howmany;
+				howmany = 1;
+			}
+
+			var results = {
+				'fns': {},
+				'statistics': {
+					'faster': {
+						'fn': null,
+						'loop': Infinity
+					},
+					'slower': {
+						'fn': null,
+						'loop': -Infinity
+					}
+				}
+			};
+
+			for( fn_name in fns ){
+
+				var fn = fns[ fn_name ];
+				var array_loops = [];
+
+				for(var i=0; i<howmany; i++ ){
+					var second = (new Date().getTime()) + millisecond;
+					var current_loop = 0;
+
+					while( (new Date().getTime()) < second ){
+						current_loop++;
+						fn();
+					}
+					array_loops.push( current_loop );
+				}
+
+				//  Average
+				number_of_execution = (function(array){
+					var avg = 0;
+					for( a in array ){
+						avg += array[a];
+					}
+					return (avg/(array.length));
+				})(array_loops);
+
+				if( results.statistics.faster.fn == null || results.statistics.faster.number_of_execution < number_of_execution ){
+					results.statistics.faster = {
+						'fn': fn_name,
+						'number_of_execution': number_of_execution
+					};
+				}
+				if( results.statistics.slower.fn == null || results.statistics.slower.number_of_execution > number_of_execution ){
+					results.statistics.slower = {
+						'fn': fn_name,
+						'number_of_execution': number_of_execution
+					};
+				}
+
+				results['fns'][ fn_name ] = number_of_execution;
+			}
+
+			var tmp = (results.statistics.faster.number_of_execution / results.statistics.slower.number_of_execution);
+			results.statistics.result = 'The function '+ results.statistics.faster.fn +' is faster than '+ results.statistics.slower.fn +' of '+ ((tmp*100)-100).toFixed(2) +'% ('+ tmp.toFixed(2) +' times)';
+
+			return results;
+		},
+
+		'ucFirst': function( string ){
+			return (!string) ? "" : string[0].toUpperCase() + string.slice(1);
+		},
+
+		'dotdotdot': function( string, how_many_words ){
+
+			if( typeof string === 'undefined' ){
+				return '';
+			}
+			if( typeof how_many_words === 'undefined' ){
+				how_many_words = pieces.length/2;
+			}
+
+			var pieces = string.split(' ');
+
+			return (pieces.slice(0, how_many_words ).join(' ')) +'...';
+		},
+
+		'consoleCheck': function(){
+
+			if( typeof window.console !== 'undefined' ){
+				return true;
+			}
+
+			var c = {};
+
+			var fns = [
+				'log','debug','info','warn','exception','assert','dir','dirxml','trace','group','groupEnd',
+				'groupCollapsed','profile','profileEnd','count','clear','time','timeEnd','timeStamp','table','error'
+			];
+			for( f in fns ){
+				c[ fns[f] ] = function(){};
+			}
+			window.console = c;
+		},
+
+		'stack': function( show_anonymous ){
+			show_anonymous = (!KUtils.isUndefined(show_anonymous)) ? show_anonymous : false;
+			var stack = [];
+			var _caller = arguments.callee.caller;
+			while( _caller != null ){
+				var fn_name = /function ([^(]*)/.exec( _caller+"" );
+				fn_name = (fn_name != null && typeof fn_name[1] !== 'undefined') ? fn_name[1] : fn_name;
+				if( show_anonymous && fn_name == '' )
+					fn_name = 'anonymous';
+				if( fn_name != '' )
+					stack.push( fn_name );
+				_caller = _caller.caller;
+			}
+			stack.reverse();
+
+			if( stack.length ){
+				return stack.join('() -> ') +'()';
+			}
+
+			return null;
+		},
+
+		'arrayDiff': function( a, b ){
+
+			var tmp=[], diff=[], i= 0, len=0;
+
+			len = a.length;
+			for( i=0; i<len; i++ ){
+				tmp[a[i]] = true;
+			}
+
+			len = b.length;
+			for( i=0; i<len; i++ ){
+				if( tmp[b[i]] ){
+					delete tmp[b[i]];
+				}else{
+					tmp[b[i]] = true;
+				}
+			}
+
+			for( var k in tmp ){
+				diff.push(k);
+			}
+
+			return diff;
+		},
+
+
+		/**
+		 onEvents( struct )
+		 onEvents( onProgess, struct )
+
+		 USAGE:
+
+		 var onProgress = function(event_name, selector){
+		console.log( event_name +' / '+ selector );
+	};
+
+		 onEvents( onProgress, {
+		'click': {
+
+			'#btn_select_all': function(){
+				$fields.val("1");
+			},
+
+			'#btn_unselect_all': function(){
+				$fields.val("0");
+			},
+
+			'#btn_unselect_all': function(){
+				$fields.each(function(){
+					var $this = $(this);
+					$this.val( parseInt($this.val()) );
+				});
+			}
+
+		}
+	});
+
+		 */
+		'onEvents': function(){
+
+			var arg0 = arguments[0];
+			var arg1 = arguments[1];
+
+			switch( arguments.length ){
+				case 0:
+					return;
+				case 1:
+					if( typeof arg0 === 'object' ){
+						KUtils.onEvents( function(){}, arg0 );
+						return;
+					}
+					return;
+				case 2:
+					if( typeof arg0 !== 'function' || typeof arg1 !== 'object' ){
+						console.warn('KUtils.onEvents() called with wrong arguments ('+ (typeof arg0) +', '+ (typeof arg1) +') must be (function,object)');
+						return;
+					}
+					break;
+			}
+
+			var onProgress = arg0;
+			var struct = arg1;
+
+			for( var event_name in struct ){
+				for( var selector in struct[event_name] ){
+					var fn = struct[event_name][selector];
+					$(document).on( event_name, selector, fn );
+					onProgress( event_name, selector );
+				}
+			}
+		},
+
+
+		'str_replace': function( string, search, to_replace ){
+			var len = search.length,
+					i=0;
+
+			if( (search.constructor === Array) && (to_replace.constructor === Array) ){
+				for(i=0; i<len; i++ ){
+					string = string.replace( search[i], to_replace[i] );
+				}
+			}else if( search.constructor === Array ){
+				for(i=0; i<len; i++ ){
+					string = string.replace( search[i], to_replace );
+				}
+			}else{
+				string = string.replace( search, to_replace );
+			}
+
+			return string;
+		}
+
+	};
+
+////////////////////
+	var PrototypeDateUtils = {
+
+		'format': function( format ){
+
+			if( typeof format === 'undefined' ){
+				format = 'Y-m-d';
+			}
+
+			var date = this;
+			var formated = '';
+
+			var length = format.length;
+			for(var i=0; i<length; i++ ){
+				switch( format[i] ){
+
+					case '\\':
+						i++;	//	Jump the next char! :)
+						break;
+////////////////			Days
+
+					//	Day of the month without leading zeros
+					case 'j':
+						formated += getDate();
+						break;
+
+					//	Day of the month, 2 digits with leading zeros
+					case 'd':
+						var day = parseInt( date.getDate() );
+						formated += ((day < 10) ? '0'+day : day);
+						break;
+
+//				case 'D':
+//					formated += '';
+//					break;
+
+					//	 ISO-8601 numeric representation of the day of the week = 1 (for Monday) through 7 (for Sunday)
+					case 'N':
+						formated += date.getDay();
+						break;
+
+
+////////////////			Months
+
+					//	Numeric representation of a month, without leading zeros
+					case 'n':
+						formated += parseInt( date.getMonth() )+1;
+						break;
+
+					//	Numeric representation of a month, with leading zeros
+					case 'm':
+						var month = parseInt( date.getMonth() )+1;
+						formated += ((month < 10) ? '0'+month : month);
+						break;
+
+					//	Number of days in the given month
+					case 't':
+						var num_days = {
+							'1': 31,
+							'2': 28,
+							'3': 31,
+							'4': 30,
+							'5': 31,
+							'6': 30,
+							'7': 31,
+							'8': 31,
+							'9': 30,
+							'10': 31,
+							'11': 30,
+							'12': 31
+						};
+						var month = parseInt( date.getMonth() )+1;
+						formated += num_days[ month ];
+						break;
+
+
+////////////////			Years
+
+					case 'Y':
+						formated += date.getFullYear();
+						break;
+
+					case 'y':
+						var year = ''+ ((new Date()).getFullYear());
+						var y_length = year.length;
+						formated += year.substring( y_length-2, y_length);
+						break;
+
+
+////////////////			Time
+
+					//	12-hour format of an hour without leading zeros 	1 through 12
+					case 'g':
+						var hours = date.getHours();
+						formated += (hours>12) ? hours-12 : hours;
+						break;
+
+					//	24-hour format of an hour without leading zeros 	0 through 23
+					case 'G':
+						formated += date.getHours();
+						break;
+
+					//	12-hour format of an hour with leading zeros 	01 through 12
+					case 'h':
+						var hours = date.getHours();
+						hours = (hours>12) ? (hours-12) : hours;
+						formated += ((hours < 10) ? '0'+hours : hours);
+						break;
+
+					//	24-hour format of an hour with leading zeros 	00 through 23
+					case 'H':
+						var hours = date.getHours();
+						formated += ((hours < 10) ? '0'+hours : hours);
+						break;
+
+					//	Minutes with leading zeros 	00 to 59
+					case 'i':
+						var minutes = date.getMinutes();
+						formated += ((minutes < 10) ? '0'+minutes : minutes);
+						break;
+
+					//	Seconds, with leading zeros 	00 through 59
+					case 's':
+						var seconds = date.getSeconds();
+						formated += ((seconds < 10) ? '0'+seconds : seconds);
+						break;
+
+					case 'c':
+						var cents = parseInt(date.getMilliseconds()/10);
+						formated += ((cents < 10) ? '0'+cents : cents);
+						break;
+
+					case 'u':
+						var milli = date.getMilliseconds();
+						formated += ((milli < 10) ? '0'+milli : milli);
+						break;
+////////////////			Another char
+
+					default:
+						formated += format[i];
+						break;
+				}
+			}
+
+			return formated;
+		},
+
+		'getMillisecondsByIdentifier': function( identifier ){
+
+			switch( identifier ){
+
+				case 'd':
+					return 86400000;
+					break;
+
+				case 'm':	//	Month (30 days)
+					return 2592000000;
+					break;
+
+				case 'y':	//	Year
+					return 31536000000;
+					break;
+
+				case 'h':	//	Hour
+					return 3600000;
+					break;
+
+				case 'i':	//	Minutes
+					return 60000;
+					break;
+
+				case 's':	//	Seconds
+					return 1000;
+					break;
+
+				case 'w':	//	Week
+					return 604800000;
+					break;
+
+////////////////		Another char
+
+				default:
+					console.warn('Identifier "'+ identifier +'" undefined! :( ');
+					return 0;
+					break;
+			}
+		},
+
+		'getDateAfterModify': function( operator, modifier ){
+
+			var self = this;
+			var milliseconds = 0;
+			var modifiers = modifier.split(' ');
+
+			for( m in modifiers ){
+				var mod = modifiers[m];
+
+				//	pieces[1] => number of
+				//	pieces[2] => identifier
+				var pieces = mod.match(/(\d+)([a-zA-Z])/);		//	mod.match(/([+-])(\d+)([a-zA-Z])/);		//	'1d'	'2w'
+				var number = pieces[1];
+				var identifier = pieces[2];
+
+				milliseconds += PrototypeDateUtils.getMillisecondsByIdentifier(identifier) * number;
+			}
+
+			//	Operator determ if i add or sub the value :)
+			var new_date = self.getTime() + (milliseconds*operator);
+			return (new Date(new_date));
+		},
+
+		'add': function( modifier ){
+			return (PrototypeDateUtils.getDateAfterModify).apply(this, [1, modifier] );
+		},
+
+		'sub': function( modifier ){
+			return (PrototypeDateUtils.getDateAfterModify).apply(this, [-1, modifier] );
+		}
+
+	};
+
+	Date.prototype.format = PrototypeDateUtils.format;
+	Date.prototype.getFormat = function(){
+		console_action('DEPRECATED','Date.prototype.getFormat');
+		return (Date.prototype.format).apply( this, arguments );
+	};
+	Date.prototype.add = PrototypeDateUtils.add;
+	Date.prototype.sub = PrototypeDateUtils.sub;
+
+	Object.keys = Object.keys || function( obj ){
+				var keys = [];
+				for( k in obj ){
+					if( obj.hasOwnProperty(k) ){
+						keys.push( k );
+					}
+				}
+				return keys;
+			};
+
+	var console_action = function( type, nameFunction, nameParam ){
+
+		if( typeof console === 'undefined' || typeof console.info === 'undefined' || typeof console.warn === 'undefined' ){
+			return;
+		}
+
+		var infos = {},
+				text = '';
+
+		switch(type){
+///////////////////////////////////////////////////////////////
+			//	Param Ignored
+			case 'PRM_IGN':
+				infos['state'] = 'Ignored';
+				infos['why'] = 'Invalid value';
+				infos['description'] = [
+					"Will be use the default value"
+				];
+				break;
+///////////////////////////////////////////////////////////////
+			//	Param Ignored
+			case 'IDENT_NOT_DEF':
+				infos['state'] = 'Ignored';
+				infos['why'] = 'Invalid value';
+				infos['description'] = [
+					"Identifier undefined :( "
+				];
+				break;
+			//	Deprecated
+			case 'DEPRECATED':
+				infos['state'] = 'Deprecated Function';
+				infos['why'] = '';
+				infos['description'] = [
+					"This function is deprected, it will be removed in the future. View the documention for more info."
+				];
+				break;
+///////////////////////////////////////////////////////////////
+		}	// End switch
+
+		text = [
+			"Function: "+ nameFunction,
+			( (typeof nameParam !== 'undefined') ? "Param: "+ nameParam : null ),
+			"State: "+ infos['state'],
+			"Why: "+ infos['why'],
+			(infos['description']).join("\n\t"),
+			"Stack:\t"+ KUtils.stack(),
+			"\n"
+		].filter(function(el){
+			//	Filter the null value
+			if( typeof el !== 'undefined' && !KUtils.empty(el) ){
+				return el;
+			}
+		}).join("\n\t");	// Join :)
+
+		switch( type ){
+			case 'PRM_IGN':
+			case 'IDENT_NOT_DEF':
+				console.warn( 'KUtils - WARNING'+ text );
+				break;
+		}	// End switch
+
+	};
+
+
+	///////////////
+	// Check if exist another functions
+	if( typeof jQuery !== 'undefined' ){
+		KUtils.version({'jQuery': jQuery.fn.jquery });
+		if( typeof jQuery.ui !== 'undefined' ){
+			KUtils.version({'jQuery.ui': jQuery.ui.version });
+		}
+	}
+	/////////////////
+
+	//	Assign KUtils to window object for global visibility
+	window.KUtils = KUtils;
+
+})( window );
 
 
 /**
  *	jquery.sake
  *
- *	@version:	3.10.2
+ *	@version:	3.13.3
  *	@author:	Kevin Lucich
  *	@employees:	Salvatore Caputi
  *	@thanks:	Angelica - to have endured me during
@@ -23,7 +1537,7 @@
 	var $document = $(document);
 
 	var global_sake = {
-		'version': '3.10.1',
+		'version': '3.13.3',
 		'url_source': 'http://sake.lucichkevin.it/',
 		'url_plugin': 'http://sake.lucichkevin.it/',
 		'language': 'it',
@@ -32,9 +1546,6 @@
 			'loaded': false
 		},
 		'methods_var': {
-			'setPositionTo': {
-				'original_position': {}
-			},
 			'validate':{
 				'rules': {},
 				'dictionary': {
@@ -42,8 +1553,6 @@
 						// Generic
 						'EMPTYFIELD': "Il campo non puo' essere vuoto",
 						'VALUENOTACCEPTED': 'Valore inserito non valido',
-						// $dic['ERRORFIELDS'] = 'Alcuni campi non sono
-						// correttamente compilati';
 
 						// Text
 						'ONLYALPHANUMERIC': 'Sono ammessi solo caratteri alfanumerici',
@@ -88,7 +1597,7 @@
 			'blink': {}
 		},
 		'shortcuts': []
-};
+	};
 
 	KUtils.version( {'sake':global_sake.version} );
 
@@ -99,11 +1608,11 @@
 	 *	@version	2.2
 	 *	@author	Kevin Lucich
 	 *
-	 *	@params	{int|String}	params.speed	The time of animation
-	 *	@params	{String}		params.easing	The easing of animation, you can choose from all easing plugin "http://gsgd.co.uk/sandbox/jquery/easing/"
-	 *	@params	{Boolean}		params.scrollx	If TRUE perfomed a X scroll
-	 *	@params	{String}		easing			The type of easing of animation
-	*/
+	 *	@param	{int|String}	params.speed	The time of animation
+	 *	@param	{String}		params.easing	The easing of animation, you can choose from all easing plugin "http://gsgd.co.uk/sandbox/jquery/easing/"
+	 *	@param	{Boolean}		params.scrollx	If TRUE performed a X scroll
+	 *	@param	{String}		easing			The type of easing of animation
+	 */
 	$.fn.scrollTo = function( params, easing ){
 
 		var paramsDefault = {
@@ -113,13 +1622,11 @@
 			'offset': {'x':0,'y':0}
 		};
 
-		// Posso passare i parametri come oggetto o due valori separati
-		// (speed,easing)
+		// Posso passare i parametri come oggetto o due valori separati  (speed,easing)
 		if( (typeof params !== 'undefined') && (typeof params != 'object') ){
 			params = {
-				'speed': params,	// params is a NUMBER and equal a speed
-									// value
-				'easing': (KUtils.isUndefined(easing)) ? paramsDefault.easing : easing
+				'speed': params,	// params is a NUMBER and equal a speed value
+				'easing': (typeof easing === 'undefined') ? paramsDefault.easing : easing
 			};
 		}
 		params = KUtils.extend( true, {}, paramsDefault, params);
@@ -129,18 +1636,20 @@
 		}
 
 		var xpos = 0,
-			ypos = 0,
-			$document = $(document);
+				ypos = 0,
+				$document = $(document);
 
 		switch( this.selector ){
 			case 'top':
 				// xpos and ypos = 0
-				if( params.scrollx )
+				if( params.scrollx ){
 					xpos = $document.width();
+				}
 				break;
 			case 'bottom':
-				if( params.scrollx )
+				if( params.scrollx ){
 					xpos = $document.width();
+				}
 				ypos = $document.height();
 				break;
 			case 'left':
@@ -178,71 +1687,74 @@
 	};
 
 
-/* ================================================================== */
-/**
- * $.sakelightbox( method, [params] );
- *
- *	@version 1.3
- *	@author Kevin Lucich
- *
- *	@param {String}	method 		Method of Sakelightbox will be called: "create", "setContent", "show", "hide", "remove"
- *	@param {Object}	params 		List of params
- *
- *	@param {String}	params.content			The content of Sakelightbox
- *	@param {String}	params.position			String with X Y position (default: "center center")
- *	@param {Object}	params.offset			Object with two attributes, top and left, custom offset
- *	@param {String}	params.classes			List of classes to associate a Sakelightbox (separated from spaces)
- *	@param {Boolean}	params.bg				Discriminate if the background will be show or hide
- *	@param {String}	params.url 				If set, it will be load into content using a iframe
- *	@param {int}		params.duration 		Number of milliseconds dell'animazione per la visualizzazione
- *	@param {Boolean}	params.button_close 	Discriminate if the button for closing Sakelightbox will be show or hide
- *
- *	@returns void
- */
+	/* ================================================================== */
+	/**
+	 * $.sakelightbox( method, [params] );
+	 *
+	 *	@version 1.3
+	 *	@author Kevin Lucich
+	 *
+	 *	@param {String}	method 		Method of Sakelightbox will be called: "create", "setContent", "show", "hide", "remove"
+	 *	@param {Object}	params 		List of params
+	 *
+	 *	@param {String}		params.content			The content of Sakelightbox
+	 *	@param {String}		params.position			String with X Y position (default: "center center")
+	 *	@param {Object}		params.offset			Object with two attributes, top and left, custom offset
+	 *	@param {String}		params.classes			List of classes to associate a Sakelightbox (separated from spaces)
+	 *	@param {Boolean}	params.bg				Discriminate if the background will be show or hide
+	 *	@param {String}		params.url 				If set, it will be load into content using a iframe
+	 *	@param {int}		params.duration 		Number of milliseconds dell'animazione per la visualizzazione
+	 *	@param {Boolean}	params.button_close 	Discriminate if the button for closing Sakelightbox will be show or hide
+	 *
+	 *	@returns void
+	 */
 	$.sakelightbox = function( method, params ){
 
 		var methodssakelightbox = {
 
-			init: function( params ){
+			'init': function( params ){
 				var paramsDefault = {
-						'position': 'center center',
-						'offset': {'top': 0, 'left': 0},
-						'classes': 'content_sakelightbox',
-						'bg': true,
-						'url': false,
-						'duration': 1500,
-						'button_close': true,
-						'content': '<div id="lightboxcontentdefault"><br>BY:<br><br>Kevin Lucich & Salvatore Caputi<br><br></div><div class="sakeversion"></div><br>'
-						};
+					'position': 'center center',
+					'offset': {'top': 0, 'left': 0},
+					'classes': 'content_sakelightbox',
+					'bg': true,
+					'url': false,
+					'duration': 750,
+					'button_close': true,
+					'content': '<div style="text-align: center;  font-size: 25px;"><br>BY:<br><br>Kevin Lucich & Salvatore Caputi<br><br></div><div class="sakeversion"></div><br>',
+
+					'onCreate': function( $lightbox, params ){}
+				};
 				params = KUtils.extend( true, {}, paramsDefault, params );
 
-				if( !KUtils.isUndefined(params.background) )
+				if( typeof params.background !== 'undefined' ){
 					params.bg = params.background;
+				}
 
 				var pos = params.position.split(' ');
-				params.position = ((!KUtils.isUndefined(pos[0])) ? pos[0] : 'center') +' '+ ((!KUtils.isUndefined(pos[1])) ? pos[1] : 'center');
+				params.position = ((typeof pos[0] !== 'undefined') ? pos[0] : 'center') +' '+ ((typeof pos[1] !== 'undefined') ? pos[1] : 'center');
 
 				return params;
 			},
 
-			create: function( params ){
+			'create': function( params ){
 
-				var close = content = '';
+				var close = '', content = '';
 				params.sakeId = 'sake_'+ Math.floor(new Date().getTime());
 
 				if( params.button_close )
 					close = '<div class="close_sakelightbox" data-sakeId="'+ params.sakeId +'"></div>';
 
 				var html = '';
-					html += (params.bg) ? '<div id="box_sakelightbox"></div>' : '';
-					html += '<div id="'+ params.sakeId +'" class="'+ params.classes +'">'+ close +'<div class="content"></div></div>';
+				html += (params.bg) ? '<div id="box_sakelightbox"></div>' : '';
+				html += '<div id="'+ params.sakeId +'" class="'+ params.classes +'">'+ close +'<div class="content"></div></div>';
 				$('body').append(html);
 
 				// Return params with ID
 				return params;
 			},
 
-			setContent: function( params ){
+			'setContent': function( params ){
 				if( params.url )
 					params.content = '<iframe src="'+ params.url +'"></iframe>';
 				$('#'+ params.sakeId +' > .content').html( params.content );
@@ -254,45 +1766,54 @@
 				});
 			},
 
-			show: function( params ) {
+			'show': function( params ) {
 
-				// Se il box non esiste lo creo
-//				if( !$('.content_sakelightbox').length )
+				//	Se il box non esiste lo creo
 				params = methodssakelightbox['create'](params);
 
 				methodssakelightbox['setContent'](params);
+
+				(params.onCreate).apply( null, [$('#'+ params.sakeId), params] );
 
 				var showContent = function(){
 					$('#'+ params.sakeId).animate({ 'opacity':'1' }, { 'duration': params.duration });
 				};
 
-				// Se esiste lo sfondo...
+				//	Se esiste lo sfondo...
 				if( params.bg ){
 					$('#box_sakelightbox').animate({ 'opacity':'0.6' }, {
 						'duration': params.duration,
-						'complete': showContent()
+						'complete': function(){
+							showContent();
+						}
 					});
 				}else{
 					showContent();
 				}
+
+				return $('#'+ params.sakeId);
 			},
 
-			hide: function( params ) {
+			'hide': function( params ) {
 
 				$('.content_sakelightbox').animate({ 'opacity':'0' }, {
 					'duration': params.duration,
 					'complete': function (){
 						$('#box_sakelightbox').animate({ 'opacity':'0' }, {
 							'duration': params.duration,
-							'complete': function(){ $('.content_sakelightbox, #box_sakelightbox').css({ 'z-index':'-1' }); }
+							'complete': function(){
+								$('.content_sakelightbox, #box_sakelightbox').css({ 'z-index':'-1' });
+							}
 						});
 					}
 				});
 			},
 
-			remove: function( params ){
+			'remove': function( params ){
 				methodssakelightbox['hide'](params);
-				setTimeout( function(){ $('#box_sakelightbox, .content_sakelightbox').remove(); }, params.duration);
+				setTimeout(function(){
+					$('#box_sakelightbox, .content_sakelightbox').remove();
+				}, params.duration );
 			}
 		};
 
@@ -305,15 +1826,15 @@
 		console.error('Method "' +  method + '" does not exist on jQuery.sakelightbox');
 	};
 
-/* ================================================================== */
-/**
- *	$( __ELEMENT__ ).getAllStyle( [attrs] ); Return an object with all style css of the __ELEMENT__
- *
- *	@version 1.3
- *	@author Kevin Lucich
- *
- *	@params {Array}	attrs	A list of the styles that the function should return
- */
+	/* ================================================================== */
+	/**
+	 *	$( __ELEMENT__ ).getAllStyle( [attrs] ); Return an object with all style css of the __ELEMENT__
+	 *
+	 *	@version 1.3
+	 *	@author Kevin Lucich
+	 *
+	 *	@params {Array}	attrs	A list of the styles that the function should return
+	 */
 	$.fn.getAllStyle = function( attrs, no_obj ){
 
 		if( typeof attrs == 'boolean' ){
@@ -321,23 +1842,23 @@
 			attrs = null;
 		}
 
-		var els = new Object();
+		var els = {};
 		var obj = {};
 		if( attrs == null )
 			attrs = ['font-family','font-size','font-weight','font-style','color',
-					'text-transform','text-decoration','letter-spacing','word-spacing',
-					'line-height','text-align','vertical-align','direction','background-color',
-					'background-image','background-repeat','background-position',
-					'background-attachment','opacity','width','height','top','right','bottom',
-					'left','margin-top','margin-right','margin-bottom','margin-left',
-					'padding-top','padding-right','padding-bottom','padding-left',
-					'border-top-width','border-right-width','border-bottom-width',
-					'border-left-width','border-top-color','border-right-color',
-					'border-bottom-color','border-left-color','border-top-style',
-					'border-right-style','border-bottom-style','border-left-style','position',
-					'display','visibility','z-index','overflow-x','overflow-y','white-space',
-					'clip','float','clear','cursor','list-style-image','list-style-position',
-					'list-style-type','marker-offset'];
+				'text-transform','text-decoration','letter-spacing','word-spacing',
+				'line-height','text-align','vertical-align','direction','background-color',
+				'background-image','background-repeat','background-position',
+				'background-attachment','opacity','width','height','top','right','bottom',
+				'left','margin-top','margin-right','margin-bottom','margin-left',
+				'padding-top','padding-right','padding-bottom','padding-left',
+				'border-top-width','border-right-width','border-bottom-width',
+				'border-left-width','border-top-color','border-right-color',
+				'border-bottom-color','border-left-color','border-top-style',
+				'border-right-style','border-bottom-style','border-left-style','position',
+				'display','visibility','z-index','overflow-x','overflow-y','white-space',
+				'clip','float','clear','cursor','list-style-image','list-style-position',
+				'list-style-type','marker-offset'];
 
 		if( (this.selector).indexOf(",") ){
 			els = (this.selector).split(',');
@@ -347,9 +1868,9 @@
 
 		var i=0;
 		$.each( els, function( index, el){
-			el = KUtils.isUndefined(el) ? i++ : $.trim(el);
-			obj[ el ] = new Object();
-			$.each( attrs, function(i,attr){
+			el = (typeof el === 'undefined') ? i++ : $.trim(el);
+			obj[ el ] = {};
+			$.each( attrs, function(x,attr){
 				obj[ el ][attr] = $(el).css(attr);
 			});
 		});
@@ -360,29 +1881,22 @@
 
 		return obj;
 	};
-/**
- * $( __ELEMENTS__ ).setPositionTo( ELEM_DEST [,params] ); Set the position of
- * __ELEMENTS__ of the position if ELEM_DEST has the value ":reset" the
- * ELEM_DEST return in original position
- *
- *	@version 1.4
- *	@author Kevin Lucich
- *
- *	@params {String} ELEM_DEST The id of element from which to take the position
- *	@params {Object} params List with falcotative params
- *
- *	@params {Object} params.animate For specificing an easing and/or duration of
- *         animation
- *	@params {String} params.my String with X Y position *rispetto a" __ELEMENTS__
- *         (default: "left top")
- *	@params {String} params.at String with X Y position *rispetto a" ELEM_DEST
- *         (default: "left top")
- *	@params {Object} params.offset Object with two attributes, top and left,
- *         custom offset
- *
- *	@return void
- */
-	var setPositionToVars = global_sake['methods_var']['setPositionTo'];
+	/**
+	 *	$( __ELEMENTS__ ).setPositionTo( ELEM_DEST [,params] ); Set the position of __ELEMENTS__ of the position
+	 *
+	 *	@version 1.5
+	 *	@author Kevin Lucich
+	 *
+	 *	@params {String} ELEM_DEST The id of element from which to take the position
+	 *	@params {Object} params List with falcotative params
+	 *
+	 *	@params {Object} params.animate For specificing an easing and/or duration of animation
+	 *	@params {String} params.my String with X Y position *rispetto a" __ELEMENTS__ (default: "left top")
+	 *	@params {String} params.at String with X Y position *rispetto a" ELEM_DEST (default: "left top")
+	 *	@params {Object} params.offset Object with two attributes, top and left, custom offset
+	 *
+	 *	@return this
+	 */
 	$.fn.setPositionTo = function( eleTo, params ){
 
 		if( typeof params === 'undefined' ){
@@ -393,14 +1907,12 @@
 		if( typeof eleTo === 'string' && eleTo.substring(0,true) == '#' ){
 			eleTo = '#'+ $.escape( eleTo.slice(1) );
 		}
-		// diverso dalle parole riservate (control_words_reserved)
-		var cwr = $.inArray(eleTo,[':reset',':mouse'])==-1;
+		//	diverso dalle parole riservate (control_words_reserved)
+		var cwr = $.inArray(eleTo,[':mouse','window'])==-1;
+		var $eleTo = null;
 
 		if( cwr ){
-			if( eleTo == 'window' ){
-				create_sake_window();
-				eleTo = '#saketarget_window';
-			}else if( !$(eleTo).length ){
+			if( !$(eleTo).length ){
 				console_action('PRM_IGN','$.setPositionTo','first_argument');
 				eleTo = 'body';
 			}
@@ -424,16 +1936,18 @@
 		}
 
 		if( cwr ){
-			var h_eleTo = $eleTo.height();
+			var h_eleTo = $eleTo.height(),
+					w_eleTo = $eleTo.width(),
+					percent = 100;
+
 			if( /%/.test(params.offset.top) ){
-				var per = parseFloat(params.offset.top);	// percentual without %
-				params.offset.top = h_eleTo*(per/100);		// result in PX
+				percent = parseFloat(params.offset.top);	// percent without %
+				params.offset.top = h_eleTo*(percent/100);		// result in PX
 			}
 
-			var w_eleTo = $eleTo.width();
 			if( /%/.test(params.offset.left) ){
-				var per = parseFloat(params.offset.left);	// percentual without %
-				params.offset.left = w_eleTo*(per/100);		// result in PX
+				percent = parseFloat(params.offset.left);	// percent without %
+				params.offset.left = w_eleTo*(percent/100);		// result in PX
 			}
 		}
 
@@ -443,27 +1957,16 @@
 
 		switch( eleTo ){
 
-			case ':reset':
-
-				$(this).each(function(index,el){
-					var original_style = setPositionToVars['original_position'][ $(el).attr('id') ];
-					if( params.animate ){
-						$( this ).animate(
-							original_style,
-							params.animate.duration
-						);
-					}else{
-						 $( this ).css( original_style );
-					}
-				});
-
-				break;
-
 			case ':mouse':
 				obj_style = global_sake['mouse_position'];
-				obj_style['position'] += 'absolute';
+				obj_style['position'] = 'absolute';
 				obj_style['top'] += params.offset.top;
 				obj_style['left'] += params.offset.left;
+				break;
+
+			case 'window':
+				obj_style['top'] = $(window).height() + params.offset.top;
+				obj_style['left'] = params.offset.left;
 				break;
 
 			default:
@@ -471,17 +1974,11 @@
 				$(this).each(function(index,el){
 
 					var id_el = $(el).attr('id');
-					if( KUtils.isUndefined(id_el) ){
+					if( typeof id_el === 'undefined' ){
 						id_el = 'saketemp_'+ $(el).index();
 						$(el).attr('id', id_el);
-					}else
-						 id_el = $.escape(id_el);
-
-					if( !setPositionToVars['original_position'][ id_el ] ){
-						setPositionToVars['original_position'][ id_el ] = $(el).getAllStyle();
-						var pos = $('#'+ id_el ).offset();
-						setPositionToVars['original_position'][ id_el ]['top'] = pos['top'];
-						setPositionToVars['original_position'][ id_el ]['left'] = pos['left'];
+					}else{
+						id_el = $.escape(id_el);
 					}
 				});
 
@@ -491,7 +1988,8 @@
 				break;
 		}
 
-		var my=my_x=my_y=at=at_x=at_y='';
+		var my='', my_x='', my_y='',
+				at='', at_x='', at_y='';
 
 		if( params.my ){
 			my = (params.my).split(" ");
@@ -507,6 +2005,7 @@
 		/* --- MY coordinate --- */
 		switch( my_x ){
 			case 'center':
+			case 'middle':
 				obj_style['left'] -= $(this).realOuterWidth(true) / 2;
 				break;
 			case 'right':
@@ -518,6 +2017,7 @@
 		}
 		switch( my_y ){
 			case 'center':
+			case 'middle':
 				obj_style['top'] -= $(this).realOuterHeight(true) / 2;
 				break;
 			case 'bottom':
@@ -529,14 +2029,25 @@
 		}
 		/* --- END MY --- */
 
+		if( (obj_style['left'] < 0) && (my_x == 'left') ){
+			//console.log( $(this), "obj_style['left']", obj_style['left'], params.at );
+			params.my = (params.my).replace('left','right');
+			//console.log( $(this), params.at );
+			return $(this).setPositionTo( eleTo, params );
+		}
+
 		if( eleTo != ':mouse' ){
+
+			var _realOuterWidth = (eleTo == 'window') ? $(window).width() : $eleTo.realOuterWidth(true);
+			var _realOuterHeight = (eleTo == 'window') ? $(window).height() : $eleTo.realOuterHeight(true);
+
 			/* --- AT coordinate --- */
 			switch( at_x ){
 				case 'center':
-					obj_style['left'] += $eleTo.realOuterWidth(true) / 2;
+					obj_style['left'] += _realOuterWidth / 2;
 					break;
 				case 'right':
-					obj_style['left'] += $eleTo.realOuterWidth(true);
+					obj_style['left'] += _realOuterWidth;
 					break;
 				case 'left':
 				default:
@@ -544,10 +2055,10 @@
 			}
 			switch( at_y ){
 				case 'center':
-					obj_style['top'] += $eleTo.realOuterHeight(true) / 2;
+					obj_style['top'] += _realOuterHeight / 2;
 					break;
 				case 'bottom':
-					obj_style['top'] += $eleTo.realOuterHeight(true);
+					obj_style['top'] += _realOuterHeight;
 					break;
 				case 'top':
 				default:
@@ -557,50 +2068,48 @@
 		}
 
 
-		if( eleTo != ':reset' ){
-			if( params.animate ){
-				$( this ).css({'position':'absolute'});
-				$( this ).animate(obj_style, {
-					'duration': params.animate.duration,
-					'easing': params.animate.easing,
-					'queue': false
-				});
-			}else{
-				$( this ).css( obj_style );
-			}
+		if( params.animate ){
+			$(this).css({'position':'absolute'});
+			$(this).animate(obj_style, {
+				'duration': params.animate.duration,
+				'easing': params.animate.easing,
+				'queue': false
+			});
+		}else{
+			$(this).css( obj_style );
 		}
 
 		return this;
 	};
 
-/* ================================================================== */
+	/* ================================================================== */
 
-/**
- * $( __ELEMENT__ ).tooltip( method [, params] );
- *
- *	@version 3.0
- *	@author Kevin Lucich
- *
- *	@params {String} method Method of Tooltip will be called: "create", "setContent", "show", "hide", "remove"
- *	@params {Object} params List of params
- *
- *	@params {String} params.content The content of Tooltip
- *	@params {String} params.side The side of __ELEMENT__ will be positioned Tooltip (default: "top")
- *	@params {String} params.position The position rispect a side (can be "left,center,right" if the side is set to "top or bottom", "top,center,bottom" if the side is set to "left or right"), default: "left")
- *	@params {Object} params.offset Object with two attributes, "top" and "left", represents the custom offset to be applied to the tooltip
- *	@params {String} params.classes List of classes to associate a Tooltip (separated from spaces)
- *	@params {Boolean} params.showArrow Discriminate if the arrow will be show or hide
- *	@params {Boolean} params.useMousePosition Discriminate if the Tooltip will be positioning at mouse position
- *	@params {String} params.bgColor The color for background (default: "#FFFFFF")
- *	@params {String} params.borderColor The color for border (default: "#FF8800")
- *	@params {String} params.borderWidth The width for border (default: "2px")
- *	@params {String} params.arrowSize The size of arrow (default: "10px")
- *	@params {Object} params.animation For specificing an easing and/or duration of animation
- *	@params {Number} params.animation.duration Milliseconds that the animation will last for showing
- *	@params {String} params.animation.easing The easing of animation, you can choose from all easing plugin "http://gsgd.co.uk/sandbox/jquery/easing/"
- *
- *	@returns void
- */
+	/**
+	 * $( __ELEMENT__ ).tooltip( method [, params] );
+	 *
+	 *	@version 3.0
+	 *	@author Kevin Lucich
+	 *
+	 *	@params {String} method Method of Tooltip will be called: "create", "setContent", "show", "hide", "remove"
+	 *	@params {Object} params List of params
+	 *
+	 *	@params {String} params.content The content of Tooltip
+	 *	@params {String} params.side The side of __ELEMENT__ will be positioned Tooltip (default: "top")
+	 *	@params {String} params.position The position rispect a side (can be "left,center,right" if the side is set to "top or bottom", "top,center,bottom" if the side is set to "left or right"), default: "left")
+	 *	@params {Object} params.offset Object with two attributes, "top" and "left", represents the custom offset to be applied to the tooltip
+	 *	@params {String} params.classes List of classes to associate a Tooltip (separated from spaces)
+	 *	@params {Boolean} params.showArrow Discriminate if the arrow will be show or hide
+	 *	@params {Boolean} params.useMousePosition Discriminate if the Tooltip will be positioning at mouse position
+	 *	@params {String} params.bgColor The color for background (default: "#FFFFFF")
+	 *	@params {String} params.borderColor The color for border (default: "#FF8800")
+	 *	@params {String} params.borderWidth The width for border (default: "2px")
+	 *	@params {String} params.arrowSize The size of arrow (default: "10px")
+	 *	@params {Object} params.animation For specificing an easing and/or duration of animation
+	 *	@params {Number} params.animation.duration Milliseconds that the animation will last for showing
+	 *	@params {String} params.animation.easing The easing of animation, you can choose from all easing plugin "http://gsgd.co.uk/sandbox/jquery/easing/"
+	 *
+	 *	@returns void
+	 */
 
 	var TooltipVars = global_sake.methods_var.tooltip;
 	$.fn.tooltip = function( method, params ) {
@@ -644,13 +2153,13 @@
 				};
 
 				var my = false,
-					at = false,
-					side = params.side,
-					offset = offsetBySide(side),
-					iSide = invertSide(side),
-					position = params.position;
-					iPosition = invertSide(position),
-					target = '';
+						at = false,
+						side = params.side,
+						offset = offsetBySide(side),
+						iSide = invertSide(side),
+						position = params.position,
+						iPosition = invertSide(position),
+						target = '';
 
 				switch( params.useMousePosition ){
 					case false:
@@ -669,7 +2178,7 @@
 								my = iSide +' '+ position;
 								at = side +' '+ position;
 								break;
-							}
+						}
 						break;
 
 					case true:
@@ -684,7 +2193,7 @@
 							case 'right':
 								my = iSide +' '+ iPosition;
 								break;
-							}
+						}
 
 						break;
 				}
@@ -716,7 +2225,7 @@
 					}
 
 					var id_tt = $el.attr('id');
-					id_tt = (KUtils.isUndefined(id_tt)) ? 'sakett_'+ Math.floor(new Date().getTime()) : 'sakett_'+ id_tt;
+					id_tt = (typeof id_tt === 'undefined') ? 'sakett_'+ Math.floor(new Date().getTime()) : 'sakett_'+ id_tt;
 					$el.attr('data-idsakett', id_tt );
 					return id_tt;
 				};
@@ -801,7 +2310,7 @@
 					var _arrowCSS = function(arrowSize, color, layer){
 
 						var side = params.side,
-							bgColor = params.bgColor;
+								bgColor = params.bgColor;
 
 						var regex = /#\b[\w]{3,6}\b/g;
 
@@ -819,7 +2328,19 @@
 						css += 'border-width: ' + arrowSize + ';';
 
 						if (side == 'top' || side == 'bottom'){
-							css += 'left: 20%;margin-left: -' + arrowSize + ';';
+							switch( params.position ){
+								case 'left':
+									css += 'left: 20%;';
+									break;
+								case 'center':
+								case 'middle':
+									css += 'left: 50%;';
+									break;
+								case 'right':
+									css += 'left: 75%;';
+									break;
+							}
+							css += 'margin-left: -' + arrowSize + ';';
 						}else{
 							css += 'top: 50%;margin-top: -' + arrowSize + ';';
 						}
@@ -831,10 +2352,10 @@
 
 					var _baseCSS = function(){
 						var side = params.side,
-							bgColor = params.bgColor,
-							borderColor = params.borderColor,
-							borderWidth = params.borderWidth,
-							hasBorder = parseFloat(borderWidth) > 0;
+								bgColor = params.bgColor,
+								borderColor = params.borderColor,
+								borderWidth = params.borderWidth,
+								hasBorder = parseFloat(borderWidth) > 0;
 
 						var css = '.'+ params.idCSS +'{';
 						css += 'z-index: 10002;';
@@ -878,7 +2399,7 @@
 
 					var _arrowBorderCSS = function() {
 						var css = '',
-							borderWidth = parseFloat(params.borderWidth);
+								borderWidth = parseFloat(params.borderWidth);
 
 						if( (borderWidth > 0)&&(params.showArrow) ){
 							var _size = /[\D]+/.exec( params.arrowSize );
@@ -966,7 +2487,7 @@
 						case 'delay':
 							setTimeout( function(){ $el.css('display','none'); }, params.animation.time );
 							break;
-						}
+					}
 				}else{
 					$el.hide();
 				}
@@ -1017,8 +2538,9 @@
 		// Method calling logic
 		if( methodsTooltip[method] ){
 			var el = this;
-			if( KUtils.isUndefined(params) )
+			if( typeof params === 'undefined' ){
 				params = {};
+			}
 			params = methodsTooltip['init'].apply( el, [params] );
 			return methodsTooltip[ method ].apply( el, [params] );
 		}
@@ -1026,34 +2548,47 @@
 		console.error('Method "' +  method + '" does not exist on jQuery.tooltip');
 	};
 
-/* ================================================================== */
-/**
- * $( __ELEMENT__ ).validate( [params] );
- *
- *	@version 3.3.1
- *	@author Kevin Lucich
- *
- *	@params {Object} params List of params
- *
- *	@params {Boolean} params.showTooltip Discriminate if a Tooltip with error
- *         will be show (default: True)
- *	@params {Boolean} params.showRules If set print in console a list of rules
- *         for validation (default: True)
- *
- *	@returns {Boolean} Return TRUE if the data are valid
- */
+	/* ================================================================== */
+	/**
+	 * $( __ELEMENT__ ).validate( [params] );
+	 *
+	 *	@version 3.3.1
+	 *	@author Kevin Lucich
+	 *
+	 *	@params {Object} params List of params
+	 *
+	 *	@params {Boolean} params.showTooltip Discriminate if a Tooltip with error
+	 *         will be show (default: True)
+	 *	@params {Boolean} params.showRules If set print in console a list of rules
+	 *         for validation (default: True)
+	 *
+	 *	@returns {Boolean} Return TRUE if the data are valid
+	 */
 	var ValidateVars = global_sake['methods_var']['validate'];
 	$.fn.validate = function( method, params ){
 
 		var methodsValidate = {
+			'counterElements': 0,
 
-			'__getRules': function( datasets ){
+			'__getIdElement': function( $el ){
+				if( typeof $el.attr('data-idsake_validate') !== 'undefined' ){
+					return $el.attr('data-idsake_validate');
+				}
+
+				var id_sake = $el.attr('id');
+				id_sake = (typeof id_sake === 'undefined' || id_sake == '') ? 'sake_'+ (++methodsValidate.counterElements) : id_sake;
+				$el.attr('data-idsake_validate', id_sake );
+				return id_sake;
+			},
+
+			'__getRules': function( $el ){
+				var datasets = $el.data();
 				var rules = {};
-				for( key in datasets ){
+				for( var key in datasets ){
 					var v = datasets[key];
 					// Questa chiave è un'array :)
 					if( key == 'notacceptedvalues' ){
-						dataset = eval(v);
+						v = eval(v);
 					}
 					rules[ key ] = v;
 				}
@@ -1061,18 +2596,6 @@
 			},
 
 			'init': function(params){
-
-				var getIdElement = function( $el ){
-					if( !KUtils.isUndefined( $el.attr('data-idsake_validate') ) ){
-						return $el.attr('data-idsake_validate');
-					}
-
-					var id_sake = $el.attr('id');
-					id_sake = (typeof id_sake === 'undefined' || id_sake == '') ? 'sake_'+ Math.floor(new Date().getTime()) : id_sake;
-					$el.attr('data-idsake_validate', id_sake );
-					return id_sake;
-				};
-
 				var $el = this;
 
 				var paramsDefault = {
@@ -1081,58 +2604,65 @@
 					'tooltipOnFocus': false,
 					'showRules': false,
 					'debug': false,
+					'cached': false,
 					'rules': {}
 				};
 				params = KUtils.extend( true, {}, paramsDefault, params );
 
-				// Se non esiste l'elemento contenitore da validare, termino la funzione
+				//	Se non esiste l'elemento contenitore da validare, termino la funzione
 				if( !$el.length ){
 					return false;
 				}
 
-				// Remove all tooltip, so to update them with possible new alerts
+				//	Remove all tooltip, so to update them with possible new alerts
 				$('.sakeTT_validate, .radio_sake_control').remove();
 
-				// Assegno (se necessario) un ID al contenitore, significa che ho eseguito l'INIT
-				params.idFather = getIdElement( $el );
+				//	Assegno (se necessario) un ID al contenitore, significa che ho eseguito l'INIT
+				params.idFather = methodsValidate.__getIdElement( $el );
 
 				var childrenRules = {};
 				// Assegno un ID (se necessario) ai figli
-				$el.find('input[type=text], input[type=password], select').each(function(i, input ){
-					$input = $(input);
+				$el.find('input[type="text"], input[type="password"], select').each(function(i, input ){
+					var $input = $(input);
 					var idChild = $input.attr('id');
 					if( typeof idChild === 'undefined' || idChild == '' ){
-						idChild = getIdElement($input);
+						idChild = methodsValidate.__getIdElement($input);
 						$input.attr('id',idChild);
 					}
 
-					childrenRules[ idChild ] = methodsValidate.__getRules( $input[0]['dataset'] );
+					childrenRules[ idChild ] = methodsValidate.__getRules( $input );
 				});
-				ValidateVars['rules'][ params.idFather ] = childrenRules;
 
-				$el.find('input[type=radio]').each(function(i, input ){
-					$input = $(input);
+				$el.find('input[type="radio"]').each(function(i, input ){
+					var $input = $(input);
 					var idChild = $input.attr('id');
-					if( KUtils.isUndefined(idChild) && KUtils.isUndefined( childrenRules['sake_'+ $input.attr('name')] ) ){
+					if( (typeof idChild === 'undefined') && (typeof childrenRules['sake_'+ $input.attr('name')] === 'undefined') ){
 						idChild = 'sake_'+ $input.attr('name');
 						$input.attr('id', idChild );
 						childrenRules[ idChild ] = $input[0]['dataset'];
 					}
 				});
 
+				if( params.cached ){
+					ValidateVars['rules'][ params.idFather ] = childrenRules;
+				}
+
 				return params;
 			},
 
-			'_do': function(params){
+			'_do': function( params ){
+				var $containerToValidate = this;
+				$containerToValidate.find('.invalid').removeClass('invalid');
 
 				var getDic = function( key ){
 
 					var dic = global_sake.methods_var.validate.dictionary[ global_sake.language ];
-					if( KUtils.isUndefined( dic[key] ) )
+					if( typeof dic[key] === 'undefined' )
 						return '';
 
 					return dic[ key ];
 				};
+
 				// Controllo la lunghezza del valore nel campo
 				var testLength = function( $el ){
 
@@ -1202,49 +2732,71 @@
 					return false;
 				};
 				var testPIVA = function(pi){
-					if( !KUtils.check({'type':'text','subtype':'piva','value': pi}) )
+					if( !KUtils.check({'type':'text','subtype':'piva','value': pi}) ){
 						return getDic('PIVAFIELD');
+					}
 					var i=0, s=0;
-					for( i = 0; i <= 9; i += 2 )
+					for( i = 0; i <= 9; i += 2 ){
 						s += pi.charCodeAt(i) - '0'.charCodeAt(0);
+					}
 					for( i = 1; i <= 9; i += 2 ){
 						c = 2*( pi.charCodeAt(i) - '0'.charCodeAt(0) );
 						if( c > 9 )  c = c - 9;
 						s += c;
 					}
-					if( ( 10 - s%10 )%10 != pi.charCodeAt(10) - '0'.charCodeAt(0) )
+					if( ( 10 - s%10 )%10 != pi.charCodeAt(10) - '0'.charCodeAt(0) ){
 						return getDic('PIVAFIELD');
+					}
+
 					return '';
 				};
 
 				var hasValidValue = function( $el ){
-					var _rules = ValidateVars['rules'][ params.idFather ];
-					var _value = ($el.is('[type=radio]')) ? $el.find(':checked').val() : $el.val();
-
+					var _rules = (typeof ValidateVars['rules'][params.idFather] !== 'undefined') ? ValidateVars['rules'][ params.idFather ] : {};
+					var _value = ($el.is('[type="radio"]')) ? $el.find(':checked').val() : $el.val();
 					var idChild = $el.attr('id');
 					if( typeof idChild === 'undefined' ){
-						idChild = getIdElement($el);
+						idChild = methodsValidate.__getIdElement($el);
 						$el.attr('id',idChild);
 					}
-					if( typeof _rules[ idChild ] === 'undefined' ){
-						ValidateVars['rules'][ params.idFather ][ idChild ] = _rules[ idChild ] = methodsValidate.__getRules( $el[0]['dataset'] );
+
+					var child_rules;
+					if( typeof _rules[ idChild ] !== 'undefined' ){
+						child_rules = _rules[ idChild ];
+					}else{
+						child_rules = methodsValidate.__getRules( $el );
+						if( params.cached ){
+							ValidateVars['rules'][ params.idFather ][ idChild ] = child_rules;
+						}
 					}
-					var notaccepted = _rules[ idChild ]['notacceptedvalues'];
-					return (typeof notaccepted !== 'undefined') ? (notaccepted.indexOf(_value) == -1) : true;
+
+					var not_accepted = child_rules['notacceptedvalues'];
+					return (typeof not_accepted !== 'undefined') ? (not_accepted.indexOf(_value) == -1) : true;
 				};
 
-				var isCompulsory = function( el_id ){
-					var attr = getData($('#'+el_id),'compulsory',null) || getData($('#'+el_id),'cmp',null);
-					return ( !KUtils.isUndefined( attr ) && ( attr.toLowerCase() != 'false') );
+				var isCompulsory = function( $el ){
+					var attr = (getData($el,'compulsory',null) || getData($el,'cmp',null));
+					return ( (typeof attr !== 'undefined') && (attr != null) && ((''+attr).toLowerCase() != 'false') );
 				};
 
 				var getData = function( $el, attr,  _default ){
 					try{
-						var el_id = $el.attr('id');
-						var rules = ValidateVars['rules'][ params.idFather ];
-						return ((typeof rules[ el_id ] !== 'undefined')&&(typeof rules[ el_id ][ attr ] !== 'undefined')) ? rules[ el_id ][ attr ] : _default;
+						var data = undefined;
+
+						if( params.cached ){
+							var el_id = $el.attr('id');
+							var rules = ValidateVars['rules'][ params.idFather ];
+							if( (typeof rules[ el_id ] !== 'undefined') && (typeof rules[ el_id ][ attr ] !== 'undefined') ){
+								data = rules[ el_id ][ attr ];
+							}
+						}else{
+							data = $el.data(attr);
+						}
+
+						return (typeof data !== 'undefined') ? data : _default;
+
 					}catch( error ){
-						console_action('GENERIC_ERROR', '.validate()', undefined, 'I encountered an error while retrieving the rules of the element :(');
+						console_action('GENERIC_ERROR', '.validate()', undefined, 'I encountered an error while retrieving the rules of the element :( '+ "\n"+ error);
 					}
 				};
 
@@ -1260,8 +2812,7 @@
 							'classes': 'tooltipSAKE sakeTT_validate'
 						};
 
-						// Save params into element, in this way when he "focus
-						// event" is called i have always the params! :D
+						//	Save params into element, in this way when he "focus event" is called i have always the params! :D
 						$el.data('sake-validate-tooltip-params',tooltip_param);
 
 						if( params.tooltipOnFocus ){
@@ -1272,7 +2823,7 @@
 										return;
 									}
 									var tooltip_param = $el.data('sake-validate-tooltip-params');
-										tooltip_param['animation'] = {'type':'fadeIn','time':500};
+									tooltip_param['animation'] = {'type':'fadeIn','time':500};
 
 									$el.tooltip('show', tooltip_param);
 								},
@@ -1285,8 +2836,8 @@
 							}, '#'+ $el.attr('id') );
 
 						}else{
-							// If the element is hidden, i don't show the tooltip
-							if( $el.is(':hidden') ){
+							//	If the element is hidden, i don't show the tooltip
+							if( $el.is(':hidden') == false ){
 								$el.tooltip('show',tooltip_param);
 							}
 						}
@@ -1296,224 +2847,225 @@
 
 				var ok = true;
 
-				$(this).find('input[type=text],input[type=password]').each(function(i,el){
-
+				$containerToValidate.find('input[type="text"],input[type="password"]').each(function( i, el ){
 					var $el = $(el);
-					var el_id = $el.attr('id');
-					var _value = $el.trim();
-					var sakeerror = '';
 
-					var compulsory = isCompulsory( el_id );
+					var _value = $el.trim(),
+							isCmp = isCompulsory($el),
+							sake_error = '',
+							res = false;
 
-					if( compulsory && _value == '' )
-						sakeerror = getDic('EMPTYFIELD');
-					else{
-
+					if( isCmp == false ){
+						return true;
+					}else if( isCmp && _value == '' ){
+						sake_error = getDic('EMPTYFIELD');
+					}else{
 						if( _value == '' ){
-							return;	// = continue;
+							return true;	// = continue;
 						}
 
 						// Se l'elemento non ha un valore valido (definito dall'utente)
 						if( !hasValidValue($el) ){
-							sakeerror = getDic('VALUENOTACCEPTED');
+							sake_error = getDic('VALUENOTACCEPTED');
 						}
 
 						var el_subtype = getData( $el, 'subtype', 'all').toLowerCase();
 
-						if( !sakeerror ){
+						if( !sake_error ){
 							switch( getData( $el, 'type') ){
 
 								case 'text':
 
-									var res = KUtils.check({
+									res = KUtils.check({
 										'type': 'text',
 										'subtype': el_subtype,
 										'value': _value
-										});
+									});
 									if( !res ){
 										// A seconda del subtype fornisco un errore più corretto
 										switch( el_subtype ){
 											case 'alphanumeric':
-												sakeerror = getDic('ONLYALPHANUMERIC');
+												sake_error = getDic('ONLYALPHANUMERIC');
 												break;
 										}
-									}else
-										sakeerror = testLength( $el );
+									}else{
+										sake_error = testLength( $el );
+									}
 
 									break;
-		// ///////////////////////////////////////////////////////////////////////////////////////////////////
+								// ///////////////////////////////////////////////////////////////////////////////////////////////////
 								case 'number':
-									var format = getData( $el, 'format', 'all');
-									var res = KUtils.check({
+									res = KUtils.check({
 										'type':'number',
-										'subtype': format,
+										'subtype': getData( $el, 'format', 'all'),
 										'value': _value
 									});
 									if( !res ){
-										sakeerror = getDic('NUMBERFIELD');
+										sake_error = getDic('NUMBERFIELD');
 									}else{
-										sakeerror = testLength( $el );
+										sake_error = testLength( $el );
 									}
 									break;
-		// ///////////////////////////////////////////////////////////////////////////////////////////////////
+								// ///////////////////////////////////////////////////////////////////////////////////////////////////
 								case 'no_space':
-									var res = KUtils.check({
+									res = KUtils.check({
 										'type':'text',
 										'subtype': 'no_space',
 										'value': _value
 									});
-									if( !res )
-										sakeerror = getDic('NOSPACEFIELD');
+									if( !res ){
+										sake_error = getDic('NOSPACEFIELD');
+									}
 									break;
-		// ///////////////////////////////////////////////////////////////////////////////////////////////////
+								// ///////////////////////////////////////////////////////////////////////////////////////////////////
 								case 'date':
-									var format = getData( $el, 'format', 'all');
-									var res = KUtils.check({
+									res = KUtils.check({
 										'type':'date',
-										'subtype': format,
+										'subtype': getData( $el, 'format', 'all'),
 										'value': _value
 									});
-									if( !res )
-										sakeerror = getDic('DATEFIELD');
+									if( !res ){
+										sake_error = getDic('DATEFIELD');
+									}
 									break;
-		// ///////////////////////////////////////////////////////////////////////////////////////////////////
+								// ///////////////////////////////////////////////////////////////////////////////////////////////////
 								case 'date_creditcard':
-									var res = KUtils.check({
+									res = KUtils.check({
 										'type':'creditcard',
 										'subtype':'expdate',
 										'value': _value
 									});
 
 									if( !res ){
-										sakeerror = getDic('DATECREDITCARDFIELD');
-										}else{
-											_exp = _exp.split('/');
-											var _mm = Number(_exp[0]);
-											var _yy = Number('20'+_exp[1]);
-											var _today = new Date();
-											var _todayM = _today.getMonth() + 1;
-											var _todayY = _today.getFullYear();
-											if ((_todayY > _yy) || (_mm < _todayM && _yy >= _todayY))
-												sakeerror = getDic('DATECREDITCARDEXPIRED');
-											}
+										sake_error = getDic('DATECREDITCARDFIELD');
+									}else{
+										var _exp = _value.split('/');
+										var _mm = Number(_exp[0]);
+										var _yy = Number('20'+_exp[1]);
+										var _today = new Date();
+										var _todayM = _today.getMonth() + 1;
+										var _todayY = _today.getFullYear();
+										if( (_todayY > _yy) || (_mm < _todayM && _yy >= _todayY) ){
+											sake_error = getDic('DATECREDITCARDEXPIRED');
+										}
+									}
 									break;
-		// ///////////////////////////////////////////////////////////////////////////////////////////////////
+								// ///////////////////////////////////////////////////////////////////////////////////////////////////
 								case 'email':
 								case 'mail':
-									var res = KUtils.check({
+									res = KUtils.check({
 										'type':'email',
 										'value': _value
-										});
-									if( !res )
-										sakeerror = getDic('EMAILFIELD');
+									});
+									if( !res ){
+										sake_error = getDic('EMAILFIELD');
+									}
 									break;
-		// ///////////////////////////////////////////////////////////////////////////////////////////////////
+								// ///////////////////////////////////////////////////////////////////////////////////////////////////
 								case 'phone':
-									var res = KUtils.check({
+									res = KUtils.check({
 										'type':'phone',
 										'value': _value
-										});
-									if( !res )
-										sakeerror = getDic('PHONEFIELD');
+									});
+									if( !res ){
+										sake_error = getDic('PHONEFIELD');
+									}
 									break;
-		// ///////////////////////////////////////////////////////////////////////////////////////////////////
+								// ///////////////////////////////////////////////////////////////////////////////////////////////////
 								case 'codicefiscale':
-									sakeerror = testCF( _value );
+									sake_error = testCF( _value );
 									break;
-		// ///////////////////////////////////////////////////////////////////////////////////////////////////
+								// ///////////////////////////////////////////////////////////////////////////////////////////////////
 								case 'piva':
-									sakeerror = testPIVA( _value );
+									sake_error = testPIVA( _value );
 									break;
-		// ///////////////////////////////////////////////////////////////////////////////////////////////////
-								}
+								// ///////////////////////////////////////////////////////////////////////////////////////////////////
 							}
 						}
+					}
 
-					if(sakeerror){
+					if( sake_error ){
 						$el.addClass('invalid');
-						showTT( $el, sakeerror );
+						showTT( $el, sake_error );
 						ok = false;
-						$el.trigger('sake-validate-failure', {'element': $el, 'error': sakeerror});
+						$el.trigger('sake-validate-failure', {'element': $el, 'error': sake_error});
 					}else{
-						  $el.removeClass('invalid');
-					  }
+						$el.removeClass('invalid');
+					}
 
-					}); // Fine each - input type text
+				}); // Fine each - input type text
 
-		// ///////////////////////
+				// ///////////////////////
 
-				var radios_obj = new Object();
+				var radios_obj = {};
 
-				$(this).find('[type=radio]').each(function(i,el){
+				$containerToValidate.find('input[type=radio]').each(function( i, el ){
 
 					var $el = $(el);
 					var nameRadio = $el.attr('name');
 
-					if( KUtils.isUndefined(radios_obj[ nameRadio ]) ){
+					if( typeof radios_obj[ nameRadio ] === 'undefined' ){
 
-						var first = $('input[type="radio"][name="'+ nameRadio +'"]').first();
-						var el_id = first.attr('id');
-						var cmp = isCompulsory( el_id );
+						var first = $containerToValidate.find('input[type="radio"][name="'+ nameRadio +'"]').first();
 
 						radios_obj[ nameRadio ] = {
 							'first': first,
-							'last': $('input[type="radio"][name="'+ nameRadio +'"]').last(),
-							'cmp': cmp
-							};
-						}
+							'last': $containerToValidate.find('input[type="radio"][name="'+ nameRadio +'"]').last(),
+							'cmp': isCompulsory( first )
+						};
+					}
 
-					});
+				});
 
-				var $form = this
+				$.each( radios_obj, function( nameRadio, infos ){
 
-				$.each( radios_obj,function(nameRadio,infos){
+					if( infos.cmp == false ) {
+						return true;
+					}
 
-					if( infos.cmp ){
+					var sakeerror = false;
+					var id_box = 'radio_box_'+ nameRadio;
+					var $radios = $containerToValidate.find('input[type="radio"][name='+ nameRadio +']');
+					var radio_checked = $radios.is(':checked');
 
-						var sakeerror = false;
-						var id_box = 'radio_box_'+ nameRadio;
-						var $radios = $form.find('input[type="radio"][name='+ nameRadio +']');
-						var radio_checked = $radios.is(':checked');
+					var show_box = function(){
+						var point_a = (infos.first).offset();
+						var point_b = (infos.last).offset();
+						var w = (point_b.left - point_a.left) + (infos.last).width();
+						var h = (infos.first).height();
+						$('body').append('<div id="'+ id_box +'"></div>');
+						point_a['position'] = 'absolute';
+						point_a['width'] = w;
+						point_a['height'] = h;
+						point_a['z-index'] = -1;
+						$('#'+id_box).css(point_a).addClass('invalid');
+					};
 
-						var show_box = function(){
-							var point_a = (infos.first).offset();
-							var point_b = (infos.last).offset();
-							var w = (point_b.left - point_a.left) + (infos.last).width();
-							var h = (infos.first).height();
-							$('body').append('<div id="'+ id_box +'"></div>');
-							point_a['position'] = 'absolute';
-							point_a['width'] = w;
-							point_a['height'] = h;
-							point_a['z-index'] = -1;
-							$('#'+id_box).css(point_a).addClass('invalid');
-							};
+					if( $('#'+id_box).length ){
+						$('#'+id_box).remove();
+					}
 
-						if( $('#'+id_box).length )
-							$('#'+id_box).remove();
+					if( !radio_checked ){
+						show_box();
+						sakeerror = getDic('OPTIONREQUIRED');
+					}
+					if( radio_checked && !hasValidValue( $radios ) ){
+						show_box();
+						sakeerror = getDic('VALUENOTACCEPTED');
+					}
 
-						if( !radio_checked ){
-							show_box();
-							sakeerror = getDic('OPTIONREQUIRED');
-							}
-						if( radio_checked && !hasValidValue( $radios ) ){
-							show_box();
-							sakeerror = getDic('VALUENOTACCEPTED');
-							}
+					if( sakeerror ){
+						ok = false;
+						showTT( infos.first, sakeerror, 'left' );
+					}
 
-						if( sakeerror ){
-							ok = false;
-							showTT( infos.first, sakeerror, 'left' );
-							}
-						}
+				});
 
-					});
+				// /////////////////////
 
-		// /////////////////////
-
-				$(this).find('select').each(function(i,el){
-
+				$containerToValidate.find('select').each(function( i, el ){
 					var $el = $(el);
-					var compulsory = isCompulsory( $el.attr('id') );
+					var compulsory = isCompulsory($el);
 
 					if( compulsory && !hasValidValue($el) ){
 						var sakeerror = getDic('OPTIONREQUIRED');
@@ -1522,15 +3074,16 @@
 						showTT( $el, sakeerror );
 						$el.trigger('sake-validate-failure', {'element': $el, 'error': sakeerror});
 					}else{
-						 $el.removeClass('invalid');
-						 }
+						$el.removeClass('invalid');
+					}
 
-					}); // Fine each - input type select
+				}); //	Fine each - input type select
+
 				return ok;
 			},
 
 			'options': function( rules ){
-				var $el = this
+				var $el = this;
 				var idFather = $el.parents('[data-idsake_validate]').attr('data-idsake_validate');
 				var id_subject = $el.attr('id');
 
@@ -1564,46 +3117,46 @@
 		return (methodsValidate['_do']).apply( $el, [params] );
 	};
 
-/* ================================================================== */
+	/* ================================================================== */
 
-/**
- * $.check( params|typeCheck, value, [, subtype] ); $( __ELEMENT__ ).check(
- * params|typeCheck, [, subtype] ); Check the value of __ELEMENT__ with the
- * "typeCheck"
- *
- *	@version 1.2
- *	@author Kevin Lucich
- *
- *	@params {String|Object} params The type of will be the value or list of
- *         params
- *	@params {String} subtype A specified type (default: 'all') // it meas "all"
- *         of typeCheck
- *	@params {Mixed} valueToCheck The value to check
- *
- *	@returns {Boolean} Return True if the value is valid
- */
+	/**
+	 * $.check( params|typeCheck, value, [, subtype] ); $( __ELEMENT__ ).check(
+	 * params|typeCheck, [, subtype] ); Check the value of __ELEMENT__ with the
+	 * "typeCheck"
+	 *
+	 *	@version 1.2
+	 *	@author Kevin Lucich
+	 *
+	 *	@params {String|Object} params The type of will be the value or list of
+	 *         params
+	 *	@params {String} subtype A specified type (default: 'all') // it meas "all"
+	 *         of typeCheck
+	 *	@params {Mixed} valueToCheck The value to check
+	 *
+	 *	@returns {Boolean} Return True if the value is valid
+	 */
 	$.fn.check = function( params, _subtype ){
 		return KUtils.check( params, $(this).val(), _subtype);
 	};
 
-/* ================================================================== */
-/* ================================================================== */
+	/* ================================================================== */
+	/* ================================================================== */
 
-/* ================================================================== */
+	/* ================================================================== */
 
-/**
- * .escape()
- *
- *	@version 1.2
- *	@author Salvatore Caputi
- *
- *	@desc $.escape( string ); Escape dei caratteri speciali jQuery
- *
- *	@param {String}
- *            str String to escape
- *
- *	@returns {String} String passed escaped
- */
+	/**
+	 * .escape()
+	 *
+	 *	@version 1.2
+	 *	@author Salvatore Caputi
+	 *
+	 *	@desc $.escape( string ); Escape dei caratteri speciali jQuery
+	 *
+	 *	@param {String}
+	 *            str String to escape
+	 *
+	 *	@returns {String} String passed escaped
+	 */
 	$.escape = function(str){
 		// !"#$%&'()*+,.\/:;<=>?@[\]^`{|}~
 		return ((typeof str != 'string') ? str : str.replace(/([!"#$%&'()*+,.\/:;<=>?@[\]^`{|}~])/g, '\\$1'));
@@ -1618,12 +3171,12 @@
 	 *	@desc $( __ELEM__ ).escape(); Return the value of element escaped
 	 *
 	 *	@returns {String} Value of element escaped
-	*/
+	 */
 	$.fn.escape = function(){
 		return $.escape( $(this).val() );
 	};
 
-/* ================================================================== */
+	/* ================================================================== */
 
 	/**
 	 *	$('#myelement').replace({ 'search': '{Regex}', 'replacement': '{String}' });
@@ -1633,12 +3186,12 @@
 	 *
 	 *	@desc Option Values Default Description
 	 *
-	 *	@params		{String}	search		The string or regular expression to search
-	 *	@params		{String}	replacement The replacement string
-	 *	@params		{String}	modifier	The regular expression modifier to use (default: 'g')
+	 *	@param		{String}	search		The string or regular expression to search
+	 *	@param		{String}	replacement The replacement string
+	 *	@param		{String}	modifier	The regular expression modifier to use (default: 'g')
 	 *
 	 *	@returns {Object} jQuery Object
-	*/
+	 */
 	$.fn.replace = function( search, replacement, modifier ){
 
 		if( typeof search == 'object' ){
@@ -1651,13 +3204,13 @@
 			modifier = 'g';
 		}
 
-		var str = new RegExp( search, modifier );
-		this.text( this.text().replace(str,replacement) );
+		var regex = new RegExp( search, modifier );
+		this.text( KUtils.str_replace( this.text(), regex, replacement) );
 
 		return this;
 	};
 
-/* ================================================================== */
+	/* ================================================================== */
 
 	/**
 	 *	$( __ELEMENT__ ).lorem( params ); Write in ELEMENT a n paragraf of Lorem ipsum
@@ -1672,7 +3225,7 @@
 	 *	@params {Boolean} params.random Discriminate if the paragraph to print is chosen randomly
 	 *
 	 *	@returns {Object} jQuery Object
-	*/
+	 */
 	$.fn.lorem = function( params, length, random ){
 
 		if( typeof params == 'object' ){
@@ -1684,9 +3237,9 @@
 			params = $.extend( true, {}, paramsDefault, params );
 		}else{
 			params = {
-				'paragraphs': (!KUtils.isUndefined(params)) ? params : 0,
-				'length': (!KUtils.isUndefined(length)) ? length : 0,
-				'random': (!KUtils.isUndefined(random)) ? random : false
+				'paragraphs': (typeof params !== 'undefined') ? params : 0,
+				'length': (typeof length !== 'undefined') ? length : 0,
+				'random': (typeof random !== 'undefined') ? random : false
 			};
 		}
 
@@ -1729,22 +3282,22 @@
 	};
 
 
-/* ================================================================== */
+	/* ================================================================== */
 
 	/**
-	 * $.loop( fn, howmany, time ); Run "fn" function "howmany" times $.loop( params );
-	 * Check if value of __ELEMENT__ is undefined
+	 *	$.loop( fn, howmany, time ); Run "fn" function "howmany" times $.loop( params );
+	 *	Check if value of __ELEMENT__ is undefined
 	 *
 	 *	@author Kevin Lucich
 	 *	@version 1.0
 	 *
-	 *	@params {Object} params List of params
+	 *	@params {Object}	params			List of params
 	 *
-	 *	@params {function} params.fn Function to loop
-	 *	@params {Number} params.howmany How many times execute the function ( 0 = infinite )
-	 *	@params {Number} params.delay Delay before to execute the funtion
+	 *	@params {Function}	params.fn		Function to loop
+	 *	@params {Number}	params.howmany	How many times execute the function ( 0 = infinite )
+	 *	@params {Number}	params.delay	Delay before to execute the function
 	 *
-	 * The function can have a parameter, an object with a useful variables
+	 *	The function can have a parameter, an object with a useful variables
 	 *
 	 *	@returns {String} Return the id of loop created
 	 */
@@ -1762,15 +3315,16 @@
 			params = KUtils.extend( true, {}, paramsDefault, params );
 		}else{
 			params = {
-				'fn': (!KUtils.isUndefined(params)) ? params : _fn_default_,
-				'howmany': (!KUtils.isUndefined(length)) ? howmany : 1,
-				'delay': (!KUtils.isUndefined(delay)) ? delay : 0,
+				'fn': (typeof params !== 'undefined') ? params : _fn_default_,
+				'howmany': (typeof howmany !== 'undefined') ? howmany : 1,
+				'delay': (typeof delay !== 'undefined') ? delay : 0,
 				'backup_time': null
 			};
 		}
 
-		if( KUtils.isUndefined(params.backup_time) )
+		if( typeof params.backup_time === 'undefined' ){
 			params.backup_time = params.delay;
+		}
 
 		if(typeof params.fn != "function"){
 			console_action('PRM_IGN','$.loop',nameParam);
@@ -1779,7 +3333,7 @@
 
 		// Se non esiste allora è al primo ciclo, creo all'interno della var
 		// globale "global_sake" il counter
-		if( KUtils.isUndefined(params.sakeId) ){
+		if( typeof params.sakeId === 'undefined' ){
 			params.sakeId = 'loop_'+ Math.floor(new Date().getTime());
 			LoopVars[ params.sakeId ] = {
 				'counter': 0
@@ -1793,7 +3347,7 @@
 				'counter': LoopVars[ params.sakeId ]['counter']
 			};
 			(params.fn).apply(undefined, [attrs_for_function] );	// Call user
-																	// function
+			// function
 		}, params.time);
 
 		if( params.howmany ){
@@ -1829,9 +3383,9 @@
 		params = KUtils.extend( true, {}, paramsDefault, params );
 
 		var el = this,
-			childs = el.children().length,
-			elsToShow = [],
-			i=0;
+				childs = el.children().length,
+				elsToShow = [],
+				i=0;
 
 		while(elsToShow.length < params.count){
 			var elToShow = Math.floor(Math.random() * childs);
@@ -1865,12 +3419,12 @@
 	$.fn.getEvents = function(){
 
 		var result = {},
-			i = -1;
+				i = -1;
 
 		$.each( this, function( index,el ){
 			var $el = $(el);
 			var id = $el.attr('id');
-			index = (!KUtils.isUndefined(id)) ? id : ++i;
+			index = (typeof id !== 'undefined') ? id : ++i;
 			result[ index ] = {
 				'el': $el,
 				'events': {}
@@ -1884,23 +3438,23 @@
 
 
 	/**
-	 * $( __ELEMENT__ ).tips( method [, params] );
+	 *	$( __ELEMENT__ ).tips( method [, params] );
 	 *
 	 *	@author Kevin Lucich
 	 *	@version 1.0
 	 *
-	 *	@params	{String}	method Method of Tips will be called: "create", "add", "close"
-	 *	@params	{Object}	params List of params
+	 *	@param	{String}	method Method of Tips will be called: "create", "add", "close"
+	 *	@param	{Object}	params List of params
 	 *
-	 *	@params	{String}	params.content The content of tip
-	 *	@params	{String}	params.classes List of classes to associate a tip (separated from spaces)
-	 *	@params	{String}	params.position String with position rispect a window (default: "right bottom")
-	 *	@params	{Object}	params.offset Object with two attributes, top and left, custom offset
-	 *	@params	{Number}	params.delay Milliseconds before of showing
-	 *	@params	{Object}	params.animation For specificing an easing and/or duration of animation
-	 *	@params	{Number}	params.animation.duration Milliseconds that the animation will last for showing
-	 *	@params	{String}	params.animation.easing The easing of animation, you can choose from all easing plugin "http://gsgd.co.uk/sandbox/jquery/easing/"
-	 *	@params	{function}	params.closing Function execute when called a "close" method
+	 *	@param	{String}	params.content The content of tip
+	 *	@param	{String}	params.classes List of classes to associate a tip (separated from spaces)
+	 *	@param	{String}	params.position String with position respect a window (default: "right bottom")
+	 *	@param	{Object}	params.offset Object with two attributes, top and left, custom offset
+	 *	@param	{Number}	params.delay Milliseconds before of showing
+	 *	@param	{Object}	params.animation For specifying an easing and/or duration of animation
+	 *	@param	{Number}	params.animation.duration Milliseconds that the animation will last for showing
+	 *	@param	{String}	params.animation.easing The easing of animation, you can choose from all easing plugin "http://gsgd.co.uk/sandbox/jquery/easing/"
+	 *	@param	{function}	params.closing Function execute when called a "close" method
 	 *
 	 *	@returns {Object} Object with a ids of box and last tip insert (if exists)
 	 */
@@ -1908,7 +3462,7 @@
 
 		var methodsTips = {
 
-			// "metto a posto" params
+			//	Adjust params
 			init: function(params){
 				var paramsDefault = {
 					'content': 'Test test test test',
@@ -1944,9 +3498,9 @@
 				if( !$('#'+ params.boxTipsId).length ){
 					// Creo il box
 					$('<div />')
-						.attr('id', params.boxTipsId)
-						.attr('class', params.classes )
-						.appendTo('body');
+							.attr('id', params.boxTipsId)
+							.attr('class', params.classes )
+							.appendTo('body');
 
 					// Posiziono il box
 					$('#'+ params.boxTipsId).setPositionTo('window',{
@@ -1977,12 +3531,12 @@
 
 				params.tipId = 'tip_'+ Math.floor(new Date().getTime());
 
-				 $('<div class="tips" />')
-				 	.attr('id', params.tipId)
-				 	.html(params.content)
-					.appendTo('#'+ params.boxTipsId)
-					.delay(params.delay)
-					.show( params.animation.duration, params.animation.easing );
+				$('<div class="tips" />')
+						.attr('id', params.tipId)
+						.html(params.content)
+						.appendTo('#'+ params.boxTipsId)
+						.delay(params.delay)
+						.show( params.animation.duration, params.animation.easing );
 
 				return params;
 			},
@@ -2015,7 +3569,7 @@
 
 	};
 
-/* ================================================================== */
+	/* ================================================================== */
 
 	/**
 	 * $( __ELEMENT__ ).hash(); Return hash of element's value
@@ -2029,7 +3583,7 @@
 		return KUtils.hash( $(this).val() );
 	};
 
-/* ================================================================== */
+	/* ================================================================== */
 
 	/**
 	 *	$.sakebuttons( params ); Transform checkbox input in button Apple style
@@ -2037,9 +3591,9 @@
 	 *	@author Kevin Lucich
 	 *	@version 1.0
 	 *
-	 *	@params	{Object} params List of params
+	 *	@param	{Object} params List of params
 	 *
-	 *	@params	{String} params.classes List of classes to associate a tip (separated
+	 *	@param	{String} params.classes List of classes to associate a tip (separated
 	 *         from spaces)
 	 *
 	 *	@returns {Object} jQuery Object
@@ -2055,19 +3609,19 @@
 		var $el = this;
 
 		var html = '';
-			html+='<div class="sakebutton_apple '+ params.classes +'" data-refcheck="">';
-			html+='	<div class="slider">';
-			html+='		<div class="status on">'+ params.labels[0] +'</div>';
-			html+='		<div class="divide">&nbsp;</div>';
-			html+='		<div class="status off">'+ params.labels[1] +'</div>';
-			html+='	</div>';
-			html+='</div>';
+		html+='<div class="sakebutton_apple '+ params.classes +'" data-refcheck="">';
+		html+='	<div class="slider">';
+		html+='		<div class="status on">'+ params.labels[0] +'</div>';
+		html+='		<div class="divide">&nbsp;</div>';
+		html+='		<div class="status off">'+ params.labels[1] +'</div>';
+		html+='	</div>';
+		html+='</div>';
 
 		$el.find('input:checkbox').each(function(i,input){
 
 			var $input = $(input),
-				slider_off = '',
-				input_id = $input.attr('id');
+					slider_off = '',
+					input_id = $input.attr('id');
 
 			slider_off = (!$input.is(':checked')) ? 'slider_off' : '';
 
@@ -2099,22 +3653,22 @@
 		return $el;
 	};
 
-/* ================================================================== */
+	/* ================================================================== */
 
-/**
- *	$.whenChange( method, params ); Transform checkbox input in button Apple style
- *
- *	@author Kevin Lucich
- *	@version 1.0
- *
- *	@params {String} method Method of Tips will be called: "start", "stop"
- *	@params {Object} params List of params
- *
- *	@params {String} params.interval Interval in milliseconds that will be
- *	        checked the content of the element
- *
- *	@returns {Object} Object
- */
+	/**
+	 *	$.whenChange( method, params ); Transform checkbox input in button Apple style
+	 *
+	 *	@author Kevin Lucich
+	 *	@version 1.0
+	 *
+	 *	@params {String} method Method of Tips will be called: "start", "stop"
+	 *	@params {Object} params List of params
+	 *
+	 *	@params {String} params.interval Interval in milliseconds that will be
+	 *	        checked the content of the element
+	 *
+	 *	@returns {Object} Object
+	 */
 	var WhenChangeVars = global_sake['methods_var']['whenChange'];
 	$.fn.whenChange = function( method, params ){
 
@@ -2132,7 +3686,7 @@
 				params.id = $el.attr('id');
 
 				// Creo (se serve) la struttura
-				if( KUtils.isUndefined( WhenChangeVars[ params.id ] ) ){
+				if( typeof WhenChangeVars[params.id] === 'undefined' ){
 					WhenChangeVars[ params.id ] = {'idInterval':null,'bodyHash': 0};
 				}
 
@@ -2180,15 +3734,15 @@
 		return this;
 	};
 
-/* ================================================================== */
+	/* ================================================================== */
 
-/**
- *	$(el).trim(); Replace the value of element with the value "trimmed"
- *
- *	@author Kevin Lucich
- *	@version 1.0
- *	@returns The value trimmed
- */
+	/**
+	 *	$(el).trim(); Replace the value of element with the value "trimmed"
+	 *
+	 *	@author Kevin Lucich
+	 *	@version 1.0
+	 *	@returns The value trimmed
+	 */
 	$.fn.trim = function(){
 		var $el = this;
 		var value = $.trim($el.val());
@@ -2196,20 +3750,20 @@
 		return value;
 	};
 
-/* ================================================================== */
+	/* ================================================================== */
 
 	$.each( ['show','hide'], function( i, fn_name ){
 		var old_fn = $.fn[ fn_name ];
 		$.fn[ fn_name ] = function( speed, oldCallback ){
 			return this.each(function(){
 				var $obj = $(this),
-					Fn_name = KUtils.ucFirst(fn_name),
-					newCallback = function(){
-						$obj.trigger( 'After'+ Fn_name );
-						if( $.isFunction(oldCallback) ){
-							oldCallback.apply( $obj );
-						}
-					};
+						Fn_name = KUtils.ucFirst(fn_name),
+						newCallback = function(){
+							$obj.trigger( 'After'+ Fn_name );
+							if( $.isFunction(oldCallback) ){
+								oldCallback.apply( $obj );
+							}
+						};
 				// you can trigger a before show if you want
 				$obj.trigger( 'Before'+ Fn_name );
 				// now use the old function to show the element passing the new
@@ -2219,178 +3773,169 @@
 		};
 	});
 
-/*	================================================================== */
-/**
- *	$(el).template( where, data, appendTo )
- *	Copy in a template the data passed and append to element selected (where)
- *
- *	@author Kevin Lucich
- *	@version 1.0
- *	@returns jQuery Object
- */
+	/*	================================================================== */
+	/**
+	 *	$(el).template( where, data, appendTo )
+	 *	Copy in a template the data passed and append to element selected (where)
+	 *
+	 *	@author Kevin Lucich
+	 *	@version 1.0
+	 *	@returns jQuery Object
+	 */
 	$.fn.template = function( where, data, appendTo, extraData ){
-
-		var templateMethods = {
-			init: function( selector, data, appendTo, extraData ){
-
-				var __extendValue = function( params, appendTo, extraData ){
-
-					if( typeof appendTo === 'undefined' ){
-						// Default value
-						return params;
-					}
-
-					// function( $where, data, appendTo [, extraData] )
-					if( appendTo.constructor == Boolean ){
-						params['appendTo'] = appendTo;
-						if( typeof extraData !== 'undefined' && extraData.constructor == Array ){
-							params['extraData'] = extraData;
-						}
-						return params;
-					}
-
-					// function( $where, data, extraData )
-					if( appendTo.constructor == Array ){
-						params['extraData'] = appendTo;
-						return params;
-					}
-
-					return params;
-				};
-				var insertDataIntoTemplate = function( $where, datas ){
-
-					for( i in datas ){
-
-						if( datas[i] == null ){
-							continue;
-						}
-
-						var data = datas[i];
-						var $target = $template.find('[data-info="'+ i +'"]');
-
-						if( data.constructor == Function ){
-							var tmp_extraData = (params.extraData).slice(0);	// Create a copy of Array! ;-)
-							(tmp_extraData).splice(0, 0, datas);
-							data = data.apply( $target, tmp_extraData );
-							if( typeof data === 'undefined' || data == null ){
-								data = '';
-							}
-						}
-
-						if( $target.is(':input') ){
-							$target.attr('value', data ).val( data );
-						}else{
-							$target.html( data );
-						}
-					}
-
-					return $template.html();
-				};
-
-				var params = {};
-
-				switch( selector.constructor ){
-
-					case jQuery:
-						//	Passo un'oggetto jQuery (selettore), i dati da inserire nel template function( $selector, data [, appendTo] )
-						if( typeof data !== 'undefined' && typeof data === 'object' ){
-							params = {
-								'where': selector,	// jQuery Object
-								'data': data
-							};
-						}
-						break;
-
-/** //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
-
-					case Array:
-					case Object:
-
-						if( typeof data === 'undefined' && typeof selector.data !== 'undefined' ){
-							params = selector;
-						}else{
-							//	Passo un'oggetto (non jQuery) con i dati da inserire nel template, imposto il where sul "body" function( data [, appendTo] )
-							params = {
-								'where': $('body'),
-								'data': selector
-							};
-						}
-
-						break;
-
-/** //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
-
-					// function( selector, data* [, appendTo] )
-					// * Object or Array
-					case String:
-						if( typeof data !== 'undefined' && typeof data === 'object' ){
-							params = {
-								'where': $(selector),
-								'data': data
-							};
-						}
-						break;
-				}
-
-				params = __extendValue( params, appendTo, extraData );
-
-				var paramsDefault = {
-					'template': $(this).clone(),
-					'where': false,
-					'data': {},
-					'appendTo': true,
-					'extraData': []
-				};
-				params = KUtils.extend( true, {}, paramsDefault, params );
-
-				// get jQuery Object
-				$template = params.template;
-				$where = params.where;
-
-				// Hide the template
-// $(this).css('display','none');
-
-				var html_template = '';
-				switch( (params.data).constructor ){
-					case Array:
-						for( i in params.data ){
-							html_template += insertDataIntoTemplate( $where, params.data[i] );
-						}
-						break;
-					case Object:
-						html_template += insertDataIntoTemplate( $where, params.data );
-						break;
-				}
-
-				if( params.appendTo ){
-					$where.append( html_template );
-				}else{
-					$where.html( html_template );
-				}
-
-			}
-		};
-
-// /////////////////////////////////////////////////////////////
 
 		if( typeof where === 'undefined' ){
 			console.warn('Arguments missed');
 			return this;
 		}
 
-		(templateMethods['init']).apply( this, arguments );
+		///////////////////////////////////////////////////////////////
 
-		return this;
+		var __extendValue = function( params, appendTo, extraData ){
+
+			if( typeof appendTo === 'undefined' ){
+				// Default value
+				return params;
+			}
+
+			// function( $where, data, appendTo [, extraData] )
+			if( appendTo.constructor == Boolean ){
+				params['appendTo'] = appendTo;
+				if( typeof extraData !== 'undefined' && extraData.constructor == Array ){
+					params['extraData'] = extraData;
+				}
+				return params;
+			}
+
+			// function( $where, data, extraData )
+			if( appendTo.constructor == Array ){
+				params['extraData'] = appendTo;
+				return params;
+			}
+
+			return params;
+		};
+		var insertDataIntoTemplate = function( $where, datas ){
+
+			for( i in datas ){
+
+				if( datas[i] == null ){
+					continue;
+				}
+
+				var data = datas[i];
+				var $target = $template.find('[data-info="'+ i +'"]');
+
+				if( data.constructor == Function ){
+					var tmp_extraData = (params.extraData).slice(0);	// Create a copy of Array! ;-)
+					(tmp_extraData).splice(0, 0, datas);
+					data = data.apply( $target, tmp_extraData );
+					if( typeof data === 'undefined' || data == null ){
+						data = '';
+					}
+				}
+
+				if( $target.is(':input') ){
+					$target.attr('value', data ).val( data );
+				}else{
+					$target.html( data );
+				}
+			}
+
+			return $template.html();
+		};
+
+		var params = {};
+
+		switch( where.constructor ){
+
+			case jQuery:
+				//	Passo un'oggetto jQuery (selettore), i dati da inserire nel template function( $where, data [, appendTo] )
+				if( typeof data !== 'undefined' && typeof data === 'object' ){
+					params = {
+						'where': where,	// jQuery Object
+						'data': data
+					};
+				}
+				break;
+
+		/** //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
+
+			case Array:
+			case Object:
+
+				if( typeof data === 'undefined' && typeof where.data !== 'undefined' ){
+					params = where;
+				}else{
+					//	Passo un'oggetto (non jQuery) con i dati da inserire nel template, imposto il where sul "body" function( data [, appendTo] )
+					params = {
+						'where': $('body'),
+						'data': where
+					};
+				}
+
+				break;
+
+		/** //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
+
+			// function( where, data* [, appendTo] )
+			// * Object or Array
+			case String:
+				if( typeof data !== 'undefined' && typeof data === 'object' ){
+					params = {
+						'where': $(where),
+						'data': data
+					};
+				}
+				break;
+		}
+
+		params = __extendValue( params, appendTo, extraData );
+
+		var paramsDefault = {
+			'template': $(this).clone(),
+			'where': false,
+			'data': {},
+			'appendTo': true,
+			'extraData': []
+		};
+		params = KUtils.extend( true, {}, paramsDefault, params );
+
+		// get jQuery Object
+		var $template = params.template;
+		var $where = params.where;
+
+		var html_template = '';
+		switch( (params.data).constructor ){
+			case Array:
+				for( i in params.data ){
+					html_template += insertDataIntoTemplate( $where, params.data[i] );
+				}
+				break;
+			case Object:
+				html_template += insertDataIntoTemplate( $where, params.data );
+				break;
+		}
+
+		var $html_template = $(html_template);
+
+		if( params.appendTo ){
+			$where.append( $html_template );
+		}else{
+			$where.html( $html_template );
+		}
+
+		return $html_template;
 	};
 
-/* ================================================================== */
-/**
- *	$(el).blink( method, [params] ) Blink element
- *
- *	@author Kevin Lucich
- *	@version 1.0
- *	@returns jQuery Object
- */
+	/* ================================================================== */
+	/**
+	 *	$(el).blink( method, [params] ) Blink element
+	 *
+	 *	@author Kevin Lucich
+	 *	@version 1.0
+	 *	@returns jQuery Object
+	 */
 	var BlinkVars = global_sake['methods_var']['blink'];
 	$.fn.blink = function( method, params ){
 
@@ -2449,30 +3994,30 @@
 		return $el;
 	};
 
-/* ================================================================== */
-/**
- * $(el).realOuterWidth( [includeMargin] ) Return a width of an element hidden
- *
- *	@author Kevin Lucich
- *	@version 1.0
- *	@returns {int}
- *
- * $(el).outerHeight( [includeMargin] ) Return a height of an element hidden
- *
- *	@author Kevin Lucich
- *	@version 1.0
- *	@returns {int}
- */
+	/* ================================================================== */
+	/**
+	 *	$(el).realOuterWidth( [includeMargin] ) Return a width of an element hidden
+	 *
+	 *	@author Kevin Lucich
+	 *	@version 1.0
+	 *	@returns {int}
+	 *
+	 *	$(el).realOuterHeight( [includeMargin] ) Return a height of an element hidden
+	 *
+	 *	@author Kevin Lucich
+	 *	@version 1.0
+	 *	@returns {int}
+	 */
 	$.each( ['Width','Height'], function( i, attr ){
 
 		$.fn['realOuter'+ attr] = function( includeMargin ){
 			includeMargin = (typeof includeMargin !== 'undefined') ? includeMargin : false;
 			var $clone = this
-							.clone()
-							.css({
-								'display': 'block',
-								'visibility': 'hidden'
-							});
+					.clone()
+					.css({
+						'display': 'block',
+						'visibility': 'hidden'
+					});
 			$( this.parent() ).append($clone);
 			var attr_value = $clone['outer'+ attr]( includeMargin );
 			$clone.remove();
@@ -2481,7 +4026,7 @@
 
 	});
 
-/* ================================================================== */
+	/* ================================================================== */
 
 	/**
 	 *	$(container).getDataInfo( [params] )
@@ -2586,7 +4131,7 @@
 				return struct;
 			}
 
-			var v = $el.val();
+			var v = (typeof $el.attr('data-value') !== 'undefined') ? $el.attr('data-value') : $el.val();
 			if( !options.__validValue(v) ){
 				return struct;
 			}
@@ -2635,10 +4180,10 @@
 	};
 
 
-/* ================================================================== */
-/* ================================================================== */
-/* ================================================================== */
-/* ================================================================== */
+	/* ================================================================== */
+	/* ================================================================== */
+	/* ================================================================== */
+	/* ================================================================== */
 
 //	For new method
 //	$.xxx = function(){
@@ -2724,11 +4269,11 @@
 				];
 				break;
 // /////////////////////////////////////////////////////////////
-/*
- * case '': break;
- */
+			/*
+			 * case '': break;
+			 */
 // /////////////////////////////////////////////////////////////
-			}	// End switch
+		}	// End switch
 
 		if( typeof description !== 'undefined' ){
 			if( description.constructor != Array ){
@@ -2748,8 +4293,8 @@
 			( ($el != null) ? "Selector: "+ $el.selector +' (length: '+ $el.length +')' : null ),
 			"Stack:\t"+ KUtils.stack(),
 			"\n"
-		].filter(function(el){ if(!KUtils.isUndefined(el)){return el;} })		// Filter the null value
-		.join( br );	//	Join :)
+		].filter(function(el){ if(typeof el !== 'undefined'){return el;} })		// Filter the null value
+				.join( br );	//	Join :)
 
 		switch(type){
 			case 'GENERIC_ERROR':
@@ -2762,7 +4307,7 @@
 			case 'PRM_NLU':
 				console.info( 'SAKE - INFORMATION'+ br + text );
 				break;
-			}	// End switch
+		}	// End switch
 	};
 
 	var Sake = {

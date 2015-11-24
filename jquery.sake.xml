@@ -35,13 +35,6 @@
 		</declaration>
 
 		<params>
-<!--
-			<dynamic>
-				<type>Boolean</type>
-				<default>false</default>
-				<description>.</description>
-			</dynamic>
--->
 			<easing>
 				<type>String</type>
 				<default>linear</default>

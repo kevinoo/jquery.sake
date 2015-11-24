@@ -1,247 +1,187 @@
 
-///////////////////////////////////////////
-//	v3.10.2
-
-	[NEW]	Method $.fn.getDataInfo() native support for "array" (alias: "list") type (es. data-type="array")
-	[FIX]	Ignore value of checkbox if this is not checked
-
-///////////////////////////////////////////
-//	v3.10.1
-
-	[FIX]	Add new option in the method "validate" for choose the side where will be showed the tooltip
-	[FIX]	No attach many handlers (focus and focusout)
-
-///////////////////////////////////////////
-//	v3.10.0
-
-	[NEW]		Add method "getDataInfo" to get the data into a inputs in a $container
-	[REMOVE] 	Remove deprecated $.ucFirst, now is available KUtils.ucFirst
-	[REMOVE] 	Remove "iamaselect" method in favor of a third party library
-
-///////////////////////////////////////////
-//	v3.9.5
-
-	[FIX]	Fix little fixes in ".tooltip" method
-
-///////////////////////////////////////////
-//	v3.9.3
-
-	[FIX]	Fix ".template" method, support of input field
-
-///////////////////////////////////////////
-//	v3.9.1
-
-	[FIX]	"attach" method of Tooltip, there was a problem when the "mouseover" trigger because the params are empty
-
-
-///////////////////////////////////////////
-//	v3.9.0
-
-	[ADD]	Two methods "realOuterWidth" and "realOuterHeight": return the width/heigth of hidden elements
-
-
-///////////////////////////////////////////
-//	v3.8.5
-
-	[FIX]	Error in tooltip (used in validate) when the options "tooltipOnFocus" is true
-
-
-///////////////////////////////////////////
-//	v3.8.2
-
-	[FIX]	Error in validate when get the rules of a element
-	[ADD]	More information when trigger a Sake error
-
-
-///////////////////////////////////////////
-//	v3.8.0
-
-	[ADD]	Blink method
-	[FIX]	Anothers little fix
-
-
-///////////////////////////////////////////
-//	v3.7.4
-
-	[FIX]	Event in sakebuttons
-	[FIX]	Anothers little fix
-
-
-///////////////////////////////////////////
-//	v3.7.3
-
-	[FIX]	Debug console log in $.validate 
-
-
-///////////////////////////////////////////
-//	v3.7.2
-
-	[NEW]	Now when Sake print in console of browser an function's error, there is the stack of functions called
-
-
-///////////////////////////////////////////
-//	v3.7.1
-
-	.scrollTo
-		v2.2	Return a error if the element selected does not exists
-
-
-///////////////////////////////////////////
-//	v3.6.1	(2013-07-19)
-
-	.validate
-		-	[ADD]	failure trigger on select  
-
-
-///////////////////////////////////////////
-//	v3.6.0	(2013-07-17)
-
-	.validate
-		[ADD]	New method "options" for modify rules of input in form
-
-
-///////////////////////////////////////////
-//	v3.5.2 (2013-07-02) 
-
-	.scrollTo
-		v2.2	[ADD]		Special selectors 'top','right','bottom','left'
-		v2.1	[REMOVE]	"dynamic" param
-
-	core Sake
-		Extend the .show() and .hide() function of jQuery's Core: added a trigger "beforeX" and "afterX" (where X is "Show" or "Hide")
-
-
-///////////////////////////////////////////
-//	v3.5.1 (2013-06-27)
-
-	.validate
-		v3.3a	[FIX]	check "notacceptedvalues"
-
-	.rgbToHex
-		v1.0	First version
-
-	.replace
-		v1.0	First version
-
-	.lorem
-		v1.0	First version
-
-	.loop
-		v1.0	First version
-
-	.random
-		v1.0	First version
-
-	.hash
-		v1.0	First version
-	
-	.MD5
-		v1.0	First version
-
-	.iamaselect
-		v1.0	First version
-
-	.trim
-		v1.0	First version
-
-///////////////////////////////////////////
-//	v3.0.0
-
-	.sakelightbox
-		v1.3	[REMOVE]	Remove a deprecated attribute "top", "left", "width" and "height", added attribute "position" (String)
-
-	.getAllStyle
-		v1.3	[NEW]	New (boolean) parameter, TRUE if the function does not return an object when the selector has only one element
-
-	.setPositionTo
-		v1.4	[ADD]	filters: ":mouse" and ":reset" 
-
-	.tooltip
-		v3.0	[NEW]	New engine and style (simplified HTML code). Configurable by params (border size and color, background).
-
-	.validate
-		v3.3	[ADD]	particular class for tooltip (validate)
-		v3.2	[ADD]	new attribute for elements "data-failure": if the check of value has negative, call the function 
-		v3.1	[ADD]	new attribute for elements "data-notacceptedvalues"
-		v3.0	[NEW]	New engine
-
-	.check
-		v1.2	[FIX]	Fixed pattern "number" check
-
-
-///////////////////////////////////////////
-//	v2.8.0
-
-	.scrollTo
-		v1.0	First version
-
-	.sakelightbox
-		v1.3	[REMOVE]		A deprecated attribute "top", "left", "width" and "height", added attribute "position" (String)
-		v1.2.5	[DEPRECATED]	Deprecated aram "top", "left", "width" and "height", use a new attribute "position" (String)
-		v1.2	[ADD]			Add new param: 'width' [It's a CSS attribute, if specified, the attribute "left" will be calculated automatically]
-		v1.1	[FIX]			Creation lightbox: remove a double CSS rule
-		v1.0	First version
-
-	.getAllStyle
-		v1.3	[NEW]	New (boolean) parameter, TRUE if the function does not return an object when the selector has only one element
-		v1.2	[FIX]	Return an Object {id_element -> style}
-		v1.1	[ADD]	possibility to pass an array of attrs to be will return
-		v1.0	First version
-
-	.setPositionTo
-		v1.4	[ADD]	filters: ":mouse" and ":reset" 
-		v1.3	[ADD]	params: "my", "at", "offset"
-		v1.2	[ADD]	param: "animation"
-		v1.1	[FIX]	Fixed the positioning
-		v1.0	First version
-
-	.tooltip
-		v3.0	[NEW]	New engine and style (simplified HTML code). Configurable by params (border size and color, background).
-		v2.5	[FIX]	Fixed CSS position of Arrow
-		v2.0	[NEW]	New arrow stle
-		v1.x	[FIX]	Fixed little bugs of positioning / creating (resources)
-		v1.0	First version
-
-	.validate
-		v2.0	[ADD]	control "radio" and multi-checkbox
-		v1.x	[FIX]	Little fix
-		v1.0	First version
-
-	.check
-		v1.2	[FIX]	Fixed pattern "number" check
-		v1.1	[ADD]	patterns (color,url,html)
-		v1.0	First version
-
-	.isUndefined
-		v1.1	[FIX]	Fixed the control
-		v1.0	First version
-
-	.changelog
-		v1.0	First version
-
-	.escape
-		v1.2	[FIX]	if is passed a variable with type other than String, it will be returned to the same 
-		v1.1	[FIX]	Fixed chars escaping
-		v1.0	First version
-
-	.hexToRgb
-		v1.1	[ADD]	new optional param "return_string"
-		v1.0	First version
-
-	.rgbToHex
-		v1.0	First version
-
-	.replace
-		v1.0	First version
-
-	.lorem
-		v1.0	First version
-
-	.loop
-		v1.0	First version
-
-	.random
-		v1.0	First version
-
-	.getEvents
-		v1.0	First version
+/**
+ *	jquery.sake
+ *
+ *	@version:	3.10.3
+ *	@author:	Kevin Lucich
+ *	@employees:	Salvatore Caputi
+ *	@thanks:	Angelica - to have endured me during
+ *				Alberto (Bardo) - for helping me with testing on IE
+
+	v3.13.3
+		[FIX] fix the position of arrow's tooltip
+
+	v3.11.0
+		[FIX] Various fix to method $.fn.validate()
+		[NEW] The method $.fn.validate() don't use a internal cache for the rules, set in the param "cached: true" if you want a cache
+
+	v3.10.3
+		[NEW] Method $.fn.getDataInfo() support attribute "data-value" in element, if exists use this for value, otherwise use "value"
+
+	v3.10.2
+		[NEW] Method $.fn.getDataInfo() native support for "array" (alias: "list") type (es. data-type="array")
+		[FIX] Ignore value of checkbox if this is not checked
+
+	v3.10.1
+		[FIX] Add new option in the method "validate" for choose the side where will be showed the tooltip
+		[FIX] No attach many handlers (focus and focusout)
+
+	v3.10.0
+		[NEW] 	Add method "getDataInfo" to get the data into a inputs in a $container
+		[REMOVE] 	Remove deprecated $.ucFirst, now is available KUtils.ucFirst
+		[REMOVE] 	Remove "iamaselect" method in favor of a third party library
+
+	v3.9.5
+		[FIX] Fix little fixes in ".tooltip" method
+
+	v3.9.3
+		[FIX] Fix ".template" method, support of input field
+
+	v3.9.1
+		[FIX] "attach" method of Tooltip, there was a problem when the "mouseover" trigger because the params are empty
+
+	v3.9.0
+		[ADD] Two methods "realOuterWidth" and "realOuterHeight": return the width/heigth of hidden elements
+
+	v3.8.5
+		[FIX] Error in tooltip (used in validate) when the options "tooltipOnFocus" is true
+
+
+	v3.8.2
+		[FIX] Error in validate when get the rules of a element
+		[ADD] More information when trigger a Sake error
+
+	v3.8.0
+		[ADD] Blink method
+		[FIX] Anothers little fix
+
+	v3.7.4
+		[FIX] Event in sakebuttons
+		[FIX] Anothers little fix
+
+	v3.7.3
+		[FIX] Debug console log in $.validate 
+
+	v3.7.2
+		[NEW] Now when Sake print in console of browser an function's error, there is the stack of functions called
+
+	v3.7.1
+		.scrollTo
+			v2.2 Return a error if the element selected does not exists
+
+	v3.6.1	(2013-07-19)
+		.validate
+			[ADD] failure trigger on select
+
+	v3.6.0	(2013-07-17)
+		.validate
+			[ADD] New method "options" for modify rules of input in form
+
+
+	v3.5.2 (2013-07-02)
+		.scrollTo
+			v2.2	[ADD] 	Special selectors 'top','right','bottom','left'
+			v2.1	[REMOVE] "dynamic" param
+		Core Sake
+			Extend the .show() and .hide() function of jQuery's Core: added a trigger "beforeX" and "afterX" (where X is "Show" or "Hide")
+
+	v3.5.1 (2013-06-27)
+		.validate
+			v3.3a	[FIX] check "notacceptedvalues"
+		.rgbToHex
+			v1.0	First version
+		.replace
+			v1.0	First version
+		.lorem
+			v1.0	First version
+		.loop
+			v1.0	First version
+		.random
+			v1.0	First version
+		.hash
+			v1.0	First version
+		.MD5
+			v1.0	First version
+		.iamaselect
+			v1.0	First version
+		.trim
+			v1.0	First version
+
+	v3.0.0
+		.sakelightbox
+			v1.3	[REMOVE] Remove a deprecated attribute "top", "left", "width" and "height", added attribute "position" (String)
+		.getAllStyle
+			v1.3	[NEW] New (boolean) parameter, TRUE if the function does not return an object when the selector has only one element
+		.setPositionTo
+			v1.4	[ADD] filters: ":mouse" and ":reset"
+		.tooltip
+			v3.0	[NEW] New engine and style (simplified HTML code). Configurable by params (border size and color, background).
+		.validate
+			v3.3	[ADD] particular class for tooltip (validate)
+			v3.2	[ADD] new attribute for elements "data-failure": if the check of value has negative, call the function
+			v3.1	[ADD] new attribute for elements "data-notacceptedvalues"
+			v3.0	[NEW] New engine
+		.check
+			v1.2	[FIX] Fixed pattern "number" check
+
+
+	v2.8.0
+		.scrollTo
+			v1.0	First version
+		.sakelightbox
+			v1.3	[REMOVE] 	A deprecated attribute "top", "left", "width" and "height", added attribute "position" (String)
+			v1.2.5	[DEPRECATED] Deprecated aram "top", "left", "width" and "height", use a new attribute "position" (String)
+			v1.2	[ADD] 		Add new param: 'width' [It's a CSS attribute, if specified, the attribute "left" will be calculated automatically]
+			v1.1	[FIX] 		Creation lightbox: remove a double CSS rule
+			v1.0	First version
+		.getAllStyle
+			v1.3	[NEW] New (boolean) parameter, TRUE if the function does not return an object when the selector has only one element
+			v1.2	[FIX] Return an Object {id_element -> style}
+			v1.1	[ADD] possibility to pass an array of attrs to be will return
+			v1.0	First version
+		.setPositionTo
+			v1.4	[ADD] filters: ":mouse" and ":reset"
+			v1.3	[ADD] params: "my", "at", "offset"
+			v1.2	[ADD] param: "animation"
+			v1.1	[FIX] Fixed the positioning
+			v1.0	First version
+		.tooltip
+			v3.0	[NEW] New engine and style (simplified HTML code). Configurable by params (border size and color, background).
+			v2.5	[FIX] Fixed CSS position of Arrow
+			v2.0	[NEW] New arrow stle
+			v1.x	[FIX] Fixed little bugs of positioning / creating (resources)
+			v1.0	First version
+		.validate
+			v2.0	[ADD] control "radio" and multi-checkbox
+			v1.x	[FIX] Little fix
+			v1.0	First version
+		.check
+			v1.2	[FIX] Fixed pattern "number" check
+			v1.1	[ADD] patterns (color,url,html)
+			v1.0	First version
+		.isUndefined
+			v1.1	[FIX] Fixed the control
+			v1.0	First version
+		.changelog
+			v1.0	First version
+		.escape
+			v1.2	[FIX] if is passed a variable with type other than String, it will be returned to the same
+			v1.1	[FIX] Fixed chars escaping
+			v1.0	First version
+		.hexToRgb
+			v1.1	[ADD] new optional param "return_string"
+			v1.0	First version
+		.rgbToHex
+			v1.0	First version
+		.replace
+			v1.0	First version
+		.lorem
+			v1.0	First version
+		.loop
+			v1.0	First version
+		.random
+			v1.0	First version
+		.getEvents
+			v1.0	First version
+ *
+ */
