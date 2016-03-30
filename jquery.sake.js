@@ -1828,7 +1828,8 @@
 
 	/* ================================================================== */
 	/**
-	 *	$( __ELEMENT__ ).getAllStyle( [attrs] ); Return an object with all style css of the __ELEMENT__
+	 *	$( __ELEMENT__ ).getAllStyle( [attrs] );
+	 *	Return an object with all style css of the __ELEMENT__
 	 *
 	 *	@version 1.3
 	 *	@author Kevin Lucich
@@ -3300,6 +3301,7 @@
 
 	/**
 	 *	$.loop( fn, howmany, time ); Run "fn" function "howmany" times $.loop( params );
+	 *	Check if value of __ELEMENT__ is undefined
 	 *
 	 *	@author Kevin Lucich
 	 *	@version 1.0
@@ -3669,16 +3671,15 @@
 	/* ================================================================== */
 
 	/**
-	 *	$.whenChange( method, params ); Transform checkbox input in button Apple style
+	 *	$.whenChange( method, params );
+	 *	Check the content of the element and trigger the event "change" on it
 	 *
 	 *	@author Kevin Lucich
 	 *	@version 1.0
 	 *
-	 *	@params {String} method Method of Tips will be called: "start", "stop"
+	 *	@params {String} method Method will be called: "start", "stop"
 	 *	@params {Object} params List of params
-	 *
-	 *	@params {String} params.interval Interval in milliseconds that will be
-	 *	        checked the content of the element
+	 *	@params {int} params.interval Interval in milliseconds that will be checked the content of the element
 	 *
 	 *	@return {Object} Object
 	 */
@@ -3762,29 +3763,6 @@
 		$el.val( value );
 		return value;
 	};
-
-	/* ================================================================== */
-
-	$.each( ['show','hide'], function( i, fn_name ){
-		var old_fn = $.fn[ fn_name ];
-		$.fn[ fn_name ] = function( speed, oldCallback ){
-			return this.each(function(){
-				var $obj = $(this),
-						Fn_name = KUtils.ucFirst(fn_name),
-						newCallback = function(){
-							$obj.trigger( 'After'+ Fn_name );
-							if( $.isFunction(oldCallback) ){
-								oldCallback.apply( $obj );
-							}
-						};
-				// you can trigger a before show if you want
-				$obj.trigger( 'Before'+ Fn_name );
-				// now use the old function to show the element passing the new
-				// callback
-				old_fn.apply( $obj, [speed, newCallback]);
-			});
-		};
-	});
 
 	/*	================================================================== */
 	/**
