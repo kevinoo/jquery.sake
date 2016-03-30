@@ -3300,7 +3300,6 @@
 
 	/**
 	 *	$.loop( fn, howmany, time ); Run "fn" function "howmany" times $.loop( params );
-	 *	Check if value of __ELEMENT__ is undefined
 	 *
 	 *	@author Kevin Lucich
 	 *	@version 1.0
