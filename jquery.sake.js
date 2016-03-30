@@ -7,79 +7,79 @@
 (function(window){
 
 	var KUtils = null,
-			KUtilsHelps = null,
-			check_patterns = {
-				'text': {
-					'all': 				"^(.)__OF_B__$",	//	__RANGE__
-					'alphanumeric':		"^[a-zA-Z0-9 ]+$",
-					'no_space': 		"^[\\S]+$",
-					'codicefiscale':	"^[a-z]{6}[0-9]{2}[a-z][0-9]{2}[a-z][0-9]{3}[a-z]$",
-					'piva':				"^[0-9]{11}$"
-				},
-				'number': {
-					'all':		"^(([-+]?[0-9]+)|([-+]?([0-9]__OF_B__\\.[0-9]__OF_A__)))$",
-					'int':		"^[-+]?[0-9]+$",
-					'float':	"^[-+]?([0-9]__OF_B__\\.[0-9]__OF_A__)$"
-				},
-				'ip':{
-					'all':		"^([1][0-9][0-9]|2[0-4][0-9]|25[0-5])\.([1][0-9][0-9]|2[0-4][0-9]|25[0-5])\.([1][0-9][0-9]|2[0-4][0-9]|25[0-5])\.([1][0-9][0-9]|2[0-4][0-9]|25[0-5])$"
-				},
-				'email':{
-					'all':		"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[A-Za-z]{2,4}$"
-				},
-				'username':{
-					'all':		"^([a-zA-Z0-9_-]__OF_B__)$"
-				},
-				'password':{
-					'all':		"^([a-zA-Z0-9_-]__OF_B__)$"
-				},
-				'phone':{
-					'all':		"^([0-9-()+ ]__OF_B__)$"
-				},
-				'date':{
-					'all':		"^(((0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9]{4}))|((0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.]([0-9]{4}))|(([0-9]{4})[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]))|(([0-9]{4})[- /.](0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])))$",
-					'Y-m-d':	"^(([0-9]{4})[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]))$",
-					'Y-d-m':	"^(([0-9]{4})[- /.](0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012]))$",
-					'm-d-Y':	"^((0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9]{4}))$",
-					'd-m-Y':	"^((0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.]([0-9]{4}))$"
-				},
-				'space':{
-					'all':				"[ \t\r\n]",
-					'onlyspaces':		" ",
-					'onlytabs':			"\t",
-					'onlybreakline':	"[\n\r]"
-				},
-				'url':{
-					'all':		"^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$",
-					'onlywww':	"^w{3}([0-9]+)?\.([a-zA-Z0-9]([a-zA-Z0-9\-]{0,65}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}"
-				},
-				'creditcard':{
-					'all':				"^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$",
-					'visa':				"^4[0-9]{12}(?:[0-9]{3})?$",
-					'mastercard':		"^5[1-5][0-9]{14}$",
-					'americaexpress':	"^3[47][0-9]{13}$",
-					'dinersclub':		"^3(?:0[0-5]|[68][0-9])[0-9]{11}$",
-					'discover':			"^6(?:011|5[0-9]{2})[0-9]{12}$",
-					'jcb':				"^(?:2131|1800|35\d{3})\d{11}$",
-					'expdate':			"^(0[1-9]|1[012])\/([12][0-9])$"
-				},
-				'image':{
-					'all':		"([^\s]+(?=\.(jpeg|jpg|gif|png|tiff))\.\2)$",
-					'jpeg':		"([^\s]+(?=\.(jpeg))\.\2)$",
-					'jpg':		"([^\s]+(?=\.(jpg))\.\2)$",
-					'gif':		"([^\s]+(?=\.(gif))\.\2)$",
-					'png':		"([^\s]+(?=\.(png))\.\2)$",
-					'tiff':		"([^\s]+(?=\.(tiff))\.\2)$"
-				},
-				'color':{
-					'all':		"^(rgb\((\d+),\s*(\d+),\s*(\d+)\))|(#?([a-f0-9]{6}|[a-f0-9]{3}))$",
-					'rgb':		"^rgb\((\d+),\s*(\d+),\s*(\d+)\)$",
-					'hex':		"^#?([a-fA-Z0-9]{6}|[a-fA-Z0-9]{3})$"
-				},
-				'html':{
-					'all':		"(\<(/?[^\>]+)\>)"
-				}
-			};
+		KUtilsHelps = null,
+		check_patterns = {
+			'text': {
+				'all': 				"^(.)__OF_B__$",	//	__RANGE__
+				'alphanumeric':		"^[a-zA-Z0-9 ]+$",
+				'no_space': 		"^[\\S]+$",
+				'codicefiscale':	"^[a-z]{6}[0-9]{2}[a-z][0-9]{2}[a-z][0-9]{3}[a-z]$",
+				'piva':				"^[0-9]{11}$"
+			},
+			'number': {
+				'all':		"^(([-+]?[0-9]+)|([-+]?([0-9]__OF_B__\\.[0-9]__OF_A__)))$",
+				'int':		"^[-+]?[0-9]+$",
+				'float':	"^[-+]?([0-9]__OF_B__\\.[0-9]__OF_A__)$"
+			},
+			'ip':{
+				'all':		"^([1][0-9][0-9]|2[0-4][0-9]|25[0-5])\.([1][0-9][0-9]|2[0-4][0-9]|25[0-5])\.([1][0-9][0-9]|2[0-4][0-9]|25[0-5])\.([1][0-9][0-9]|2[0-4][0-9]|25[0-5])$"
+			},
+			'email':{
+				'all':		"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[A-Za-z]{2,4}$"
+			},
+			'username':{
+				'all':		"^([a-zA-Z0-9_-]__OF_B__)$"
+			},
+			'password':{
+				'all':		"^([a-zA-Z0-9_-]__OF_B__)$"
+			},
+			'phone':{
+				'all':		"^([0-9-()+ ]__OF_B__)$"
+			},
+			'date':{
+				'all':		"^(((0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9]{4}))|((0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.]([0-9]{4}))|(([0-9]{4})[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]))|(([0-9]{4})[- /.](0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])))$",
+				'Y-m-d':	"^(([0-9]{4})[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]))$",
+				'Y-d-m':	"^(([0-9]{4})[- /.](0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012]))$",
+				'm-d-Y':	"^((0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9]{4}))$",
+				'd-m-Y':	"^((0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.]([0-9]{4}))$"
+			},
+			'space':{
+				'all':				"[ \t\r\n]",
+				'onlyspaces':		" ",
+				'onlytabs':			"\t",
+				'onlybreakline':	"[\n\r]"
+			},
+			'url':{
+				'all':		"^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$",
+				'onlywww':	"^w{3}([0-9]+)?\.([a-zA-Z0-9]([a-zA-Z0-9\-]{0,65}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}"
+			},
+			'creditcard':{
+				'all':				"^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$",
+				'visa':				"^4[0-9]{12}(?:[0-9]{3})?$",
+				'mastercard':		"^5[1-5][0-9]{14}$",
+				'americaexpress':	"^3[47][0-9]{13}$",
+				'dinersclub':		"^3(?:0[0-5]|[68][0-9])[0-9]{11}$",
+				'discover':			"^6(?:011|5[0-9]{2})[0-9]{12}$",
+				'jcb':				"^(?:2131|1800|35\d{3})\d{11}$",
+				'expdate':			"^(0[1-9]|1[012])\/([12][0-9])$"
+			},
+			'image':{
+				'all':		"([^\s]+(?=\.(jpeg|jpg|gif|png|tiff))\.\2)$",
+				'jpeg':		"([^\s]+(?=\.(jpeg))\.\2)$",
+				'jpg':		"([^\s]+(?=\.(jpg))\.\2)$",
+				'gif':		"([^\s]+(?=\.(gif))\.\2)$",
+				'png':		"([^\s]+(?=\.(png))\.\2)$",
+				'tiff':		"([^\s]+(?=\.(tiff))\.\2)$"
+			},
+			'color':{
+				'all':		"^(rgb\((\d+),\s*(\d+),\s*(\d+)\))|(#?([a-f0-9]{6}|[a-f0-9]{3}))$",
+				'rgb':		"^rgb\((\d+),\s*(\d+),\s*(\d+)\)$",
+				'hex':		"^#?([a-fA-Z0-9]{6}|[a-fA-Z0-9]{3})$"
+			},
+			'html':{
+				'all':		"(\<(/?[^\>]+)\>)"
+			}
+		};
 
 	/*******************************************************************/
 	/*******************************************************************/
@@ -1526,7 +1526,7 @@
 /**
  *	jquery.sake
  *
- *	@version:	3.13.3
+ *	@version:	3.15.0
  *	@author:	Kevin Lucich
  *	@employees:	Salvatore Caputi
  *	@thanks:	Angelica - to have endured me during
@@ -1537,7 +1537,7 @@
 	var $document = $(document);
 
 	var global_sake = {
-		'version': '3.13.3',
+		'version': '3.15.0',
 		'url_source': 'http://sake.lucichkevin.it/',
 		'url_plugin': 'http://sake.lucichkevin.it/',
 		'language': 'it',
@@ -1706,7 +1706,7 @@
 	 *	@param {int}		params.duration 		Number of milliseconds dell'animazione per la visualizzazione
 	 *	@param {Boolean}	params.button_close 	Discriminate if the button for closing Sakelightbox will be show or hide
 	 *
-	 *	@returns void
+	 *	@return void
 	 */
 	$.sakelightbox = function( method, params ){
 
@@ -2108,7 +2108,7 @@
 	 *	@params {Number} params.animation.duration Milliseconds that the animation will last for showing
 	 *	@params {String} params.animation.easing The easing of animation, you can choose from all easing plugin "http://gsgd.co.uk/sandbox/jquery/easing/"
 	 *
-	 *	@returns void
+	 *	@return void
 	 */
 
 	var TooltipVars = global_sake.methods_var.tooltip;
@@ -2552,7 +2552,7 @@
 	/**
 	 * $( __ELEMENT__ ).validate( [params] );
 	 *
-	 *	@version 3.3.1
+	 *	@version 3.3.2
 	 *	@author Kevin Lucich
 	 *
 	 *	@params {Object} params List of params
@@ -2562,7 +2562,7 @@
 	 *	@params {Boolean} params.showRules If set print in console a list of rules
 	 *         for validation (default: True)
 	 *
-	 *	@returns {Boolean} Return TRUE if the data are valid
+	 *	@return {Boolean} Return TRUE if the data are valid
 	 */
 	var ValidateVars = global_sake['methods_var']['validate'];
 	$.fn.validate = function( method, params ){
@@ -2602,6 +2602,7 @@
 					'showTooltip': true,
 					'tooltipSide': 'right',
 					'tooltipOnFocus': false,
+					'ignore_hidden_fields': false,
 					'showRules': false,
 					'debug': false,
 					'cached': false,
@@ -2847,7 +2848,11 @@
 
 				var ok = true;
 
-				$containerToValidate.find('input[type="text"],input[type="password"]').each(function( i, el ){
+				var $elements_to_validate = $containerToValidate.find('input[type="text"],input[type="password"]');
+				if( params.ignore_hidden_fields ){
+					$elements_to_validate = $elements_to_validate.not(':hidden');
+				}
+				$elements_to_validate.each(function( i, el ){
 					var $el = $(el);
 
 					var _value = $el.trim(),
@@ -2999,7 +3004,11 @@
 
 				var radios_obj = {};
 
-				$containerToValidate.find('input[type=radio]').each(function( i, el ){
+				$elements_to_validate = $containerToValidate.find('input[type=radio]');
+				if( params.ignore_hidden_fields ){
+					$elements_to_validate = $elements_to_validate.not(':hidden');
+				}
+				$elements_to_validate.each(function( i, el ){
 
 					var $el = $(el);
 					var nameRadio = $el.attr('name');
@@ -3041,8 +3050,9 @@
 						$('#'+id_box).css(point_a).addClass('invalid');
 					};
 
-					if( $('#'+id_box).length ){
-						$('#'+id_box).remove();
+					var $box = $('#'+ id_box );
+					if( $box.length ){
+						$box.remove();
 					}
 
 					if( !radio_checked ){
@@ -3063,7 +3073,11 @@
 
 				// /////////////////////
 
-				$containerToValidate.find('select').each(function( i, el ){
+				$elements_to_validate = $containerToValidate.find('select');
+				if( params.ignore_hidden_fields ){
+					$elements_to_validate = $elements_to_validate.not(':hidden');
+				}
+				$elements_to_validate.each(function( i, el ){
 					var $el = $(el);
 					var compulsory = isCompulsory($el);
 
@@ -3133,7 +3147,7 @@
 	 *         of typeCheck
 	 *	@params {Mixed} valueToCheck The value to check
 	 *
-	 *	@returns {Boolean} Return True if the value is valid
+	 *	@return {Boolean} Return True if the value is valid
 	 */
 	$.fn.check = function( params, _subtype ){
 		return KUtils.check( params, $(this).val(), _subtype);
@@ -3155,7 +3169,7 @@
 	 *	@param {String}
 	 *            str String to escape
 	 *
-	 *	@returns {String} String passed escaped
+	 *	@return {String} String passed escaped
 	 */
 	$.escape = function(str){
 		// !"#$%&'()*+,.\/:;<=>?@[\]^`{|}~
@@ -3170,7 +3184,7 @@
 	 *
 	 *	@desc $( __ELEM__ ).escape(); Return the value of element escaped
 	 *
-	 *	@returns {String} Value of element escaped
+	 *	@return {String} Value of element escaped
 	 */
 	$.fn.escape = function(){
 		return $.escape( $(this).val() );
@@ -3190,7 +3204,7 @@
 	 *	@param		{String}	replacement The replacement string
 	 *	@param		{String}	modifier	The regular expression modifier to use (default: 'g')
 	 *
-	 *	@returns {Object} jQuery Object
+	 *	@return {Object} jQuery Object
 	 */
 	$.fn.replace = function( search, replacement, modifier ){
 
@@ -3224,7 +3238,7 @@
 	 *	@params {Number} params.length Number of chars to print
 	 *	@params {Boolean} params.random Discriminate if the paragraph to print is chosen randomly
 	 *
-	 *	@returns {Object} jQuery Object
+	 *	@return {Object} jQuery Object
 	 */
 	$.fn.lorem = function( params, length, random ){
 
@@ -3299,7 +3313,7 @@
 	 *
 	 *	The function can have a parameter, an object with a useful variables
 	 *
-	 *	@returns {String} Return the id of loop created
+	 *	@return {String} Return the id of loop created
 	 */
 	var LoopVars = global_sake.methods_var.loop;
 	$.loop = function( params, howmany, delay ){
@@ -3372,7 +3386,7 @@
 	 *	@params {Boolean} params.remove Discriminate if elements inside will be hided
 	 *         (false) or removed (true)
 	 *
-	 *	@returns void
+	 *	@return void
 	 */
 	$.fn.random = function( params ){
 
@@ -3414,7 +3428,7 @@
 	 *	@author Kevin Lucich
 	 *	@version 1.0
 	 *
-	 *	@returns {Object} Return a map of events associated at element
+	 *	@return {Object} Return a map of events associated at element
 	 */
 	$.fn.getEvents = function(){
 
@@ -3456,7 +3470,7 @@
 	 *	@param	{String}	params.animation.easing The easing of animation, you can choose from all easing plugin "http://gsgd.co.uk/sandbox/jquery/easing/"
 	 *	@param	{function}	params.closing Function execute when called a "close" method
 	 *
-	 *	@returns {Object} Object with a ids of box and last tip insert (if exists)
+	 *	@return {Object} Object with a ids of box and last tip insert (if exists)
 	 */
 	$.tips = function( method, params ){
 
@@ -3596,7 +3610,7 @@
 	 *	@param	{String} params.classes List of classes to associate a tip (separated
 	 *         from spaces)
 	 *
-	 *	@returns {Object} jQuery Object
+	 *	@return {Object} jQuery Object
 	 */
 	$.fn.sakebuttons = function( params ){
 
@@ -3667,7 +3681,7 @@
 	 *	@params {String} params.interval Interval in milliseconds that will be
 	 *	        checked the content of the element
 	 *
-	 *	@returns {Object} Object
+	 *	@return {Object} Object
 	 */
 	var WhenChangeVars = global_sake['methods_var']['whenChange'];
 	$.fn.whenChange = function( method, params ){
@@ -3739,9 +3753,9 @@
 	/**
 	 *	$(el).trim(); Replace the value of element with the value "trimmed"
 	 *
-	 *	@author Kevin Lucich
-	 *	@version 1.0
-	 *	@returns The value trimmed
+	 *	@author		Kevin Lucich
+	 *	@version	1.0
+	 *	@return		{String}	The value trimmed
 	 */
 	$.fn.trim = function(){
 		var $el = this;
@@ -3780,7 +3794,7 @@
 	 *
 	 *	@author Kevin Lucich
 	 *	@version 1.0
-	 *	@returns jQuery Object
+	 *	@return jQuery Object
 	 */
 	$.fn.template = function( where, data, appendTo, extraData ){
 
@@ -3934,7 +3948,7 @@
 	 *
 	 *	@author Kevin Lucich
 	 *	@version 1.0
-	 *	@returns jQuery Object
+	 *	@return jQuery Object
 	 */
 	var BlinkVars = global_sake['methods_var']['blink'];
 	$.fn.blink = function( method, params ){
@@ -3998,15 +4012,9 @@
 	/**
 	 *	$(el).realOuterWidth( [includeMargin] ) Return a width of an element hidden
 	 *
-	 *	@author Kevin Lucich
-	 *	@version 1.0
-	 *	@returns {int}
-	 *
-	 *	$(el).realOuterHeight( [includeMargin] ) Return a height of an element hidden
-	 *
-	 *	@author Kevin Lucich
-	 *	@version 1.0
-	 *	@returns {int}
+	 *	@author		Kevin Lucich
+	 *	@version	1.0
+	 *	@return		{int}
 	 */
 	$.each( ['Width','Height'], function( i, attr ){
 
@@ -4044,8 +4052,11 @@
 			'delimiter': '/',
 			'ignoreHidden': false,
 			'types': {
+				'trimmed': function( $field, key, value ){
+					return $field.trim();
+				},
 				'boolean': function( $field, key, value ){
-					if( $field.is(':checkbox') ){
+					if( $field.is(':checkbox') || $field.is(':radio') ){
 						return $field.is(':checked');
 					}
 					return (eval(value)) ? true : false;
@@ -4112,7 +4123,7 @@
 
 		var options = $.extend( true, {}, __default, args );
 
-		var __set = function( struct, keys, $el ){
+		var __get = function( struct, keys, $el ){
 
 			var key = keys.shift();
 
@@ -4120,7 +4131,7 @@
 				if (typeof struct[key] === 'undefined') {
 					struct[key] = {};
 				}
-				struct[key] = __set(struct[key], keys, $el);
+				struct[key] = __get(struct[key], keys, $el);
 				if (((struct[key]).constructor == Object) && !KUtils.objSize(struct[key])) {
 					delete(struct[key]);
 				}
@@ -4132,6 +4143,11 @@
 			}
 
 			var v = (typeof $el.attr('data-value') !== 'undefined') ? $el.attr('data-value') : $el.val();
+
+			if( (typeof $el.attr('data-nullable') !== 'undefined') && (v == 'null') ){
+				v = null;
+			}
+
 			if( !options.__validValue(v) ){
 				return struct;
 			}
@@ -4173,12 +4189,136 @@
 				return;
 			}
 			var path_keys = $field.attr('data-info').split(options.delimiter);
-			struct = __set( struct, path_keys, $field );
+			struct = __get( struct, path_keys, $field );
 		});
 
 		return struct;
 	};
 
+	/* ================================================================== */
+
+	/**
+	 *	$(container).setDataInfo( data )
+	 *	Set data info into the children of $container
+	 *
+	 *	@params		data	Object	The data to set
+	 *	@params		options	Object	Options list
+	 *
+	 *	@author		Kevin Lucich
+	 *	@version	1.0
+	 *	@return		Object
+	 */
+	$.fn.setDataInfo = function( data, options ){
+		var self = this;
+
+		if( typeof options === 'undefined' ){
+			options = {};
+		}
+
+		options = $.extend( true, {}, $.fn.setDataInfo.prototype.defaults, options );
+
+		var assign = function( k, v, path ){
+			if( typeof path === 'undefined' ){
+				path = '';
+			}
+
+			if( (v != null) && (v.constructor == Object) ){
+				for( var l in v ){
+					if( v.hasOwnProperty(l) ){
+						var next_path = (path=='') ? (k) : (path + options.delimiter + k);
+						assign( l, v[l], next_path );
+					}
+				}
+			}
+
+			var $el = self.find('[data-info="'+ (path + options.delimiter + k) +'"]');
+
+			if( $el.hasClass('ignore-value') || (options.ignore_null == true) ){
+				return;
+			}
+
+			if( typeof $el.attr('data-value') !== 'undefined' ){
+				$el.attr('data-value', v );
+			}else if( $el.is('input, select, textarea') ){
+				$el.val( v );
+			}else{
+				if( options.use_html ){
+					$el.html( v );
+				}else{
+					$el.html( v );
+				}
+			}
+
+		};
+
+		for( var k in data ){
+			if( data.hasOwnProperty(k) ){
+				assign( k, data[k] );
+			}
+		}
+
+		return self;
+	};
+	$.fn.setDataInfo.prototype = {
+		'defaults': {
+			'delimiter': '/',
+			'ignore_null': false,
+			'use_html': true
+		}
+	};
+
+	/* ================================================================== */
+
+	/**
+	 *	Return values of checkboxes or invert the selection
+	 *	$(el).checkboxes( values|invert );
+	 *
+	 *	@author Kevin Lucich
+	 *	@version 1.0
+	 *	@return	jQuery
+	 *
+	 */
+	$.fn.checkboxes = function( action ){
+
+		if( typeof action === 'undefined' ){
+			action = 'values';
+		}
+
+		switch( action ){
+
+			case 'values':
+				var values = {};
+				this.each(function(i,c){
+					var $c = $(c);
+
+					var key = $c.attr('data-info');
+					key = (typeof key !== 'undefined') ? key : $c.attr('id');
+					key = (typeof key !== 'undefined') ? key : i;
+
+					var type = $c.attr('data-type');
+					type = (typeof type !== 'undefined') ? type : null;
+
+					var v = $c.val();
+					if( !$c.is(':checked') ){
+						v = false;
+					}else if( type == 'boolean' ){
+						v = true;
+					}
+					values[ key ] = v;
+				});
+				return values;
+
+			case 'invert':
+				this.each(function(i,c){
+					var $c = $(c);
+					$c.prop('checked', !$c.is(':checked') );
+				});
+				break;
+
+		}
+
+		return this;
+	};
 
 	/* ================================================================== */
 	/* ================================================================== */
