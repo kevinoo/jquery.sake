@@ -1526,7 +1526,7 @@
 /**
  *	jquery.sake
  *
- *	@version:	3.15.0
+ *	@version:	3.15.1
  *	@author:	Kevin Lucich
  *	@employees:	Salvatore Caputi
  *	@thanks:	Angelica - to have endured me during
@@ -4208,7 +4208,11 @@
 				}
 			}
 
-			var $el = self.find('[data-info="'+ (path + options.delimiter + k) +'"]');
+			var full_path = k;
+			if( path != '' ){
+				full_path = path + options.delimiter + k;
+			}
+			var $el = self.find('[data-info="'+ full_path +'"]');
 
 			if( $el.hasClass('ignore-value') || (options.ignore_null == true) ){
 				return;
@@ -4216,7 +4220,7 @@
 
 			if( typeof $el.attr('data-value') !== 'undefined' ){
 				$el.attr('data-value', v );
-			}else if( $el.is('input, select, textarea') ){
+			}else if( $el.is('input') || $el.is('select') || $el.is('textarea') ){
 				$el.val( v );
 			}else{
 				if( options.use_html ){
