@@ -1,6 +1,6 @@
 /**
  * KUtils
- * @version:	1.20.2
+ * @version:	1.21.0
  * @author:	Kevin Lucich
 */
 
@@ -25,7 +25,7 @@
 				'all':		"^([1][0-9][0-9]|2[0-4][0-9]|25[0-5])\.([1][0-9][0-9]|2[0-4][0-9]|25[0-5])\.([1][0-9][0-9]|2[0-4][0-9]|25[0-5])\.([1][0-9][0-9]|2[0-4][0-9]|25[0-5])$"
 			},
 			'email':{
-				'all':		"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[A-Za-z]{2,4}$"
+				'all':		"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[A-Za-z]{2,6}$"
 			},
 			'username':{
 				'all':		"^([a-zA-Z0-9_-]__OF_B__)$"
@@ -128,7 +128,7 @@
 	KUtils = {
 
 		'plugins_version': {
-			'KUtils': '1.20.0'
+			'KUtils': '1.21.0'
 		},
 
 		/**
@@ -536,25 +536,31 @@
 		},
 
 		/**
-		 $.MD5( str );	 Return string cripted with MD5 method
-		 A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
-
-		 @author		Paul Johnston, Greg Holt
-		 @updated	Kevin Lucich <lucichkevin@gmail.com>
-
-		 @param		{string|Object}	str		The string (or object/array) to cript with MD5 method
-
-		 @return	{String}	String cripted with MD5 method
+		 *	$.MD5( str );	 Return string cripted with MD5 method
+		 *	A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
+		 *	@author		Paul Johnston, Greg Holt
+		 *	@updated	Kevin Lucich <lucichkevin@gmail.com>
+		 *	@param	str	{String|Object}	The string (or object/array) to cript with MD5 method
+		 *	@return	{String}	String cripted with MD5 method
 		 */
 		'MD5': function( str ){
 
 			//	In this case "str" is an Object or Array
 			if( (str != null) && (str.constructor == Array || str.constructor == Object) ){
-				var obj = str;
-				str = '';
-				for( i in obj ){
-					str = KUtils.MD5( str + obj[i] );
-				}
+				var __describe_object = function( obj, str ){
+					if( !obj ){
+						return str;
+					}
+					for( i in obj ){
+						if( obj.hasOwnProperty(i) == false ){
+							continue;
+						}
+						var md5 = (obj[i] != null) && ((obj[i]).constructor == Array || (obj[i]).constructor == Object) ? __describe_object(obj[i],str) : i +':'+ obj[i];
+						str = KUtils.MD5( str +'_'+ md5 );
+					}
+					return str;
+				};
+				str = __describe_object(str,'');
 			}
 
 			// Convert a 32-bit number to a hex string with ls-byte first
@@ -815,8 +821,7 @@
 					return false;
 				}
 
-				if ( obj.constructor &&
-						!hasOwn.call( obj.constructor.prototype, "isPrototypeOf" ) ) {
+				if ( obj.constructor && !hasOwn.call( obj.constructor.prototype, "isPrototypeOf" ) ) {
 					return false;
 				}
 
@@ -1526,7 +1531,7 @@
 /**
  *	jquery.sake
  *
- *	@version:	3.15.1
+ *	@version:	3.15.3
  *	@author:	Kevin Lucich
  *	@employees:	Salvatore Caputi
  *	@thanks:	Angelica - to have endured me during
@@ -1537,7 +1542,7 @@
 	var $document = $(document);
 
 	var global_sake = {
-		'version': '3.15.0',
+		'version': '3.15.3',
 		'url_source': 'http://sake.lucichkevin.it/',
 		'url_plugin': 'http://sake.lucichkevin.it/',
 		'language': 'it',
@@ -1567,6 +1572,9 @@
 
 						// Date
 						'DATEFIELD': 'Data non corretta',
+						'MIN_DATE': 'Il campo deve contenere una data maggiore o uguale a __MIN__ ',
+						'MAX_DATE': 'Il campo deve contenere una data minore o uguale a __MAX__ ',
+						'MIN_MAX_DATE': 'Il campo deve contenere una data tra __MIN__ e __MAX__ ',
 
 						// Credit card
 						'DATECREDITCARDFIELD': 'WTF???',
@@ -2113,7 +2121,7 @@
 	 */
 
 	var TooltipVars = global_sake.methods_var.tooltip;
-	$.fn.tooltip = function( method, params ) {
+	$.fn.sakeTooltip = function( method, params ) {
 
 		var methodsTooltip = {
 
@@ -2516,18 +2524,18 @@
 			'attach': function( params ){
 				(params.callbacks.BeforeAttach).apply( {}, params );
 				var $this = this
-				$this.tooltip('create',params);
+				$this.sakeTooltip('create',params);
 				$this.data({'sakeParamsTooltip':params});
 				$this.on({
 					'mouseover': function(){
 						var $this = $(this);
 						var params = $this.data('sakeParamsTooltip');
-						$this.tooltip('show',params);
+						$this.sakeTooltip('show',params);
 					},
 					'mouseleave': function(){
 						var $this = $(this);
 						var params = $this.data('sakeParamsTooltip');
-						$this.tooltip('hide',params);
+						$this.sakeTooltip('hide',params);
 					}
 				});
 				(params.callbacks.AfterAttach).apply( $('#'+$this.attr('data-idsakett') ), arguments );
@@ -2654,7 +2662,8 @@
 
 			'_do': function( params ){
 				var $containerToValidate = this;
-				$containerToValidate.find('.invalid').removeClass('invalid');
+				var $invalid_inputs = $containerToValidate.find('.invalid');
+				$invalid_inputs.removeClass('invalid');
 
 				var getDic = function( key ){
 
@@ -2804,47 +2813,37 @@
 
 				var showTT = function( $el, errorText, side ){
 
-					if( params.showTooltip && typeof $el.data('sake-validate-tooltip-params') === 'undefined' ){
-
-						var tooltip_param = {
-							'side': (side || params.tooltipSide ),
-							'position':'center',
-							'content': errorText,
-							'showArrow': true,
-							'classes': 'tooltipSAKE sakeTT_validate'
-						};
-
-						//	Save params into element, in this way when he "focus event" is called i have always the params! :D
-						$el.data('sake-validate-tooltip-params',tooltip_param);
-
-						if( params.tooltipOnFocus ){
-
-							$(document).on({
-								'focus': function( event ){
-									if( !$el.hasClass('invalid') ){
-										return;
-									}
-									var tooltip_param = $el.data('sake-validate-tooltip-params');
-									tooltip_param['animation'] = {'type':'fadeIn','time':500};
-
-									$el.tooltip('show', tooltip_param);
-								},
-								'focusout': function( event ){
-									if( !$el.hasClass('invalid') ){
-										return;
-									}
-									$el.tooltip('remove', {'animation': {'type':'fadeIn','time':500}} );
-								}
-							}, '#'+ $el.attr('id') );
-
-						}else{
-							//	If the element is hidden, i don't show the tooltip
-							if( $el.is(':hidden') == false ){
-								$el.tooltip('show',tooltip_param);
-							}
-						}
+					if( $el.is('[title]') == false ){
+						$el.attr('title','');
 					}
 
+					$el.data('sake_tooltip',{
+						'content': errorText
+					});
+
+					if( typeof $el.data('uiTooltip') !== 'undefined' ){
+						$el.tooltip('destroy');
+					}
+
+					$el.tooltip({
+						'track': true,
+						'content': function(){
+							var element = $(this);
+							if ( element.is('[title]') ) {
+								return element.attr('title');
+							}
+
+							var old_sake_tooltip = element.data('sake-validate-tooltip-params');
+							if( old_sake_tooltip ){
+								return old_sake_tooltip.content;
+							}
+
+							var sake_tooltip = element.data('sake_tooltip');
+							if( typeof sake_tooltip !== 'undefined' ){
+								return sake_tooltip.content;
+							}
+						}
+					});
 				};
 
 				var ok = true;
@@ -2933,6 +2932,48 @@
 									if( !res ){
 										sake_error = getDic('DATEFIELD');
 									}
+									
+									if( (typeof $el.attr('data-from') === 'undefined') && (typeof $el.attr('data-to') === 'undefined') ){
+										break;
+									}
+
+									var parts = null,
+										date = null;
+
+									if( (new RegExp("^(([0-9]{4})[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]))$")).test(_value) ){
+										//	'Y-m-d'
+										parts = _value.split(_value.charAt(4));
+										date = [parts[0],parts[1],parts[2]].join('-');
+									}else if( (new RegExp("^((0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.]([0-9]{4}))$")).test(_value) ){
+										//	'd-m-Y'
+										parts = _value.split(_value.charAt(2));
+										date = [parts[2],parts[1],parts[0]].join('-');
+									}else if( (new RegExp("^((0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.]([0-9]{4}))$")).test(_value) ){
+										//	'm-d-Y'
+										parts = _value.split(_value.charAt(2));
+										date = [parts[2],parts[0],parts[1]].join('-');
+									}else if( (new RegExp("^(([0-9]{4})[- /.](0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012]))$")).test(_value) ){
+										//	'Y-d-m'
+										parts = _value.split(_value.charAt(4));
+										date = [parts[0],parts[2],parts[1]].join('-');
+									}else if( (new RegExp("^(([0-9]{4})[- /.](0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012]))$")).test(_value) ){
+										//	'Y-d-m'
+										parts = _value.split(_value.charAt(4));
+										date = [parts[0],parts[2],parts[1]].join('-');
+									}
+
+									var ms = new Date(date).getTime();
+									var from = (typeof $el.attr('data-from') !== 'undefined') ? new Date($el.attr('data-from')).getTime() : null;
+									var to = (typeof $el.attr('data-to') !== 'undefined') ? new Date($el.attr('data-to')).getTime() : null;
+
+									if( ((from != null) && (to != null)) && ((ms < from) || (ms > to)) ){
+										sake_error = getDic('MIN_MAX_DATE').replace('__MIN__', (new Date(from)).getFormat('Y-m-d') ).replace('__MAX__', (new Date(to)).getFormat('Y-m-d') );
+									}else if( (from != null) && (ms < from) ){
+										sake_error = getDic('MIN_DATE').replace('__MIN__', (new Date(from)).getFormat('Y-m-d') );
+									}else if( (to != null) && (ms > to) ){
+										sake_error = getDic('MAX_DATE').replace('__MAX__', (new Date(to)).getFormat('Y-m-d') );
+									}
+
 									break;
 								// ///////////////////////////////////////////////////////////////////////////////////////////////////
 								case 'date_creditcard':
@@ -4018,7 +4059,7 @@
 	 *	Returns an object with field data inside the $container
 	 *
 	 *	@author		Kevin Lucich
-	 *	@version	1.0
+	 *	@version	1.1
 	 *	@return		Object
 	 */
 	$.fn.getDataInfo = function( delimiter, ignoreHidden, types ){
@@ -4028,6 +4069,7 @@
 		var __default = {
 			'delimiter': '/',
 			'ignoreHidden': false,
+            'include_checkbox_false_value' :false,
 			'types': {
 				'trimmed': function( $field, key, value ){
 					return $field.trim();
@@ -4059,7 +4101,7 @@
 						args.ignoreHidden = a;
 						break;
 					case Object:
-						if( (a.hasOwnProperty('delimiter') || a.hasOwnProperty('ignoreHidden') || a.hasOwnProperty('types') ) ){
+						if( (a.hasOwnProperty('delimiter') || a.hasOwnProperty('ignoreHidden') || a.hasOwnProperty('types') || a.hasOwnProperty('include_checkbox_false_value') ) ){
 							args = a;	 // Options
 						}else{
 							// Don't contain "delimiter" or "ignoreHidden" or
@@ -4115,7 +4157,7 @@
 				return struct;
 			}
 
-			if( $el.hasClass('ignore-value') || ($el.is(':checkbox') && !$el.is(':checked')) ){
+			if( $el.hasClass('ignore-value') || (!options.include_checkbox_false_value && ($el.is(':checkbox') && !$el.is(':checked')))){
 				return struct;
 			}
 
