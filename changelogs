@@ -2,11 +2,24 @@
 /**
  *	jquery.sake
  *
- *	@version:	3.15.0
+ *	@version:	3.16.0
  *	@author:	Kevin Lucich
  *	@employees:	Salvatore Caputi
  *	@thanks:	Angelica - to have endured me during
- *				Alberto (Bardo) - for helping me with testing on IE
+ *			Alberto (Bardo) - for helping me with testing on IE
+
+	v3.16.0
+		[REMOVE] Renamed the method $.tooltip - Warning: is deprecated: use jQueryUI
+		[DEPRECATED] Deprecated the use of $.sakeTooltip - Will be remove in v3.17.0
+
+	v3.15.3
+		[FIX] Permits that $.getDataInfo returns "false" value of input type checkbox 
+
+	v3.15.2
+		[ADD] Inserted in the $.validate control that a number must be at least / at most a certain value
+
+	v3.15.1
+		[FIX] Extend the max domain length of an email: from four to five chars
 
 	v3.15.0
 		[NEW] $.fn.setDataInfo
