@@ -1531,7 +1531,7 @@
 /**
  *	jquery.sake
  *
- *	@version:	3.15.3
+ *	@version:	3.16.0
  *	@author:	Kevin Lucich
  *	@employees:	Salvatore Caputi
  *	@thanks:	Angelica - to have endured me during
@@ -1542,7 +1542,7 @@
 	var $document = $(document);
 
 	var global_sake = {
-		'version': '3.15.3',
+		'version': '3.16.0',
 		'url_source': 'http://sake.lucichkevin.it/',
 		'url_plugin': 'http://sake.lucichkevin.it/',
 		'language': 'it',
