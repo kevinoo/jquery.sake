@@ -1531,7 +1531,8 @@
 /**
  *	jquery.sake
  *
- *	@version:	3.16.0
+ *	@version:	4.3.0
+ *	@updated:	2017-09-19
  *	@author:	Kevin Lucich
  *	@employees:	Salvatore Caputi
  *	@thanks:	Angelica - to have endured me during
@@ -1542,14 +1543,8 @@
 	var $document = $(document);
 
 	var global_sake = {
-		'version': '3.16.0',
-		'url_source': 'http://sake.lucichkevin.it/',
-		'url_plugin': 'http://sake.lucichkevin.it/',
+		'version': '4.2.0',
 		'language': 'it',
-		'mouse_position': {},
-		'easingPlugin': {
-			'loaded': false
-		},
 		'methods_var': {
 			'validate':{
 				'rules': {},
@@ -1599,12 +1594,8 @@
 					}
 				}
 			},
-			'loop': {},
-			'tips': {},
-			'whenChange': {},
-			'blink': {}
-		},
-		'shortcuts': []
+			'loop': {}
+		}
 	};
 
 	KUtils.version( {'sake':global_sake.version} );
@@ -1623,29 +1614,22 @@
 	 */
 	$.fn.scrollTo = function( params, easing ){
 
-		var paramsDefault = {
-			'speed': 500,
-			'easing': 'linear',
-			'scrollx': false,
-			'offset': {'x':0,'y':0}
-		};
-
 		// Posso passare i parametri come oggetto o due valori separati  (speed,easing)
 		if( (typeof params !== 'undefined') && (typeof params != 'object') ){
 			params = {
 				'speed': params,	// params is a NUMBER and equal a speed value
-				'easing': (typeof easing === 'undefined') ? paramsDefault.easing : easing
+				'easing': (typeof easing === 'undefined') ? $.fn.scrollTo.prototype.defaults.easing : easing
 			};
 		}
-		params = KUtils.extend( true, {}, paramsDefault, params);
+		params = KUtils.extend( true, {}, $.fn.scrollTo.prototype.defaults, params);
 		if( (params.offset).constructor != Object ){
 			var off = params.offset;
 			params.offset = {'x':off,'y':off};
 		}
 
 		var xpos = 0,
-				ypos = 0,
-				$document = $(document);
+			ypos = 0,
+			$document = $(document);
 
 		switch( this.selector ){
 			case 'top':
@@ -1692,872 +1676,16 @@
 			scrollTop: ypos+'px',
 			scrollLeft: xpos+'px'
 		}, params.speed, params.easing);
-	};
-
-
-	/* ================================================================== */
-	/**
-	 * $.sakelightbox( method, [params] );
-	 *
-	 *	@version 1.3
-	 *	@author Kevin Lucich
-	 *
-	 *	@param {String}	method 		Method of Sakelightbox will be called: "create", "setContent", "show", "hide", "remove"
-	 *	@param {Object}	params 		List of params
-	 *
-	 *	@param {String}		params.content			The content of Sakelightbox
-	 *	@param {String}		params.position			String with X Y position (default: "center center")
-	 *	@param {Object}		params.offset			Object with two attributes, top and left, custom offset
-	 *	@param {String}		params.classes			List of classes to associate a Sakelightbox (separated from spaces)
-	 *	@param {Boolean}	params.bg				Discriminate if the background will be show or hide
-	 *	@param {String}		params.url 				If set, it will be load into content using a iframe
-	 *	@param {int}		params.duration 		Number of milliseconds dell'animazione per la visualizzazione
-	 *	@param {Boolean}	params.button_close 	Discriminate if the button for closing Sakelightbox will be show or hide
-	 *
-	 *	@return void
-	 */
-	$.sakelightbox = function( method, params ){
-
-		var methodssakelightbox = {
-
-			'init': function( params ){
-				var paramsDefault = {
-					'position': 'center center',
-					'offset': {'top': 0, 'left': 0},
-					'classes': 'content_sakelightbox',
-					'bg': true,
-					'url': false,
-					'duration': 750,
-					'button_close': true,
-					'content': '<div style="text-align: center;  font-size: 25px;"><br>BY:<br><br>Kevin Lucich & Salvatore Caputi<br><br></div><div class="sakeversion"></div><br>',
-
-					'onCreate': function( $lightbox, params ){}
-				};
-				params = KUtils.extend( true, {}, paramsDefault, params );
-
-				if( typeof params.background !== 'undefined' ){
-					params.bg = params.background;
-				}
-
-				var pos = params.position.split(' ');
-				params.position = ((typeof pos[0] !== 'undefined') ? pos[0] : 'center') +' '+ ((typeof pos[1] !== 'undefined') ? pos[1] : 'center');
-
-				return params;
-			},
-
-			'create': function( params ){
-
-				var close = '', content = '';
-				params.sakeId = 'sake_'+ Math.floor(new Date().getTime());
-
-				if( params.button_close )
-					close = '<div class="close_sakelightbox" data-sakeId="'+ params.sakeId +'"></div>';
-
-				var html = '';
-				html += (params.bg) ? '<div id="box_sakelightbox"></div>' : '';
-				html += '<div id="'+ params.sakeId +'" class="'+ params.classes +'">'+ close +'<div class="content"></div></div>';
-				$('body').append(html);
-
-				// Return params with ID
-				return params;
-			},
-
-			'setContent': function( params ){
-				if( params.url )
-					params.content = '<iframe src="'+ params.url +'"></iframe>';
-				$('#'+ params.sakeId +' > .content').html( params.content );
-
-				$('#'+ params.sakeId).setPositionTo('window',{
-					'my': params.position,
-					'at': params.position,
-					'offset': params.offset
-				});
-			},
-
-			'show': function( params ) {
-
-				//	Se il box non esiste lo creo
-				params = methodssakelightbox['create'](params);
-
-				methodssakelightbox['setContent'](params);
-
-				(params.onCreate).apply( null, [$('#'+ params.sakeId), params] );
-
-				var showContent = function(){
-					$('#'+ params.sakeId).animate({ 'opacity':'1' }, { 'duration': params.duration });
-				};
-
-				//	Se esiste lo sfondo...
-				if( params.bg ){
-					$('#box_sakelightbox').animate({ 'opacity':'0.6' }, {
-						'duration': params.duration,
-						'complete': function(){
-							showContent();
-						}
-					});
-				}else{
-					showContent();
-				}
-
-				return $('#'+ params.sakeId);
-			},
-
-			'hide': function( params ) {
-
-				$('.content_sakelightbox').animate({ 'opacity':'0' }, {
-					'duration': params.duration,
-					'complete': function (){
-						$('#box_sakelightbox').animate({ 'opacity':'0' }, {
-							'duration': params.duration,
-							'complete': function(){
-								$('.content_sakelightbox, #box_sakelightbox').css({ 'z-index':'-1' });
-							}
-						});
-					}
-				});
-			},
-
-			'remove': function( params ){
-				methodssakelightbox['hide'](params);
-				setTimeout(function(){
-					$('#box_sakelightbox, .content_sakelightbox').remove();
-				}, params.duration );
-			}
-		};
-
-		// Method calling logic
-		if( methodssakelightbox[method] ){
-			params = methodssakelightbox['init'].apply( this, [params] );
-			return methodssakelightbox[ method ].apply( this, [params] );
-		}
-
-		console.error('Method "' +  method + '" does not exist on jQuery.sakelightbox');
-	};
-
-	/* ================================================================== */
-	/**
-	 *	$( __ELEMENT__ ).getAllStyle( [attrs] );
-	 *	Return an object with all style css of the __ELEMENT__
-	 *
-	 *	@version 1.3
-	 *	@author Kevin Lucich
-	 *
-	 *	@params {Array}	attrs	A list of the styles that the function should return
-	 */
-	$.fn.getAllStyle = function( attrs, no_obj ){
-
-		if( typeof attrs == 'boolean' ){
-			no_obj = attrs;
-			attrs = null;
-		}
-
-		var els = {};
-		var obj = {};
-		if( attrs == null )
-			attrs = ['font-family','font-size','font-weight','font-style','color',
-				'text-transform','text-decoration','letter-spacing','word-spacing',
-				'line-height','text-align','vertical-align','direction','background-color',
-				'background-image','background-repeat','background-position',
-				'background-attachment','opacity','width','height','top','right','bottom',
-				'left','margin-top','margin-right','margin-bottom','margin-left',
-				'padding-top','padding-right','padding-bottom','padding-left',
-				'border-top-width','border-right-width','border-bottom-width',
-				'border-left-width','border-top-color','border-right-color',
-				'border-bottom-color','border-left-color','border-top-style',
-				'border-right-style','border-bottom-style','border-left-style','position',
-				'display','visibility','z-index','overflow-x','overflow-y','white-space',
-				'clip','float','clear','cursor','list-style-image','list-style-position',
-				'list-style-type','marker-offset'];
-
-		if( (this.selector).indexOf(",") ){
-			els = (this.selector).split(',');
-		}else{
-			els[0] = this;
-		}
-
-		var i=0;
-		$.each( els, function( index, el){
-			el = (typeof el === 'undefined') ? i++ : $.trim(el);
-			obj[ el ] = {};
-			$.each( attrs, function(x,attr){
-				obj[ el ][attr] = $(el).css(attr);
-			});
-		});
-
-		if( no_obj ){
-			return obj[ (obj.keys).first ];
-		}
-
-		return obj;
-	};
-	/**
-	 *	$( __ELEMENTS__ ).setPositionTo( ELEM_DEST [,params] ); Set the position of __ELEMENTS__ of the position
-	 *
-	 *	@version 1.5
-	 *	@author Kevin Lucich
-	 *
-	 *	@params {String} ELEM_DEST The id of element from which to take the position
-	 *	@params {Object} params List with falcotative params
-	 *
-	 *	@params {Object} params.animate For specificing an easing and/or duration of animation
-	 *	@params {String} params.my String with X Y position *rispetto a" __ELEMENTS__ (default: "left top")
-	 *	@params {String} params.at String with X Y position *rispetto a" ELEM_DEST (default: "left top")
-	 *	@params {Object} params.offset Object with two attributes, top and left, custom offset
-	 *
-	 *	@return this
-	 */
-	$.fn.setPositionTo = function( eleTo, params ){
-
-		if( typeof params === 'undefined' ){
-			params = {};
-		}
-
-		// If is ID not escape first char "#"
-		if( typeof eleTo === 'string' && eleTo.substring(0,true) == '#' ){
-			eleTo = '#'+ $.escape( eleTo.slice(1) );
-		}
-		//	diverso dalle parole riservate (control_words_reserved)
-		var cwr = $.inArray(eleTo,[':mouse','window'])==-1;
-		var $eleTo = null;
-
-		if( cwr ){
-			if( !$(eleTo).length ){
-				console_action('PRM_IGN','$.setPositionTo','first_argument');
-				eleTo = 'body';
-			}
-			$eleTo = $(eleTo);
-		}
-
-		var paramsDefault = {
-			'animate': false,
-			'my': false,
-			'at': false,
-			'offset': {'top':0, 'left': 0 }
-		};
-		params = KUtils.extend( true, {}, paramsDefault, params );
-
-		if( params.animate ){
-			if( params.animate.easing ){
-				getEasingPlugin();
-			}else{
-				params.animate.easing = 'swing';
-			}
-		}
-
-		if( cwr ){
-			var h_eleTo = $eleTo.height(),
-					w_eleTo = $eleTo.width(),
-					percent = 100;
-
-			if( /%/.test(params.offset.top) ){
-				percent = parseFloat(params.offset.top);	// percent without %
-				params.offset.top = h_eleTo*(percent/100);		// result in PX
-			}
-
-			if( /%/.test(params.offset.left) ){
-				percent = parseFloat(params.offset.left);	// percent without %
-				params.offset.left = w_eleTo*(percent/100);		// result in PX
-			}
-		}
-
-		var obj_style = {
-			'position': 'absolute'
-		};
-
-		switch( eleTo ){
-
-			case ':mouse':
-				obj_style = global_sake['mouse_position'];
-				obj_style['position'] = 'absolute';
-				obj_style['top'] += params.offset.top;
-				obj_style['left'] += params.offset.left;
-				break;
-
-			case 'window':
-				obj_style['top'] = $(window).height() + params.offset.top;
-				obj_style['left'] = params.offset.left;
-				break;
-
-			default:
-				// Save attributes of elements, so i can reset
-				$(this).each(function(index,el){
-
-					var id_el = $(el).attr('id');
-					if( typeof id_el === 'undefined' ){
-						id_el = 'saketemp_'+ $(el).index();
-						$(el).attr('id', id_el);
-					}else{
-						id_el = $.escape(id_el);
-					}
-				});
-
-				var pos = $eleTo.offset();
-				obj_style['top'] = pos['top'] + params.offset.top;
-				obj_style['left'] = pos['left'] + params.offset.left;
-				break;
-		}
-
-		var my='', my_x='', my_y='',
-				at='', at_x='', at_y='';
-
-		if( params.my ){
-			my = (params.my).split(" ");
-			my_x = my[0];
-			my_y = my[1];
-		}
-		if( params.at && (eleTo!=':mouse') ){
-			at = (params.at).split(" ");
-			at_x = at[0];
-			at_y = at[1];
-		}
-
-		/* --- MY coordinate --- */
-		switch( my_x ){
-			case 'center':
-			case 'middle':
-				obj_style['left'] -= $(this).realOuterWidth(true) / 2;
-				break;
-			case 'right':
-				obj_style['left'] -= $(this).realOuterWidth(true);
-				break;
-			case 'left':
-			default:
-				break;
-		}
-		switch( my_y ){
-			case 'center':
-			case 'middle':
-				obj_style['top'] -= $(this).realOuterHeight(true) / 2;
-				break;
-			case 'bottom':
-				obj_style['top'] -= $(this).realOuterHeight(true);
-				break;
-			case 'top':
-			default:
-				break;
-		}
-		/* --- END MY --- */
-
-		if( (obj_style['left'] < 0) && (my_x == 'left') ){
-			//console.log( $(this), "obj_style['left']", obj_style['left'], params.at );
-			params.my = (params.my).replace('left','right');
-			//console.log( $(this), params.at );
-			return $(this).setPositionTo( eleTo, params );
-		}
-
-		if( eleTo != ':mouse' ){
-
-			var _realOuterWidth = (eleTo == 'window') ? $(window).width() : $eleTo.realOuterWidth(true);
-			var _realOuterHeight = (eleTo == 'window') ? $(window).height() : $eleTo.realOuterHeight(true);
-
-			/* --- AT coordinate --- */
-			switch( at_x ){
-				case 'center':
-					obj_style['left'] += _realOuterWidth / 2;
-					break;
-				case 'right':
-					obj_style['left'] += _realOuterWidth;
-					break;
-				case 'left':
-				default:
-					break;
-			}
-			switch( at_y ){
-				case 'center':
-					obj_style['top'] += _realOuterHeight / 2;
-					break;
-				case 'bottom':
-					obj_style['top'] += _realOuterHeight;
-					break;
-				case 'top':
-				default:
-					break;
-			}
-			/* --- END AT --- */
-		}
-
-
-		if( params.animate ){
-			$(this).css({'position':'absolute'});
-			$(this).animate(obj_style, {
-				'duration': params.animate.duration,
-				'easing': params.animate.easing,
-				'queue': false
-			});
-		}else{
-			$(this).css( obj_style );
-		}
 
 		return this;
 	};
-
-	/* ================================================================== */
-
-	/**
-	 * $( __ELEMENT__ ).tooltip( method [, params] );
-	 *
-	 *	@version 3.0
-	 *	@author Kevin Lucich
-	 *
-	 *	@params {String} method Method of Tooltip will be called: "create", "setContent", "show", "hide", "remove"
-	 *	@params {Object} params List of params
-	 *
-	 *	@params {String} params.content The content of Tooltip
-	 *	@params {String} params.side The side of __ELEMENT__ will be positioned Tooltip (default: "top")
-	 *	@params {String} params.position The position rispect a side (can be "left,center,right" if the side is set to "top or bottom", "top,center,bottom" if the side is set to "left or right"), default: "left")
-	 *	@params {Object} params.offset Object with two attributes, "top" and "left", represents the custom offset to be applied to the tooltip
-	 *	@params {String} params.classes List of classes to associate a Tooltip (separated from spaces)
-	 *	@params {Boolean} params.showArrow Discriminate if the arrow will be show or hide
-	 *	@params {Boolean} params.useMousePosition Discriminate if the Tooltip will be positioning at mouse position
-	 *	@params {String} params.bgColor The color for background (default: "#FFFFFF")
-	 *	@params {String} params.borderColor The color for border (default: "#FF8800")
-	 *	@params {String} params.borderWidth The width for border (default: "2px")
-	 *	@params {String} params.arrowSize The size of arrow (default: "10px")
-	 *	@params {Object} params.animation For specificing an easing and/or duration of animation
-	 *	@params {Number} params.animation.duration Milliseconds that the animation will last for showing
-	 *	@params {String} params.animation.easing The easing of animation, you can choose from all easing plugin "http://gsgd.co.uk/sandbox/jquery/easing/"
-	 *
-	 *	@return void
-	 */
-
-	var TooltipVars = global_sake.methods_var.tooltip;
-	$.fn.sakeTooltip = function( method, params ) {
-
-		var methodsTooltip = {
-
-			'__setPosition': function( params ){
-
-				var invertSide = function( side ){
-					switch( side ){
-						case 'top':		return 'bottom';
-						case 'bottom':	return 'top';
-						case 'right':	return 'left';
-						case 'left':	return 'right';
-						case 'center':	return 'center';
-					}
-				};
-
-				var offsetBySide = function(){
-
-					if( !params.showArrow ){
-						return {};
-					}
-
-					switch( params.side ){
-						case 'top':
-							params.offset.top -= parseFloat(params.arrowSize);
-							break;
-						case 'bottom':
-							params.offset.top += parseFloat(params.arrowSize);
-							break;
-						case 'right':
-							params.offset.left += parseFloat(params.arrowSize);
-							break;
-						case 'left':
-							params.offset.left -= parseFloat(params.arrowSize);
-							break;
-					}
-
-					return params.offset;
-				};
-
-				var my = false,
-						at = false,
-						side = params.side,
-						offset = offsetBySide(side),
-						iSide = invertSide(side),
-						position = params.position,
-						iPosition = invertSide(position),
-						target = '';
-
-				switch( params.useMousePosition ){
-					case false:
-						target = '#'+ (params.target).attr('id');
-						switch( side ){
-
-							case 'top':
-							case 'bottom':
-								my = position + ' '+ iSide;
-								at = position + ' '+ side;
-								break;
-
-							case 'left':
-							case 'right':
-							case 'center':
-								my = iSide +' '+ position;
-								at = side +' '+ position;
-								break;
-						}
-						break;
-
-					case true:
-						target = ':mouse';
-						offset = {'top':0, 'left': 0 };
-						switch( side ){
-							case 'top':
-							case 'bottom':
-								my = iPosition + ' '+ iSide;
-								break;
-							case 'left':
-							case 'right':
-								my = iSide +' '+ iPosition;
-								break;
-						}
-
-						break;
-				}
-
-				(params.tooltip.obj).setPositionTo( target,{
-					'my': my,
-					'at': at,
-					'offset': offset
-				});
-
-			},
-
-			'init': function( params ){
-
-				var getIdCSS = function( $el ){
-
-					if( typeof $el.attr('data-idcsssakett') !== 'undefined' ){
-						return $el.attr('data-idcsssakett');
-					}
-
-					var str = params.side + params.arrowSize + params.bgColor + params.borderWidth + params.borderColor;
-					var hash = 'sake_'+ KUtils.hash(str);
-					$el.attr('data-idcsssakett', hash);
-					return hash;
-				};
-				var getIdTooltip = function( $el ){
-					if( typeof $el.attr('data-idsakett') !== 'undefined' ){
-						return $el.attr('data-idsakett');
-					}
-
-					var id_tt = $el.attr('id');
-					id_tt = (typeof id_tt === 'undefined') ? 'sakett_'+ Math.floor(new Date().getTime()) : 'sakett_'+ id_tt;
-					$el.attr('data-idsakett', id_tt );
-					return id_tt;
-				};
-
-				var paramsDefault = {
-					'side':'top',
-					'position':'left',
-					'content':'sake - by Lucich & Caputi',
-					'offset': {'top': 0,'left': 0},
-					'classes': 'tooltipSAKE',
-					'showArrow': true,
-					'useMousePosition': false,
-					'animation': false,
-					'bgColor':'#FFFFFF',
-					'borderColor':'#FF8800',
-					'borderWidth':'2px',
-					'arrowSize':'10px',
-					'callbacks': {
-
-						'BeforeCreate': function(){},
-						'AfterCreate': function(){},
-
-						'BeforeSetContent': function(){},
-						'AfterSetContent': function(){},
-
-						'BeforeShow': function(){},
-						'AfterShow': function(){},
-
-						'BeforeHide': function(){},
-						'AfterHide': function(){},
-
-						'BeforeRemove': function(){},
-						'AfterRemove': function(){},
-
-						'BeforeAttach': function(){},
-						'AfterAttach': function(){}
-					}
-				};
-				if( typeof params === 'undefined' ){
-					params = {};
-
-					// If not empty the param cache, use them
-					if( typeof TooltipVars[ params.tooltip.id ] !== 'undefined'){
-						params = TooltipVars[ params.tooltip.id ];
-					}
-				}
-
-				params = KUtils.extend( true, {}, paramsDefault, params );
-
-				params.target = this;
-
-				// Se non esiste l'elemento a cui associare il tooltip, termino
-				// la funzione
-				if( !(params.target).length ){
-					return false;
-				}
-
-				params.tooltip = {};
-				params.tooltip.id = getIdTooltip( params.target );
-				params.tooltip.obj = $('#'+ params.tooltip.id);
-				params.idCSS = getIdCSS( params.target );
-
-				if( typeof (params.target).attr('id') === 'undefined' ){
-					var _id_el = 'ref_'+ params.tooltip.id;
-					(params.target).attr('id', _id_el);
-				}
-
-				if( !params.showArrow ){
-					params.arrowSize = '0px';
-				}
-
-				return params;
-			},
-
-			'create': function( params ){
-
-				var $target = params.target;
-				(params.callbacks.BeforeCreate).apply( (params.tooltip.obj), arguments );
-
-				var _getTooltipCSS = function(){
-
-					var _arrowCSS = function(arrowSize, color, layer){
-
-						var side = params.side,
-								bgColor = params.bgColor;
-
-						var regex = /#\b[\w]{3,6}\b/g;
-
-						while( r = regex.exec( bgColor ) ){
-							_border = r[0];
-						}
-						_border = KUtils.hexToRgb(_border,true);
-
-						layer = layer || 'after';
-
-						var css = '.'+ params.idCSS +':'+ layer +' {';
-
-						css += 'border-color: rgba('+ _border +',0);';
-						css += 'border-' + side + '-color: ' + color + ';';
-						css += 'border-width: ' + arrowSize + ';';
-
-						if (side == 'top' || side == 'bottom'){
-							switch( params.position ){
-								case 'left':
-									css += 'left: 20%;';
-									break;
-								case 'center':
-								case 'middle':
-									css += 'left: 50%;';
-									break;
-								case 'right':
-									css += 'left: 75%;';
-									break;
-							}
-							css += 'margin-left: -' + arrowSize + ';';
-						}else{
-							css += 'top: 50%;margin-top: -' + arrowSize + ';';
-						}
-
-						css += '}';
-
-						return css;
-					};
-
-					var _baseCSS = function(){
-						var side = params.side,
-								bgColor = params.bgColor,
-								borderColor = params.borderColor,
-								borderWidth = params.borderWidth,
-								hasBorder = parseFloat(borderWidth) > 0;
-
-						var css = '.'+ params.idCSS +'{';
-						css += 'z-index: 10002;';
-						css += 'position: absolute;';
-						css += 'background: ' + bgColor + ';';
-
-						if( hasBorder ){
-							css += 'border: ' + borderWidth + ' solid ' + borderColor + ';';
-						}
-
-						css += '}';
-						css += '.'+ params.idCSS +':after';
-
-						css += ((hasBorder) ? (', .'+ params.idCSS +':before {') : ' {');
-
-						css += ''+ side +': 100%;';
-						css += 'border: solid transparent;';
-						css += 'content: " ";';
-						css += 'height: 0;';
-						css += 'width: 0;';
-						css += 'position: absolute;';
-						css += 'pointer-events: none;';
-						css += '}';
-
-						css += ' #'+ params.tooltip.id +'{ display: none; }';
-
-						return css;
-					};
-
-					var _baseArrowCSS = function() {
-
-						var regex = /#\b[\w]{3,6}\b/g;
-						var color = '';
-
-						while( r = regex.exec( params.bgColor ) ){
-							color = r[0];
-						}
-
-						return _arrowCSS(params.arrowSize, color, 'after' );
-					};
-
-					var _arrowBorderCSS = function() {
-						var css = '',
-								borderWidth = parseFloat(params.borderWidth);
-
-						if( (borderWidth > 0)&&(params.showArrow) ){
-							var _size = /[\D]+/.exec( params.arrowSize );
-							css = _arrowCSS(
-									parseFloat(params.arrowSize) + Math.round(borderWidth * 1.41421356) + _size, // cos(PI/4) * 2
-									params.borderColor,
-									'before' );
-						}
-
-						return css;
-					};
-
-					return _baseCSS() + _baseArrowCSS() + _arrowBorderCSS();
-				};
-
-				if( !$('#style_'+ params.idCSS ).length ){
-					$('<style type="text/css" id="style_'+ params.idCSS +'">'+ _getTooltipCSS(params) +'</style>').appendTo( $('body') );
-				}
-
-				var html = '<div id="'+ params.tooltip.id +'" class="'+ params.idCSS +' '+ params.classes +'"></div>';
-
-				$('body').append( html );
-
-				params.tooltip.obj = $('#'+ params.tooltip.id);
-
-				// Save the params into the element
-				$target.data({'sakeParamsTooltip':params.tooltip.obj});
-
-				methodsTooltip['setContent']( params );
-				methodsTooltip['__setPosition']( params );
-
-				(params.callbacks.AfterCreate).apply( (params.tooltip.obj), arguments );
-
-				return this;
-			},
-
-			'setContent': function( params ){
-				(params.callbacks.BeforeSetContent).apply( (params.tooltip.obj), arguments );
-				(params.tooltip.obj).html( params.content );
-				(params.callbacks.AfterSetContent).apply( (params.tooltip.obj), arguments );
-				return this;
-			},
-
-			'show': function( params ){
-
-				(params.callbacks.BeforeShow).apply( (params.tooltip.obj), arguments );
-
-				// Check if already exist a tooltip
-				if( !(params.tooltip.obj).length ){
-					methodsTooltip['create'](params);
-				}else{
-					methodsTooltip['__setPosition']( params );
-				}
-
-				var $el = (params.tooltip.obj);	// The Tooltip (jQuery Obj)
-
-				if( params.animation ){
-					switch( params.animation.type ){
-						case 'fadeIn':
-							$el.fadeIn( params.animation.time );
-							break;
-						case 'delay':
-							setTimeout( function(){ $el.css('display','block'); }, params.animation.time );
-							break;
-					}
-				}else{
-					$el.css('display','block');
-				}
-
-				(params.callbacks.AfterShow).apply( (params.tooltip.obj), arguments );
-
-				return this;
-			},
-
-			'hide': function( params ){
-
-				(params.callbacks.BeforeHide).apply( (params.tooltip.obj), arguments );
-				var $el = (params.tooltip.obj);
-
-				if( params.animation ){
-					switch( params.animation.type ){
-						case 'fadeIn':
-							$el.fadeOut( params.animation.time );
-							break;
-						case 'delay':
-							setTimeout( function(){ $el.css('display','none'); }, params.animation.time );
-							break;
-					}
-				}else{
-					$el.hide();
-				}
-
-				(params.callbacks.AfterHide).apply( (params.tooltip.obj), arguments );
-
-				return this;
-			},
-
-			'remove': function( params ){
-
-				var $target = params.target;
-
-				// Load params
-				var _params = $target.data('sakeParamsTooltip');
-				params = KUtils.extend( true, {}, _params, params );
-
-				(params.callbacks.BeforeRemove).apply( $('#'+$(this).attr('data-idsakett')), arguments );
-				var idTooltip = $(this).attr('data-idsakett');
-				$('#'+ idTooltip +', #style_'+ idTooltip).remove();
-				(params.callbacks.AfterRemove).apply( {}, params );
-				return this;
-			},
-
-			'attach': function( params ){
-				(params.callbacks.BeforeAttach).apply( {}, params );
-				var $this = this
-				$this.sakeTooltip('create',params);
-				$this.data({'sakeParamsTooltip':params});
-				$this.on({
-					'mouseover': function(){
-						var $this = $(this);
-						var params = $this.data('sakeParamsTooltip');
-						$this.sakeTooltip('show',params);
-					},
-					'mouseleave': function(){
-						var $this = $(this);
-						var params = $this.data('sakeParamsTooltip');
-						$this.sakeTooltip('hide',params);
-					}
-				});
-				(params.callbacks.AfterAttach).apply( $('#'+$this.attr('data-idsakett') ), arguments );
-				return $this;
-			}
-
-		};
-
-		// Method calling logic
-		if( methodsTooltip[method] ){
-			var el = this;
-			if( typeof params === 'undefined' ){
-				params = {};
-			}
-			params = methodsTooltip['init'].apply( el, [params] );
-			return methodsTooltip[ method ].apply( el, [params] );
-		}
-
-		console.error('Method "' +  method + '" does not exist on jQuery.tooltip');
+	$.fn.scrollTo.prototype.defaults = {
+		'speed': 500,
+		'easing': 'linear',
+		'scrollx': false,
+		'offset': {'x':0,'y':0}
 	};
 
-	/* ================================================================== */
 	/**
 	 * $( __ELEMENT__ ).validate( [params] );
 	 *
@@ -2575,6 +1703,10 @@
 	 */
 	var ValidateVars = global_sake['methods_var']['validate'];
 	$.fn.validate = function( method, params ){
+
+		if( $('#sake_style').length == 0 ){
+			$('body').append('<style id="sake_style" type="text/css"> .invalid { background-color: #fdd; border-color: #f00; } </style>');
+		}
 
 		var methodsValidate = {
 			'counterElements': 0,
@@ -2610,7 +1742,6 @@
 				var paramsDefault = {
 					'showTooltip': true,
 					'tooltipSide': 'right',
-					'tooltipOnFocus': false,
 					'ignore_hidden_fields': false,
 					'showRules': false,
 					'debug': false,
@@ -2632,7 +1763,7 @@
 
 				var childrenRules = {};
 				// Assegno un ID (se necessario) ai figli
-				$el.find('input[type="text"], input[type="password"], select').each(function(i, input ){
+				$el.find('input[type="text"], input[type="number"], input[type="password"], select').each(function(i, input ){
 					var $input = $(input);
 					var idChild = $input.attr('id');
 					if( typeof idChild === 'undefined' || idChild == '' ){
@@ -2677,39 +1808,51 @@
 				// Controllo la lunghezza del valore nel campo
 				var testLength = function( $el ){
 
-					var result = '';
-					var _min, _max, minMax, value_input;
+					var _min = $el.attr('min');
+					var _max = $el.attr('max');
+					if( typeof _min === 'undefined' ){
+						_min = getData($el,'min',null);
+					}
+					if( typeof _max === 'undefined' ){
+						_max = getData($el,'max',null);
+					}
 
-					if( typeof getData($el,'length') === 'undefined' ){
+					//	Backward compatibility
+					var data_length_value = getData($el,'length',null);
+					if( (_min == null) && (_max == null) && (data_length_value != null) ){
+						if( data_length_value.indexOf(',') > -1 ){
+							var minMax = data_length_value.split(',');
+							_min = minMax[0];
+							_max = minMax[1];
+						}else{
+							_min = minMax;
+							_max = null;
+						}
+					}
+
+					//	There aren't value range to check
+					if( (_min == null) && (_max == null) ){
 						return '';
 					}
 
-					value_input = $el.val();
+					var value_input = $el.val(),
+						result = '';
 
-					minMax = getData( $el, 'length');
-					if( minMax.indexOf(',') > -1 ){
-						minMax = minMax.split(',');
-						_min = minMax[0];
-						_max = minMax[1];
-					}else{
-						_min = minMax;
-						_max = null;
-					}
+					switch( getInputType($el) ){
 
-					switch( getData( $el, 'type') ){
 						case 'text':
 							if( _min==0 ){ _min=1; }
-							if( (typeof _min !== 'undefined') && (typeof _max !== 'undefined') && ( (value_input.length<_min) || (value_input.length>_max) )){
+							if( (_min != null) && (_max != null) && ( (value_input.length<_min) || (value_input.length>_max) )){
 								result = getDic('MINMAXCHARS').replace('__MIN__',_min).replace('__MAX__',_max);
-							}else if( (typeof _min !== 'undefined') && (value_input.length<_min) ){
+							}else if( (_min != null) && (value_input.length<_min) ){
 								result = getDic('MINCHARS').replace('__MIN__',_min);
 							}
 							break;
 
 						case 'number':
-							if( (typeof _min !== 'undefined') && (typeof _max !== 'undefined') && ( (parseFloat(value_input)<parseFloat(_min)) ||  (parseFloat(value_input)>parseFloat(_max)) )){
+							if( (_min != null) && (_max != null) && ( (parseFloat(value_input)<parseFloat(_min)) ||  (parseFloat(value_input)>parseFloat(_max)) )){
 								result = getDic('MINMAXNUM').replace('__MIN__',_min).replace('__MAX__',_max);
-							}else if( (typeof _min !== 'undefined') && (parseFloat(value_input)<parseFloat(_min)) ){
+							}else if( (_min != null) && (parseFloat(value_input)<parseFloat(_min)) ){
 								result = getDic('MINNUM').replace('__MIN__',_min);
 							}
 							break;
@@ -2719,7 +1862,7 @@
 				};
 				var testCF = function(cf){
 					var i, s, set1, set2, setpari, setdisp;
-					if( cf )  return false;
+
 					cf = cf.toUpperCase();
 					if( cf.length != 16 )
 						return getDic('CFFIELD2');
@@ -2761,7 +1904,6 @@
 
 					return '';
 				};
-
 				var hasValidValue = function( $el ){
 					var _rules = (typeof ValidateVars['rules'][params.idFather] !== 'undefined') ? ValidateVars['rules'][ params.idFather ] : {};
 					var _value = ($el.is('[type="radio"]')) ? $el.find(':checked').val() : $el.val();
@@ -2784,12 +1926,10 @@
 					var not_accepted = child_rules['notacceptedvalues'];
 					return (typeof not_accepted !== 'undefined') ? (not_accepted.indexOf(_value) == -1) : true;
 				};
-
 				var isCompulsory = function( $el ){
 					var attr = (getData($el,'compulsory',null) || getData($el,'cmp',null));
 					return ( (typeof attr !== 'undefined') && (attr != null) && ((''+attr).toLowerCase() != 'false') );
 				};
-
 				var getData = function( $el, attr,  _default ){
 					try{
 						var data = undefined;
@@ -2810,55 +1950,56 @@
 						console_action('GENERIC_ERROR', '.validate()', undefined, 'I encountered an error while retrieving the rules of the element :( '+ "\n"+ error);
 					}
 				};
+				var hideTT = function( $el ){
+					$el.attr('data-original-title','').data('bs.tooltip', false);
+				};
+				var showTT = function( $el, errorText ){
 
-				var showTT = function( $el, errorText, side ){
-
-					if( $el.is('[title]') == false ){
-						$el.attr('title','');
+					if( params.showTooltip == false ){
+						return;
 					}
 
-					$el.data('sake_tooltip',{
-						'content': errorText
-					});
-
-					if( typeof $el.data('uiTooltip') !== 'undefined' ){
-						$el.tooltip('destroy');
-					}
-
-					$el.tooltip({
-						'track': true,
-						'content': function(){
-							var element = $(this);
-							if ( element.is('[title]') ) {
-								return element.attr('title');
-							}
-
-							var old_sake_tooltip = element.data('sake-validate-tooltip-params');
-							if( old_sake_tooltip ){
-								return old_sake_tooltip.content;
-							}
-
-							var sake_tooltip = element.data('sake_tooltip');
-							if( typeof sake_tooltip !== 'undefined' ){
-								return sake_tooltip.content;
-							}
+					$el.attr('title', errorText ).tooltip({
+						'title': function(){
+							return $(this).attr('title');
 						}
 					});
+				};
+				var getInputType = function( $el ){
+
+					var input_type = getData($el,'type',null);
+					if( input_type != null ){
+						return input_type;
+					}
+
+					input_type = $el.attr('type');
+					if( (typeof input_type !== 'undefined') ){
+						//	Check if there in type attribute: <input type="number|email|...">
+						switch( input_type ){
+							case 'email':
+							case 'number':
+							case 'date':
+								return $el.attr('type');
+						}
+					}
+
+					return 'text';
 				};
 
 				var ok = true;
 
-				var $elements_to_validate = $containerToValidate.find('input[type="text"],input[type="password"]');
+				var $elements_to_validate = $containerToValidate.find('input[type="text"],input[type="password"],input[type="number"],input[type="email"]');
 				if( params.ignore_hidden_fields ){
 					$elements_to_validate = $elements_to_validate.not(':hidden');
 				}
 				$elements_to_validate.each(function( i, el ){
 					var $el = $(el);
+					hideTT($el);
 
 					var _value = $el.trim(),
-							isCmp = isCompulsory($el),
-							sake_error = '',
-							res = false;
+						isCmp = isCompulsory($el),
+						sake_error = '',
+						res = false;
 
 					if( isCmp == false ){
 						return true;
@@ -2877,7 +2018,8 @@
 						var el_subtype = getData( $el, 'subtype', 'all').toLowerCase();
 
 						if( !sake_error ){
-							switch( getData( $el, 'type') ){
+
+							switch( getInputType($el) ){
 
 								case 'text':
 
@@ -3069,6 +2211,7 @@
 				});
 
 				$.each( radios_obj, function( nameRadio, infos ){
+					hideTT(infos.first);
 
 					if( infos.cmp == false ) {
 						return true;
@@ -3108,7 +2251,7 @@
 
 					if( sakeerror ){
 						ok = false;
-						showTT( infos.first, sakeerror, 'left' );
+						showTT( infos.first, sakeerror );
 					}
 
 				});
@@ -3121,6 +2264,7 @@
 				}
 				$elements_to_validate.each(function( i, el ){
 					var $el = $(el);
+					hideTT($el);
 					var compulsory = isCompulsory($el);
 
 					if( compulsory && !hasValidValue($el) ){
@@ -3196,9 +2340,6 @@
 	};
 
 	/* ================================================================== */
-	/* ================================================================== */
-
-	/* ================================================================== */
 
 	/**
 	 * .escape()
@@ -3208,12 +2349,11 @@
 	 *
 	 *	@desc $.escape( string ); Escape dei caratteri speciali jQuery
 	 *
-	 *	@param {String}
-	 *            str String to escape
+	 *	@param str {String} String to escape
 	 *
 	 *	@return {String} String passed escaped
 	 */
-	$.escape = function(str){
+	$.escape = function( str ){
 		// !"#$%&'()*+,.\/:;<=>?@[\]^`{|}~
 		return ((typeof str != 'string') ? str : str.replace(/([!"#$%&'()*+,.\/:;<=>?@[\]^`{|}~])/g, '\\$1'));
 	};
@@ -3337,294 +2477,6 @@
 		return this;
 	};
 
-
-	/* ================================================================== */
-
-	/**
-	 *	$.loop( fn, howmany, time ); Run "fn" function "howmany" times $.loop( params );
-	 *	Check if value of __ELEMENT__ is undefined
-	 *
-	 *	@author Kevin Lucich
-	 *	@version 1.0
-	 *
-	 *	@params {Object}	params			List of params
-	 *
-	 *	@params {Function}	params.fn		Function to loop
-	 *	@params {Number}	params.howmany	How many times execute the function ( 0 = infinite )
-	 *	@params {Number}	params.delay	Delay before to execute the function
-	 *
-	 *	The function can have a parameter, an object with a useful variables
-	 *
-	 *	@return {String} Return the id of loop created
-	 */
-	var LoopVars = global_sake.methods_var.loop;
-	$.loop = function( params, howmany, delay ){
-
-		var _fn_default_ = function(){};
-		if( typeof params == 'object' ){
-			var paramsDefault = {
-				'fn': _fn_default_,
-				'howmany': 1,
-				'delay': 0,
-				'backup_time': null
-			};
-			params = KUtils.extend( true, {}, paramsDefault, params );
-		}else{
-			params = {
-				'fn': (typeof params !== 'undefined') ? params : _fn_default_,
-				'howmany': (typeof howmany !== 'undefined') ? howmany : 1,
-				'delay': (typeof delay !== 'undefined') ? delay : 0,
-				'backup_time': null
-			};
-		}
-
-		if( typeof params.backup_time === 'undefined' ){
-			params.backup_time = params.delay;
-		}
-
-		if(typeof params.fn != "function"){
-			console_action('PRM_IGN','$.loop',nameParam);
-			params.fn = _fn_default_;
-		}
-
-		// Se non esiste allora è al primo ciclo, creo all'interno della var
-		// globale "global_sake" il counter
-		if( typeof params.sakeId === 'undefined' ){
-			params.sakeId = 'loop_'+ Math.floor(new Date().getTime());
-			LoopVars[ params.sakeId ] = {
-				'counter': 0
-			};
-		}
-
-		params.howmany--;
-		setTimeout( function(){
-			LoopVars[ params.sakeId ]['counter']++;
-			var attrs_for_function = {
-				'counter': LoopVars[ params.sakeId ]['counter']
-			};
-			(params.fn).apply(undefined, [attrs_for_function] );	// Call user
-			// function
-		}, params.time);
-
-		if( params.howmany ){
-			params.delay += params.backup_time;
-			$.loop( params );
-		}
-
-		return params.sakeId;
-	};
-
-	/**
-	 * $( __ELEMENT__ ).random( params ); Hide or remove randomly a "count" element
-	 * inside of __ELEMENT__
-	 *
-	 *	@author Kevin Lucich
-	 *	@version 1.0
-	 *
-	 *	@params {Object} params List of params
-	 *
-	 *	@params {Number} params.count Number of elements inside of __ELEMENT__ to
-	 *         keep
-	 *	@params {Boolean} params.remove Discriminate if elements inside will be hided
-	 *         (false) or removed (true)
-	 *
-	 *	@return void
-	 */
-	$.fn.random = function( params ){
-
-		var paramsDefault = {
-			'count': 1,
-			'remove': false
-		};
-		params = KUtils.extend( true, {}, paramsDefault, params );
-
-		var el = this,
-				childs = el.children().length,
-				elsToShow = [],
-				i=0;
-
-		while(elsToShow.length < params.count){
-			var elToShow = Math.floor(Math.random() * childs);
-			if ($.inArray(elToShow, elsToShow) == -1){
-				elsToShow.push(elToShow);
-			}
-		}
-
-		el.children().each(function(k,child){
-			if ($.inArray(i, elsToShow) == -1){
-				if(params.remove){
-					$(child).remove();
-				}else{
-					$(child).hide();
-				}
-			}else{
-				$(child).show();
-			}
-			i++;
-		});
-	};
-
-	/**
-	 * $( __ELEMENT__ ).getEvents();
-	 *
-	 *	@author Kevin Lucich
-	 *	@version 1.0
-	 *
-	 *	@return {Object} Return a map of events associated at element
-	 */
-	$.fn.getEvents = function(){
-
-		var result = {},
-				i = -1;
-
-		$.each( this, function( index,el ){
-			var $el = $(el);
-			var id = $el.attr('id');
-			index = (typeof id !== 'undefined') ? id : ++i;
-			result[ index ] = {
-				'el': $el,
-				'events': {}
-			};
-			result[ index ]['events'] = $._data(el,'events');
-		});
-
-		return result;
-	};
-
-
-
-	/**
-	 *	$( __ELEMENT__ ).tips( method [, params] );
-	 *
-	 *	@author Kevin Lucich
-	 *	@version 1.0
-	 *
-	 *	@param	{String}	method Method of Tips will be called: "create", "add", "close"
-	 *	@param	{Object}	params List of params
-	 *
-	 *	@param	{String}	params.content The content of tip
-	 *	@param	{String}	params.classes List of classes to associate a tip (separated from spaces)
-	 *	@param	{String}	params.position String with position respect a window (default: "right bottom")
-	 *	@param	{Object}	params.offset Object with two attributes, top and left, custom offset
-	 *	@param	{Number}	params.delay Milliseconds before of showing
-	 *	@param	{Object}	params.animation For specifying an easing and/or duration of animation
-	 *	@param	{Number}	params.animation.duration Milliseconds that the animation will last for showing
-	 *	@param	{String}	params.animation.easing The easing of animation, you can choose from all easing plugin "http://gsgd.co.uk/sandbox/jquery/easing/"
-	 *	@param	{function}	params.closing Function execute when called a "close" method
-	 *
-	 *	@return {Object} Object with a ids of box and last tip insert (if exists)
-	 */
-	$.tips = function( method, params ){
-
-		var methodsTips = {
-
-			//	Adjust params
-			init: function(params){
-				var paramsDefault = {
-					'content': 'Test test test test',
-					'classes': 'box_tips',
-					'position': 'right bottom',
-					'offset': {'top': 0, 'left': 0},
-					'delay': 0,
-					'animation': {
-						'duration': 0,
-						'easing': 'linear'
-					},
-					'closing': function(attrs){
-						(attrs.tip).delay(1000).remove(500);
-					}
-				};
-				params = $.extend( true, {}, paramsDefault, params );
-
-				if( $.inArray( params.easing, ['linear','swing'] ) ){
-					getEasingPlugin();
-				}
-
-				//	params.boxTipsId = 'sake_'+ Math.floor(new Date().getTime());
-				params.boxTipsId = 'sake_'+ KUtils.hash( params.position );
-
-				return params;
-			},
-
-			// Create a box for Tips
-			create: function(params){
-
-				create_sake_window();
-
-				if( !$('#'+ params.boxTipsId).length ){
-					// Creo il box
-					$('<div />')
-							.attr('id', params.boxTipsId)
-							.attr('class', params.classes )
-							.appendTo('body');
-
-					// Posiziono il box
-					$('#'+ params.boxTipsId).setPositionTo('window',{
-						'my': params.position,
-						'at': params.position,
-						'offset': params.offset
-					});
-
-					// Se la posizione è in basso gli setto per correttezza
-					// l'attributo BOTTOM e non TOP, altrimenti i tips
-					// uscirebbero dallo schermo!
-					if( /bottom$/.test(params.position) ){
-						$('#'+ params.boxTipsId).css({
-							'top': '',
-							'bottom': 0
-						});
-					}
-				}
-
-			},
-
-			//	Add a tip in box
-			add: function(params){
-
-				if( !$('#'+ params.boxTipsId).length ){
-					methodsTips['create'](params);
-				}
-
-				params.tipId = 'tip_'+ Math.floor(new Date().getTime());
-
-				$('<div class="tips" />')
-						.attr('id', params.tipId)
-						.html(params.content)
-						.appendTo('#'+ params.boxTipsId)
-						.delay(params.delay)
-						.show( params.animation.duration, params.animation.easing );
-
-				return params;
-			},
-
-			close: function(params){
-
-				var attrs = {'tip': $('#'+ params.boxTipsId +' div:visible').not('[data-inclosing]').first() };
-				if( params.tipId )
-					attrs = {'tip': $('#'+ params.tipId) };
-
-				(attrs.tip).attr('data-inclosing','true');
-				(params.closing).apply(undefined, [attrs] );
-				return params;
-			}
-
-		};
-
-		if( typeof method == 'object' ){
-			params = method;
-			method = 'create';
-		}
-
-		params = (methodsTips['init']).call( undefined, params );
-		(methodsTips[method]).call( undefined, params );
-
-		return {
-			'box': params.boxTipsId,
-			'tip': params.tipId
-		};
-
-	};
-
 	/* ================================================================== */
 
 	/**
@@ -3637,156 +2489,6 @@
 	 */
 	$.fn.hash = function(){
 		return KUtils.hash( $(this).val() );
-	};
-
-	/* ================================================================== */
-
-	/**
-	 *	$.sakebuttons( params ); Transform checkbox input in button Apple style
-	 *
-	 *	@author Kevin Lucich
-	 *	@version 1.0
-	 *
-	 *	@param	{Object} params List of params
-	 *
-	 *	@param	{String} params.classes List of classes to associate a tip (separated
-	 *         from spaces)
-	 *
-	 *	@return {Object} jQuery Object
-	 */
-	$.fn.sakebuttons = function( params ){
-
-		var paramsDefault = {
-			'classes': '',
-			'labels': ['ON','OFF']
-		};
-		params = KUtils.extend( true, {}, paramsDefault, params );
-
-		var $el = this;
-
-		var html = '';
-		html+='<div class="sakebutton_apple '+ params.classes +'" data-refcheck="">';
-		html+='	<div class="slider">';
-		html+='		<div class="status on">'+ params.labels[0] +'</div>';
-		html+='		<div class="divide">&nbsp;</div>';
-		html+='		<div class="status off">'+ params.labels[1] +'</div>';
-		html+='	</div>';
-		html+='</div>';
-
-		$el.find('input:checkbox').each(function(i,input){
-
-			var $input = $(input),
-					slider_off = '',
-					input_id = $input.attr('id');
-
-			slider_off = (!$input.is(':checked')) ? 'slider_off' : '';
-
-			$input.after( html );
-			$sakebutton_apple = $input.next();
-			$sakebutton_apple.attr('data-refcheck', input_id );		// Change the HTML code, don't only data of element
-			$sakebutton_apple.find('> .slider').addClass( slider_off );
-			$input.hide();
-
-			//	if i click SakeButton
-			$sakebutton_apple.on('click',function(){
-				var input_id = $(this).attr('data-refcheck');
-				var $input = $('#'+ input_id );
-				$input.prop('checked', !$input.prop('checked') ).change();   // Trigger change status input
-			});
-
-			$input.on('change',function(){
-				var $input = $(this);
-				var input_id = $input.attr('id');
-				var $slider = $('div[data-refcheck="'+ input_id +'"] > .slider');
-
-				if( $input.is(':checked') )
-					$slider.removeClass('slider_off');
-				else
-					$slider.addClass('slider_off');
-			});
-		});
-
-		return $el;
-	};
-
-	/* ================================================================== */
-
-	/**
-	 *	$.whenChange( method, params );
-	 *	Check the content of the element and trigger the event "change" on it
-	 *
-	 *	@author Kevin Lucich
-	 *	@version 1.0
-	 *
-	 *	@params {String} method Method will be called: "start", "stop"
-	 *	@params {Object} params List of params
-	 *	@params {int} params.interval Interval in milliseconds that will be checked the content of the element
-	 *
-	 *	@return {Object} Object
-	 */
-	var WhenChangeVars = global_sake['methods_var']['whenChange'];
-	$.fn.whenChange = function( method, params ){
-
-		var methodswhenChange = {
-
-			'init': function( params ){
-
-				var paramsDefault = {
-					'interval': 1000,
-					'auto_stop': true
-				};
-				params = $.extend( true, {}, paramsDefault, params );
-
-				var $el = this;
-				params.id = $el.attr('id');
-
-				// Creo (se serve) la struttura
-				if( typeof WhenChangeVars[params.id] === 'undefined' ){
-					WhenChangeVars[ params.id ] = {'idInterval':null,'bodyHash': 0};
-				}
-
-				return params;
-			},
-
-			'start': function( params ){
-
-				var temp = WhenChangeVars[ params.id ];
-
-				temp.idInterval = setInterval(function(params){
-
-					var $el = $('#'+ params.id );
-					var bodyText = $el.text();
-					var hash = KUtils.hash(bodyText);
-
-					if( temp.bodyHash != hash ){
-						temp.bodyHash = hash;
-						if( params.auto_stop ){
-							methodswhenChange['stop']( params );
-						}
-						$el.trigger('change',{});
-					}
-				}, params.interval, params);
-			},
-
-			'stop': function( params ){
-				clearInterval( WhenChangeVars[ params.id ]['idInterval'] );
-				delete WhenChangeVars[ params.id ];
-				return this;
-			}
-
-		};
-
-		// //////////////////////////////////////////////////////////
-
-		if( typeof method == 'object' ){
-			params = method;
-			method = 'start';
-		}
-
-		params = (methodswhenChange['init']).call( this, params );
-		(methodswhenChange[method]).call( this, params );
-
-		return this;
 	};
 
 	/* ================================================================== */
@@ -3962,72 +2664,6 @@
 
 	/* ================================================================== */
 	/**
-	 *	$(el).blink( method, [params] ) Blink element
-	 *
-	 *	@author Kevin Lucich
-	 *	@version 1.0
-	 *	@return jQuery Object
-	 */
-	var BlinkVars = global_sake['methods_var']['blink'];
-	$.fn.blink = function( method, params ){
-
-		var methodsBlink = {
-
-			'init': function( params ){
-
-				var paramsDefault = {
-					'speed': 500
-				};
-				params = KUtils.extend( true, {}, paramsDefault, params );
-
-				params.target_id = this.attr('id');
-				if( typeof params.target_id === 'undefined' ){
-					var new_id = 'sake_'+ Math.floor(new Date().getTime());
-					this.attr('id', new_id );
-					params.target_id = new_id;
-				}
-
-				return params;
-			},
-
-			'start': function( params ){
-
-				var $el = this;
-
-				BlinkVars[ params.target_id ] = setInterval(function() {
-					var rule_value = ($el.css('visibility') == 'hidden') ? 'visible' : 'hidden';
-					$el.css('visibility', rule_value);
-				}, params.speed );
-			},
-
-			'stop': function( params ){
-				clearInterval( BlinkVars[ params.target_id ] );
-				BlinkVars[ params.target_id ] = null;
-				$el.css('visibility', 'visible');
-			}
-
-		};
-
-		var $el = this;
-
-		if( typeof method === 'undefined' ){
-			method = 'start';
-		}else if( method.constructor == Object ){
-			params = method;
-			method = 'start';
-		}
-		if( typeof params === 'undefined' ){
-			params = {};
-		}
-
-		params = (methodsBlink['init']).call( $el, params );
-		(methodsBlink[ method ]).call( $el, params );
-
-		return $el;
-	};
-
-	/* ================================================================== */
-	/**
 	 *	$(el).realOuterWidth( [includeMargin] ) Return a width of an element hidden
 	 *
 	 *	@author		Kevin Lucich
@@ -4055,92 +2691,17 @@
 	/* ================================================================== */
 
 	/**
-	 *	$(container).getDataInfo( [params] )
+	 *	$(container).getDataInfo( [options] )
 	 *	Returns an object with field data inside the $container
 	 *
 	 *	@author		Kevin Lucich
-	 *	@version	1.1
+	 *	@version	2.0
 	 *	@return		Object
 	 */
-	$.fn.getDataInfo = function( delimiter, ignoreHidden, types ){
+	$.fn.getDataInfo = function( options ){
 		var $container = this;
 
-		var args = {};
-		var __default = {
-			'delimiter': '/',
-			'ignoreHidden': false,
-            'include_checkbox_false_value' :false,
-			'types': {
-				'trimmed': function( $field, key, value ){
-					return $field.trim();
-				},
-				'boolean': function( $field, key, value ){
-					if( $field.is(':checkbox') || $field.is(':radio') ){
-						return $field.is(':checked');
-					}
-					return (eval(value)) ? true : false;
-				},
-				'number': function( $field, key, value ){
-					return (KUtils.check('number',value)) ? eval(value) : value;
-				}
-			},
-			'__validValue': function( value ){
-				return value != '***';
-			},
-			'debug': false
-		};
-
-		switch( arguments.length ){
-			case 1:
-				var a = arguments[0];
-				switch( a.constructor ){
-					case String:
-						args.delimiter = a;
-						break;
-					case Boolean:
-						args.ignoreHidden = a;
-						break;
-					case Object:
-						if( (a.hasOwnProperty('delimiter') || a.hasOwnProperty('ignoreHidden') || a.hasOwnProperty('types') || a.hasOwnProperty('include_checkbox_false_value') ) ){
-							args = a;	 // Options
-						}else{
-							// Don't contain "delimiter" or "ignoreHidden" or
-							// "types", it is a list of the custom types
-							args.types = a;
-						}
-						break;
-				}
-				break;
-			case 2:
-				for(var i=0; i<2; i++ ){
-					switch( (arguments[i]).constructor ){
-						case String:
-							args.delimiter = arguments[i];
-							break;
-						case Boolean:
-							args.ignoreHidden = arguments[i];
-							break;
-						case Object:
-							args.types = arguments[i];
-							break;
-					}
-				}
-				break;
-			case 3:
-				args.delimiter = delimiter;
-				args.ignoreHidden = ignoreHidden;
-				args.types = types;
-				break;
-		}
-
-		// Cancel all null values
-		for( a in args ){
-			if( args[a] == null ){
-				delete(args[a]);
-			}
-		}
-
-		var options = $.extend( true, {}, __default, args );
+		options = $.extend( true, {}, $.fn.getDataInfo.prototype.defaults, options );
 
 		var __get = function( struct, keys, $el ){
 
@@ -4176,17 +2737,25 @@
 				v = (options.types[type])( $el, key, v );
 			}
 
+			var is_radio = $el.is(':radio');
 			if( typeof struct[key] !== 'undefined' ){
 				if( (struct[key]).constructor == Array ){
 					(struct[key]).push(v);
+				}else if( is_radio ){
+					if( $el.is(':checked') ){
+						struct[key] = v;
+					}
 				}else{
 					struct[key] = [struct[key],v];
 				}
 			}else{
-				if( typeof type !== 'undefined' && KUtils.inArray(type,['array','list']) ){
+				if( typeof type !== 'undefined' && KUtils.inArray(type, ['array', 'list']) ){
 					v = [v];
 				}
-				struct[key] = v;
+
+				if(!is_radio || (is_radio && $el.is(':checked'))){
+					struct[key] = v;
+				}
 			}
 
 			return struct;
@@ -4202,9 +2771,6 @@
 		$fieldsIntoSearch.each(function( i, field ){
 			var $field = $(field);
 			if( typeof $field.attr('data-info') === 'undefined' ){
-				if( options.debug ){
-					console.warn('[SAKE .getDataInfo()]', $field, 'Field don\'t have data-info attribute, the field will be ignore');
-				}
 				return;
 			}
 			var path_keys = $field.attr('data-info').split(options.delimiter);
@@ -4212,6 +2778,28 @@
 		});
 
 		return struct;
+	};
+	$.fn.getDataInfo.prototype.defaults = {
+		'delimiter': '/',
+		'ignoreHidden': false,
+		'include_checkbox_false_value': false,
+		'types': {
+			'trimmed': function( $field, key, value ){
+				return $field.trim();
+			},
+			'boolean': function( $field, key, value ){
+				if( $field.is(':checkbox') || $field.is(':radio') ){
+					return $field.is(':checked');
+				}
+				return (eval(value)) ? true : false;
+			},
+			'number': function( $field, key, value ){
+				return (KUtils.check('number',value)) ? eval(value) : value;
+			}
+		},
+		'__validValue': function( value ){
+			return value != '***';
+		}
 	};
 
 	/* ================================================================== */
@@ -4282,12 +2870,10 @@
 
 		return self;
 	};
-	$.fn.setDataInfo.prototype = {
-		'defaults': {
-			'delimiter': '/',
-			'ignore_null': false,
-			'use_html': true
-		}
+	$.fn.setDataInfo.prototype.defaults = {
+		'delimiter': '/',
+		'ignore_null': false,
+		'use_html': true
 	};
 
 	/* ================================================================== */
@@ -4355,20 +2941,6 @@
 //
 //		return (methods['init']).apply( this, [variable] );
 //	};
-
-	var getEasingPlugin = function(){
-		if( !global_sake.easingPlugin.loaded )
-			$.getScript( global_sake.url_plugin +'include/jquery.easing.1.3.js');
-		global_sake.easingPlugin.loaded = true;
-	};
-
-	var create_sake_window = function(){
-		var $saketarget_window = $('#saketarget_window');
-		if( !$saketarget_window.length ){
-			$saketarget_window = $('<div />').attr('id','saketarget_window').appendTo('body');
-		}
-		return $saketarget_window;
-	};
 
 	var console_action = function( type, nameFunction, nameParam, description ){
 
@@ -4473,80 +3045,12 @@
 		}	// End switch
 	};
 
-	var Sake = {
-		'Shortcuts': {
-
-			//	In teoria la variabile dovrebbe essere un'array di Object,
-			//	se mi viene passato direttamente un'Object (cioè "tasti e fn" e non array(obj, obj, ... )
-			'add': function( new_scs ){
-
-				if( new_scs != null ){
-					return false;
-				}
-
-				if( new_scs.constructor == Object ){
-					new_scs = [new_scs];
-				}
-
-				for( i in new_scs ){
-					(global_sake.shortcuts).push( new_scs[i] );
-				}
-
-				Sake.Shortcuts.restart();
-			},
-
-			'start': function(){
-
-				$.each( global_sake.shortcuts, function(i,sc){
-					global_sake.shortcuts[i]['hit'] = 0;	//	Numero di tasti consecutivi corretti
-					global_sake.shortcuts[i]['keys_length'] = (sc.keys).length;
-				});
-
-				$('body').on('keydown',function(e){
-
-					var keyCode = e.keyCode;
-
-					if( keyCode == 109 ){ keyCode = 45; }	// trattino -
-					if( keyCode > 95 && keyCode < 106){ keyCode -= 48; }	// tastierino numerico!
-
-					$.each( global_sake.shortcuts, function(i,sc){
-						if( keyCode === sc['keys'][ global_sake.shortcuts[i]['hit']++ ] ){
-							if(global_sake.shortcuts[i]['hit'] === sc.keys_length){
-								(sc.fn).apply();
-								global_sake.shortcuts[i]['hit'] = 0;
-							}
-						}else{
-							global_sake.shortcuts[i]['hit'] = 0;
-						}
-					});
-				});
-			},
-
-			'stop': function(){
-				$('body').off('keydown');
-			},
-
-			'restart': function(){
-				Sake.Shortcuts.stop();
-				Sake.Shortcuts.start();
-			}
-		}
-	};
-
 	window.global_sake = global_sake;
-	window.Sake = Sake;
 
 	$(function(){
-
-		$document.mousemove(function(e){
-			global_sake['mouse_position'] = {'top': e.pageY,'left': e.pageX};
-		});
-
 		$('body').on('click','.close_sakelightbox',function(){
 			$.sakelightbox('remove', {'sakeId': $(this).attr('data-sakeId') } );
 		});
-
-		Sake.Shortcuts.start();
 	});
 
 })( window, jQuery );

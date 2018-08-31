@@ -2,15 +2,20 @@
 /**
  *	jquery.sake
  *
- *	@version:	3.16.0
+ *	@version:	4.3.0
  *	@author:	Kevin Lucich
  *	@employees:	Salvatore Caputi
  *	@thanks:	Angelica - to have endured me during
- *			Alberto (Bardo) - for helping me with testing on IE
+
+	v4.3.0
+		[REMOVE] Remove obsolete function: tooltip, position, lightbox - I highly recommend Bootstrap for this function :D
+
+	v3.17.0
+		[REMOVE] Remove $.fn.getEvents
 
 	v3.16.0
 		[REMOVE] Renamed the method $.tooltip - Warning: is deprecated: use jQueryUI
-		[DEPRECATED] Deprecated the use of $.sakeTooltip - Will be remove in v3.17.0
+		[DEPRECATED] Deprecated the use of $.sakeTooltip - Will be remove in v3.20.0
 
 	v3.15.3
 		[FIX] Permits that $.getDataInfo returns "false" value of input type checkbox 
