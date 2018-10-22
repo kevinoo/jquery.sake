@@ -1,8 +1,8 @@
 /**
  * KUtils
- * @version:	1.21.0
- * @author:	Kevin Lucich
-*/
+ * @version	2.0.0
+ * @author	Kevin Lucich
+ */
 
 (function(window){
 
@@ -128,12 +128,12 @@
 	KUtils = {
 
 		'plugins_version': {
-			'KUtils': '1.21.0'
+			'KUtils': '2.0.0'
 		},
 
 		/**
-		 KUtils.version
-		 Ritorna una mappa con le versioni delle plugin
+		 * KUtils.version
+		 * Ritorna una mappa con le versioni delle plugin
 		 */
 		'version': function( plugins ){
 
@@ -152,11 +152,11 @@
 		 $( __ELEMENT__ ).check( params|typeCheck, [, subtype] );	Check the value of __ELEMENT__ with the "typeCheck"
 
 		 @version	1.2
-		 @author		Kevin Lucich
+		 @author	Kevin Lucich
 
-		 @param		params		{Object|String}	The type of will be the value or List of params
-		 @param		_subtype	{String}		A specified type (default: 'all') // it meas "all" of typeCheck
-		 @param		_value		{String|Number}	The value to check
+		 @param		params		{Object|string}	The type of will be the value or List of params
+		 @param		_subtype	{string}		A specified type (default: 'all') // it meas "all" of typeCheck
+		 @param		_value		{string|Number}	The value to check
 
 		 @return	{Boolean}	Return True if the value is valid
 		 */
@@ -247,97 +247,6 @@
 			return (methods.check['_do']).apply( undefined, [params] );
 		},
 
-		/**
-		 *	@deprecated
-		 */
-		'isUndefined': function( variable ){
-			return ( (typeof variable === 'undefined') || (variable == null) || (variable == 'NIL') );
-		},
-
-		'print_r': function( obj, html_format, space, iterate ){
-
-			//	è stata settato oppure è il valore di "space"
-			if( typeof html_format !== 'undefined' && html_format.constructor !== Boolean ){
-				space = html_format;
-				html_format = false;
-			}
-
-			var str = "";
-			var new_line = (html_format) ? '<br />' : "\n";
-			space = (typeof space === 'undefined') ? '' : space;
-			iterate = (typeof iterate === 'undefined') ? 0 : iterate;
-
-			if( !KUtils.objSize(obj) ){
-				return '{}';
-			}
-
-			for( k in obj ){
-				var v = obj[k];
-				str += ((iterate) ? space : '') +'['+ k +'] => ';
-				if( v != null ){
-					if( typeof v === 'object' ){
-						var new_space = ((space!='') ? space+space : space+"\t");
-						var res = (KUtils.print_r).apply( this, [v, html_format, new_space, iterate+1 ] );
-						//	Se l'oggetto passato aveva qualche attributo allora lo stampo, altrimenti stampo le parentesi vuote :)
-						str += ((res != '') ? "{\n"+ res + space +"}" : '{}');
-					}else
-						str += ( v );
-				}else
-					str += 'null';
-
-				str += new_line;
-			}
-
-			return str;
-		},
-
-		'var_dump': function( obj, html_format, space ){
-
-			var __dump = function( v ){
-				if( v.constructor == String ){
-					return 'string('+ v.length +') "'+ v +'"';
-				}else{
-					return (typeof v) +'('+ v +')';
-				}
-			};
-
-			//	è stata settato oppure è il valore di "space"
-			if( typeof html_format !== 'undefined' && html_format.constructor !== Boolean ){
-				space = html_format;
-				html_format = false;
-			}
-
-			var new_line = (html_format) ? '<br />' : "\n";
-			var str = "";
-
-			if( typeof space == 'undefined' ){
-				space = '';
-				str = new_line;
-			}
-
-			if( obj.constructor != Object && obj.constructor != Array ){
-				return __dump( obj );
-			}
-
-			for( k in obj ){
-				var v = obj[k];
-				str += space +'['+ k +'] => ';
-				if( v != null ){
-					if( typeof v === 'object' ){
-						var length = (v.constructor == Object) ? KUtils.objSize(v) : v.length;
-						var res = KUtils.var_dump( v, html_format, space+"	" );	//	space+"\t"
-						//	Se l'oggetto passato aveva qualche attributo allora lo stampo, altrimenti stampo le parentesi vuote :)
-						str += 'object('+ length +') '+ ((res != '') ? "{\n"+ res +space+"}" : '{}');
-					}else
-						str += __dump( v );
-				}else
-					str += 'null';
-				str += new_line;
-			}
-
-			return str;
-		},
-
 		'stripslashes': function( str ){
 			// +	original by: Kevin van Zonneveld (http://kevin.vanzonneveld.net)
 			// +	improved by: Ates Goral (http://magnetiq.com)
@@ -368,10 +277,10 @@
 		},
 
 		/**
-		 Return length of Object
-		 @author 	Kevin Lucich <lucichkevin@gmail.com>
-		 @param		{Object}	obj		The Object to count
-		 @return		{int}				The lenght of Object
+		 * Return length of Object
+		 * @author 	Kevin Lucich <lucichkevin@gmail.com>
+		 * @param	obj	{Object}	The Object to count
+		 * @return	{int}	The lenght of Object
 		 */
 		'objSize': function( obj ){
 			if( obj == null || (obj.constructor != Object && obj.constructor != Array) ){
@@ -381,10 +290,10 @@
 		},
 
 		/**
-		 Return a copy of Object
-		 @author 	Kevin Lucich <lucichkevin@gmail.com>
-		 @param		{Object}	obj		The Object to count
-		 @return		{Object}			A copy of Object
+		 * Return a copy of Object
+		 * @author 	Kevin Lucich <lucichkevin@gmail.com>
+		 * @param	obj	{Object}	The Object to count
+		 * @return	{Object}	A copy of Object
 		 */
 		'objClone': function( obj ) {
 			if( null == obj || obj.constructor != Object ){
@@ -399,14 +308,6 @@
 			return copy;
 		},
 
-		/**
-		 @deprecated		Use KUtils.MD5(obj)
-		 @return			{String}
-		 */
-		'objMD5': function( obj ) {
-			return KUtils.MD5( obj );
-		},
-
 		'objJoin': function( obj, glue, separator ){
 
 			obj = (typeof obj !== 'undefined') ? obj : {};
@@ -414,7 +315,7 @@
 			separator = (typeof separator !== 'undefined') ? separator : ',';
 
 			var pieces = [];
-			for( i in obj ){
+			for( var i in obj ){
 				if ( obj.hasOwnProperty( i ) ){
 					pieces.push( i + glue + obj[i] );
 				}
@@ -425,7 +326,7 @@
 
 		'obj2Array': function( obj ){
 			var array = [];
-			for( k in obj ){
+			for( var k in obj ){
 				array.push( obj[k] );
 			}
 			return array;
@@ -446,7 +347,7 @@
 						return Object.keys(obj);
 					}
 				case Array:
-					for( i in obj ){
+					for( var i in obj ){
 						if( obj.hasOwnProperty(i) )
 							keys.push(i);
 					}
@@ -491,8 +392,11 @@
 		},
 
 		'trim': function( str ){
-			if( str == null || typeof str === 'undefined' || str.constructor != String ){
+			if( str == null || typeof str === 'undefined' || str.constructor !== String ){
 				return str;
+			}
+			if( typeof String.prototype.trim !== 'undefined' ){
+				return str.trim();
 			}
 			if( typeof String.trim !== 'undefined' ){
 				return String.trim(str);
@@ -501,20 +405,23 @@
 		},
 
 		/**
-		 Return boolean if the el is in array
-		 @param	needle		{Mixed}		The searched value.
-		 @param	haystack	{Array}		The array
-		 @return	{Boolean}
+		 * Return boolean if the el is in array
+		 * @param	needle		mixed	The searched value.
+		 * @param	haystack	array	The array
+		 * @return	{Boolean}
 		 */
 		'inArray': function( needle, haystack ){
 
-			if( typeof needle === 'undefined' || haystack.constructor != Array ){
+			if( typeof needle === 'undefined' || haystack.constructor !== Array ){
 				return false;
 			}
 
-			if( needle.constructor == Array ){
-				var len = needle.length;
-				for( var i=0; i<len; i++ ){
+			var i = 0;
+			var len = null;
+
+			if( needle.constructor === Array ){
+				len = needle.length;
+				for( i=0; i<len; i++ ){
 					if( !KUtils.inArray( needle[i], haystack ) ){
 						return false;
 					}
@@ -525,8 +432,8 @@
 			if( typeof [].indexOf !== 'undefined' ){
 				return (haystack.indexOf(needle)!=-1);
 			}else{
-				var len = haystack.length;
-				for( var i=0; i<len; i++ ){
+				len = haystack.length;
+				for( i=0; i<len; i++ ){
 					if( haystack[i] == needle ){
 						return true;
 					}
@@ -536,12 +443,12 @@
 		},
 
 		/**
-		 *	$.MD5( str );	 Return string cripted with MD5 method
-		 *	A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
-		 *	@author		Paul Johnston, Greg Holt
-		 *	@updated	Kevin Lucich <lucichkevin@gmail.com>
-		 *	@param	str	{String|Object}	The string (or object/array) to cript with MD5 method
-		 *	@return	{String}	String cripted with MD5 method
+		 * $.MD5( str );	 Return string cripted with MD5 method
+		 * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
+		 * @author		Paul Johnston, Greg Holt
+		 * @updated	Kevin Lucich <lucichkevin@gmail.com>
+		 * @param		str	{String|Object}	The string (or object/array) to cript with MD5 method
+		 * @return	{string}	String cripted with MD5 method
 		 */
 		'MD5': function( str ){
 
@@ -691,14 +598,12 @@
 		},
 
 		/**
-		 .hash( str );	 Return hash of string
-
-		 @version	1.0
-		 @author		Kevin Lucich
-
-		 @param		{String}	str		The string to conver in hash
-
-		 @return	{Number}	The hash
+		 * Return hash of string
+		 * KUtils.hash( str );
+		 * @version	1.0
+		 * @author	Kevin Lucich
+		 * @param	str		string	The string to conver in hash
+		 * @return	Number	The hash
 		 */
 		'hash': function( str ){
 
@@ -707,7 +612,7 @@
 			}
 
 			var hash = 0, i, c,
-					len = str.length;
+				len = str.length;
 			if( len == 0 ){
 				return hash;
 			}
@@ -721,9 +626,10 @@
 		},
 
 		/**
-		 Return if a variable is empty
-		 @version	1.0
-		 @return	{Boolean}
+		 * Return if a variable is empty (null, 0, empty string, false)
+		 * @version	1.0
+		 * @param		variable	{mixed}		The variable to check
+		 * @return	{Boolean}
 		 */
 		'empty': function( variable ){
 
@@ -747,19 +653,18 @@
 		},
 
 		/**
-		 .rgbToHex()
-
-		 @version	1.0
-		 @author		Kevin Lucich
-
-		 @desc	$.rgbToHex( r, g, b );
-		 Converter a RGB color to HEX
-
-		 @param	{String}	r	Code for red color
-		 @param	{String}	g	Code for green color
-		 @param	{String}	b	Code for blue color
-
-		 @return	{String}	HEX color	(es. #00FF00 )
+		 * .rgbToHex()
+		 * @version	1.0
+		 * @author		Kevin Lucich
+		 *
+		 * @desc
+		 * 	$.rgbToHex( r, g, b );
+		 * 	Converter a RGB color to HEX
+		 *
+		 * @param	{string}	r	Code for red color
+		 * @param	{string}	g	Code for green color
+		 * @param	{string}	b	Code for blue color
+		 * @return	{string}	HEX color	(es. #00FF00 )
 		 */
 		'rgbToHex': function( r, g, b ){
 			var componentToHex = function (c){
@@ -770,45 +675,46 @@
 		},
 
 		/**
-		 .hexToRgb()
-
-		 @version	1.1
-		 @author		Kevin Lucich
-
-		 @desc		$.hexToRgb( hex [, return_string] );
-		 Converter a HEX color to RBG
-
-		 @param		{String}			hex				The color in hex code
-		 @param		{(Boolean|null)}	return_string	False will return an obj {r,g,b}, if true return a string
-
-		 @return	{Object} {r,g,b}
-		 @return	{String} if var return_string is True, format r,g,b
+		 * .hexToRgb()
+		 * @version	1.1
+		 * @author		Kevin Lucich
+		 *
+		 * @desc
+		 * 	$.hexToRgb( hex [, return_string] );
+		 * 	Converter a HEX color to RBG
+		 *
+		 * @param		{string}			hex				The color in hex code
+		 * @param		{(Boolean|null)}	return_string	False will return an obj {r,g,b}, if true return a string
+		 * @return	{object|string} if return_string param is True: return "r,g,b", otherwise an object
 		 */
 		'hexToRgb': function( hex, return_string ){
 
-			if( KUtils.isUndefined(hex) )
+			if( typeof hex === 'undefined' ){
 				hex = '#000000';
-			if( KUtils.isUndefined(return_string) )
+			}
+			if( typeof return_string === 'undefined' ){
 				return_string = false;
+			}
 
 			var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec( hex );
 
 			var rgb = result ? {
-				r: parseInt(result[1], 16),
-				g: parseInt(result[2], 16),
-				b: parseInt(result[3], 16)
+				'r': parseInt(result[1], 16),
+				'g': parseInt(result[2], 16),
+				'b': parseInt(result[3], 16)
 			} : null;
 
-			if( return_string )
-				return ''+ rgb.r +','+ rgb.g +','+ rgb.b +'';
+			if( return_string ){
+				return rgb.r +','+ rgb.g +','+ rgb.b;
+			}
 
 			return rgb;
 		},
 
 		/**
-		 .extend()
-		 @version	1.0
-		 @author		jQuery Foundation
+		 * .extend()
+		 * @version	1.0
+		 * @author		jQuery Foundation
 		 */
 		'extend': (typeof jQuery !== 'undefined' && jQuery.extend) || function(){
 
@@ -831,10 +737,10 @@
 			};
 
 			var options, name, src, copy, copyIsArray, clone,
-					target = arguments[0] || {},
-					i = 1,
-					length = arguments.length,
-					deep = false;
+				target = arguments[0] || {},
+				i = 1,
+				length = arguments.length,
+				deep = false;
 
 			// Handle a deep copy situation
 			if ( typeof target === "boolean" ) {
@@ -894,13 +800,11 @@
 		},
 
 		/**
-		 .range()
-
-		 @param	start	{Mixed}
-		 @param	end		{Mixed}
-		 @param	step	{Number}
-
-		 @return array
+		 * .range()
+		 * @param	start	{mixed}
+		 * @param	end		{mixed}
+		 * @param	step	{number}
+		 * @return array
 		 */
 		'range': function( start, end, step ){
 			var range = [];
@@ -941,19 +845,19 @@
 
 		/**
 		 var test_fns = {
-		'ucFirst1': function(){
-			var string = 'aaaaaaaaaaa';
-			return string.charAt(0).toUpperCase() + string.slice(1);
-		},
-		'ucFirst2': function(){
-			var string = 'aaaaaaaaaaa';
-			return string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
-		},
-		'LOL': function(){
-			var string = 'aaaaaaaaaaa';
-			return string;
-		},
-	};
+			'ucFirst1': function(){
+				var string = 'aaaaaaaaaaa';
+				return string.charAt(0).toUpperCase() + string.slice(1);
+			},
+			'ucFirst2': function(){
+				var string = 'aaaaaaaaaaa';
+				return string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
+			},
+			'LOL': function(){
+				var string = 'aaaaaaaaaaa';
+				return string;
+			},
+		};
 
 		 console.dir( KUtils.benchmark( test_fns) );
 		 */
@@ -1074,7 +978,7 @@
 		},
 
 		'stack': function( show_anonymous ){
-			show_anonymous = (!KUtils.isUndefined(show_anonymous)) ? show_anonymous : false;
+			show_anonymous = (typeof show_anonymous !== 'undefined') ? show_anonymous : false;
 			var stack = [];
 			var _caller = arguments.callee.caller;
 			while( _caller != null ){
@@ -1120,77 +1024,9 @@
 			return diff;
 		},
 
-
-		/**
-		 onEvents( struct )
-		 onEvents( onProgess, struct )
-
-		 USAGE:
-
-		 var onProgress = function(event_name, selector){
-		console.log( event_name +' / '+ selector );
-	};
-
-		 onEvents( onProgress, {
-		'click': {
-
-			'#btn_select_all': function(){
-				$fields.val("1");
-			},
-
-			'#btn_unselect_all': function(){
-				$fields.val("0");
-			},
-
-			'#btn_unselect_all': function(){
-				$fields.each(function(){
-					var $this = $(this);
-					$this.val( parseInt($this.val()) );
-				});
-			}
-
-		}
-	});
-
-		 */
-		'onEvents': function(){
-
-			var arg0 = arguments[0];
-			var arg1 = arguments[1];
-
-			switch( arguments.length ){
-				case 0:
-					return;
-				case 1:
-					if( typeof arg0 === 'object' ){
-						KUtils.onEvents( function(){}, arg0 );
-						return;
-					}
-					return;
-				case 2:
-					if( typeof arg0 !== 'function' || typeof arg1 !== 'object' ){
-						console.warn('KUtils.onEvents() called with wrong arguments ('+ (typeof arg0) +', '+ (typeof arg1) +') must be (function,object)');
-						return;
-					}
-					break;
-			}
-
-			var onProgress = arg0;
-			var struct = arg1;
-
-			for( var event_name in struct ){
-				for( var selector in struct[event_name] ){
-					var fn = struct[event_name][selector];
-					$(document).on( event_name, selector, fn );
-					onProgress( event_name, selector );
-				}
-			}
-		},
-
-
 		'str_replace': function( string, search, to_replace ){
 			var len = search.length,
-					i=0;
+				i=0;
 
 			if( (search.constructor === Array) && (to_replace.constructor === Array) ){
 				for(i=0; i<len; i++ ){
@@ -1439,14 +1275,14 @@
 	Date.prototype.sub = PrototypeDateUtils.sub;
 
 	Object.keys = Object.keys || function( obj ){
-				var keys = [];
-				for( k in obj ){
-					if( obj.hasOwnProperty(k) ){
-						keys.push( k );
-					}
+			var keys = [];
+			for( k in obj ){
+				if( obj.hasOwnProperty(k) ){
+					keys.push( k );
 				}
-				return keys;
-			};
+			}
+			return keys;
+		};
 
 	var console_action = function( type, nameFunction, nameParam ){
 
@@ -1455,7 +1291,7 @@
 		}
 
 		var infos = {},
-				text = '';
+			text = '';
 
 		switch(type){
 ///////////////////////////////////////////////////////////////
@@ -1528,74 +1364,20 @@
 })( window );
 
 
+
 /**
  *	jquery.sake
  *
- *	@version:	4.3.0
- *	@updated:	2017-09-19
- *	@author:	Kevin Lucich
- *	@employees:	Salvatore Caputi
- *	@thanks:	Angelica - to have endured me during
- *				Alberto (Bardo) - for helping me with testing on IE
+ *	@version:	5.1.0
+ *	@updated:	2018-04-05
+ *	@author:	Kevin Lucich - https://www.lucichkevin.it/
  */
 ;(function(window,$){
 
 	var $document = $(document);
 
 	var global_sake = {
-		'version': '4.2.0',
-		'language': 'it',
-		'methods_var': {
-			'validate':{
-				'rules': {},
-				'dictionary': {
-					'it':{
-						// Generic
-						'EMPTYFIELD': "Il campo non puo' essere vuoto",
-						'VALUENOTACCEPTED': 'Valore inserito non valido',
-
-						// Text
-						'ONLYALPHANUMERIC': 'Sono ammessi solo caratteri alfanumerici',
-						'MINCHARS': 'Il campo deve contenere almeno __MIN__ caratteri',
-						'MINMAXCHARS': 'Il campo deve contenere da __MIN__ a __MAX__ caratteri',
-						'NOSPACEFIELD': 'In questo campo non sono ammessi spazi',
-
-						// Numeric
-						'NUMBERFIELD': 'Sono ammessi solo numeri',
-						'MINNUM': 'Il campo deve contenere un numerno maggiore o uguale a __MIN__ ',
-						'MINMAXNUM': 'Il campo deve contenere un numero tra __MIN__ e __MAX__ ',
-
-						// Date
-						'DATEFIELD': 'Data non corretta',
-						'MIN_DATE': 'Il campo deve contenere una data maggiore o uguale a __MIN__ ',
-						'MAX_DATE': 'Il campo deve contenere una data minore o uguale a __MAX__ ',
-						'MIN_MAX_DATE': 'Il campo deve contenere una data tra __MIN__ e __MAX__ ',
-
-						// Credit card
-						'DATECREDITCARDFIELD': 'WTF???',
-						'DATECREDITCARDEXPIRED': 'Carta di credo scaduta',
-
-						// Email
-						'EMAILFIELD': 'Email non valida',
-
-						// Telephone
-						'PHONEFIELD': 'Telefono non valido',
-
-						// Codice fiscale
-						'CFFIELD1': 'Codice fiscale non corretto',
-						'CFFIELD2': 'La lunghezza del codice fiscale deve essere di 16 caratteri',
-						'CFFIELD3': 'Il codice fiscale contiene un carattere non valido',
-
-						// Partita IVA
-						'PIVAFIELD': 'Partita IVA non valida',
-
-						// SELECT e RADIO
-						'OPTIONREQUIRED': "E' obbligatorio selezionare un'opzione"
-					}
-				}
-			},
-			'loop': {}
-		}
+		'version': '5.0.0'
 	};
 
 	KUtils.version( {'sake':global_sake.version} );
@@ -1608,9 +1390,9 @@
 	 *	@author	Kevin Lucich
 	 *
 	 *	@param	{int|String}	params.speed	The time of animation
-	 *	@param	{String}		params.easing	The easing of animation, you can choose from all easing plugin "http://gsgd.co.uk/sandbox/jquery/easing/"
+	 *	@param	{string}		params.easing	The easing of animation, you can choose from all easing plugin "http://gsgd.co.uk/sandbox/jquery/easing/"
 	 *	@param	{Boolean}		params.scrollx	If TRUE performed a X scroll
-	 *	@param	{String}		easing			The type of easing of animation
+	 *	@param	{string}		easing			The type of easing of animation
 	 */
 	$.fn.scrollTo = function( params, easing ){
 
@@ -1689,19 +1471,18 @@
 	/**
 	 * $( __ELEMENT__ ).validate( [params] );
 	 *
-	 *	@version 3.3.2
+	 *	@version 3.4
 	 *	@author Kevin Lucich
 	 *
 	 *	@params {Object} params List of params
-	 *
-	 *	@params {Boolean} params.showTooltip Discriminate if a Tooltip with error
-	 *         will be show (default: True)
-	 *	@params {Boolean} params.showRules If set print in console a list of rules
-	 *         for validation (default: True)
-	 *
+	 *	@params {Boolean} params.showTooltip Discriminate if a Tooltip with error will be show (default: True)
+	 *	@params {Boolean} params.showRules If set print in console a list of rules for validation (default: True)
 	 *	@return {Boolean} Return TRUE if the data are valid
+	 *
+	 * -------
+	 *
+	 * v3.4: Add support to "data-other_element" attribute
 	 */
-	var ValidateVars = global_sake['methods_var']['validate'];
 	$.fn.validate = function( method, params ){
 
 		if( $('#sake_style').length == 0 ){
@@ -1722,7 +1503,7 @@
 				return id_sake;
 			},
 
-			'__getRules': function( $el ){
+			'__getValidationRules': function( $el ){
 				var datasets = $el.data();
 				var rules = {};
 				for( var key in datasets ){
@@ -1739,53 +1520,11 @@
 			'init': function(params){
 				var $el = this;
 
-				var paramsDefault = {
-					'showTooltip': true,
-					'tooltipSide': 'right',
-					'ignore_hidden_fields': false,
-					'showRules': false,
-					'debug': false,
-					'cached': false,
-					'rules': {}
-				};
-				params = KUtils.extend( true, {}, paramsDefault, params );
+				params = KUtils.extend( true, {}, $.fn.validate.prototype.defaults, params );
 
 				//	Se non esiste l'elemento contenitore da validare, termino la funzione
 				if( !$el.length ){
 					return false;
-				}
-
-				//	Remove all tooltip, so to update them with possible new alerts
-				$('.sakeTT_validate, .radio_sake_control').remove();
-
-				//	Assegno (se necessario) un ID al contenitore, significa che ho eseguito l'INIT
-				params.idFather = methodsValidate.__getIdElement( $el );
-
-				var childrenRules = {};
-				// Assegno un ID (se necessario) ai figli
-				$el.find('input[type="text"], input[type="number"], input[type="password"], select').each(function(i, input ){
-					var $input = $(input);
-					var idChild = $input.attr('id');
-					if( typeof idChild === 'undefined' || idChild == '' ){
-						idChild = methodsValidate.__getIdElement($input);
-						$input.attr('id',idChild);
-					}
-
-					childrenRules[ idChild ] = methodsValidate.__getRules( $input );
-				});
-
-				$el.find('input[type="radio"]').each(function(i, input ){
-					var $input = $(input);
-					var idChild = $input.attr('id');
-					if( (typeof idChild === 'undefined') && (typeof childrenRules['sake_'+ $input.attr('name')] === 'undefined') ){
-						idChild = 'sake_'+ $input.attr('name');
-						$input.attr('id', idChild );
-						childrenRules[ idChild ] = $input[0]['dataset'];
-					}
-				});
-
-				if( params.cached ){
-					ValidateVars['rules'][ params.idFather ] = childrenRules;
 				}
 
 				return params;
@@ -1793,16 +1532,14 @@
 
 			'_do': function( params ){
 				var $containerToValidate = this;
-				var $invalid_inputs = $containerToValidate.find('.invalid');
-				$invalid_inputs.removeClass('invalid');
+				$containerToValidate.find('.invalid').removeClass('invalid');
 
-				var getDic = function( key ){
-
-					var dic = global_sake.methods_var.validate.dictionary[ global_sake.language ];
-					if( typeof dic[key] === 'undefined' )
+				var getDictionaryText = function( key ){
+					var dictionary = $.fn.validate.prototype.dictionary[ $.fn.validate.prototype.language ];
+					if( typeof dictionary[key] === 'undefined' ){
 						return '';
-
-					return dic[ key ];
+					}
+					return dictionary[ key ];
 				};
 
 				// Controllo la lunghezza del valore nel campo
@@ -1811,14 +1548,14 @@
 					var _min = $el.attr('min');
 					var _max = $el.attr('max');
 					if( typeof _min === 'undefined' ){
-						_min = getData($el,'min',null);
+						_min = getDataAttributeValue($el,'min');
 					}
 					if( typeof _max === 'undefined' ){
-						_max = getData($el,'max',null);
+						_max = getDataAttributeValue($el,'max');
 					}
 
 					//	Backward compatibility
-					var data_length_value = getData($el,'length',null);
+					var data_length_value = getDataAttributeValue($el,'length');
 					if( (_min == null) && (_max == null) && (data_length_value != null) ){
 						if( data_length_value.indexOf(',') > -1 ){
 							var minMax = data_length_value.split(',');
@@ -1843,17 +1580,17 @@
 						case 'text':
 							if( _min==0 ){ _min=1; }
 							if( (_min != null) && (_max != null) && ( (value_input.length<_min) || (value_input.length>_max) )){
-								result = getDic('MINMAXCHARS').replace('__MIN__',_min).replace('__MAX__',_max);
+								result = getDictionaryText('MINMAXCHARS').replace('__MIN__',_min).replace('__MAX__',_max);
 							}else if( (_min != null) && (value_input.length<_min) ){
-								result = getDic('MINCHARS').replace('__MIN__',_min);
+								result = getDictionaryText('MINCHARS').replace('__MIN__',_min);
 							}
 							break;
 
 						case 'number':
 							if( (_min != null) && (_max != null) && ( (parseFloat(value_input)<parseFloat(_min)) ||  (parseFloat(value_input)>parseFloat(_max)) )){
-								result = getDic('MINMAXNUM').replace('__MIN__',_min).replace('__MAX__',_max);
+								result = getDictionaryText('MINMAXNUM').replace('__MIN__',_min).replace('__MAX__',_max);
 							}else if( (_min != null) && (parseFloat(value_input)<parseFloat(_min)) ){
-								result = getDic('MINNUM').replace('__MIN__',_min);
+								result = getDictionaryText('MINNUM').replace('__MIN__',_min);
 							}
 							break;
 					}
@@ -1865,9 +1602,9 @@
 
 					cf = cf.toUpperCase();
 					if( cf.length != 16 )
-						return getDic('CFFIELD2');
+						return getDictionaryText('CFFIELD2');
 					if( /^([0-9a-z]+)$/.test(cf) )
-						return getDic('CFFIELD3');
+						return getDictionaryText('CFFIELD3');
 
 					set1 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 					set2 = "ABCDEFGHIJABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -1881,13 +1618,13 @@
 						s += setdisp.indexOf( set2.charAt( set1.indexOf( cf.charAt(i) )));
 					}
 					if( s%26 != cf.charCodeAt(15)-'A'.charCodeAt(0) ){
-						return getDic('CFFIELD1');
+						return getDictionaryText('CFFIELD1');
 					}
 					return false;
 				};
 				var testPIVA = function(pi){
 					if( !KUtils.check({'type':'text','subtype':'piva','value': pi}) ){
-						return getDic('PIVAFIELD');
+						return getDictionaryText('PIVAFIELD');
 					}
 					var i=0, s=0;
 					for( i = 0; i <= 9; i += 2 ){
@@ -1899,57 +1636,50 @@
 						s += c;
 					}
 					if( ( 10 - s%10 )%10 != pi.charCodeAt(10) - '0'.charCodeAt(0) ){
-						return getDic('PIVAFIELD');
+						return getDictionaryText('PIVAFIELD');
 					}
 
 					return '';
 				};
+
 				var hasValidValue = function( $el ){
-					var _rules = (typeof ValidateVars['rules'][params.idFather] !== 'undefined') ? ValidateVars['rules'][ params.idFather ] : {};
-					var _value = ($el.is('[type="radio"]')) ? $el.find(':checked').val() : $el.val();
 					var idChild = $el.attr('id');
+					var _value = ($el.is('[type="radio"]')) ? $el.find(':checked').val() : $el.val();
+
 					if( typeof idChild === 'undefined' ){
 						idChild = methodsValidate.__getIdElement($el);
 						$el.attr('id',idChild);
 					}
 
-					var child_rules;
-					if( typeof _rules[ idChild ] !== 'undefined' ){
-						child_rules = _rules[ idChild ];
-					}else{
-						child_rules = methodsValidate.__getRules( $el );
-						if( params.cached ){
-							ValidateVars['rules'][ params.idFather ][ idChild ] = child_rules;
-						}
-					}
-
-					var not_accepted = child_rules['notacceptedvalues'];
+					var child_rules = methodsValidate.__getValidationRules( $el );
+					var not_accepted = child_rules['notacceptedvalues'] || child_rules['not_accepted_values'];
 					return (typeof not_accepted !== 'undefined') ? (not_accepted.indexOf(_value) == -1) : true;
 				};
+
 				var isCompulsory = function( $el ){
-					var attr = (getData($el,'compulsory',null) || getData($el,'cmp',null));
+					var attr = (getDataAttributeValue($el,'compulsory') || getDataAttributeValue($el,'cmp'));
 					return ( (typeof attr !== 'undefined') && (attr != null) && ((''+attr).toLowerCase() != 'false') );
 				};
-				var getData = function( $el, attr,  _default ){
+
+				/**
+				 * Return the value of "data-<attribute_name>", otherwise return the <default_value>
+				 * @param	$element		{jQuery}	The element from to read the attribute value
+				 * @param	attribute_name	{string}	The attribute to read
+				 * @param	default_value	{null|*}	The value to return if the value of "data-<attribute_name>" is undefined (if not set its value is NULL)
+				 * @return	{*}
+				 */
+				var getDataAttributeValue = function( $element, attribute_name,  default_value ){
+					if( typeof default_value === 'undefined' ){
+						default_value = null;
+					}
 					try{
-						var data = undefined;
-
-						if( params.cached ){
-							var el_id = $el.attr('id');
-							var rules = ValidateVars['rules'][ params.idFather ];
-							if( (typeof rules[ el_id ] !== 'undefined') && (typeof rules[ el_id ][ attr ] !== 'undefined') ){
-								data = rules[ el_id ][ attr ];
-							}
-						}else{
-							data = $el.data(attr);
-						}
-
-						return (typeof data !== 'undefined') ? data : _default;
-
+						var data_attribute_value = $element.data(attribute_name);
+						return (typeof data_attribute_value !== 'undefined') ? data_attribute_value : default_value;
 					}catch( error ){
 						console_action('GENERIC_ERROR', '.validate()', undefined, 'I encountered an error while retrieving the rules of the element :( '+ "\n"+ error);
 					}
 				};
+
 				var hideTT = function( $el ){
 					$el.attr('data-original-title','').data('bs.tooltip', false);
 				};
@@ -1965,9 +1695,10 @@
 						}
 					});
 				};
+
 				var getInputType = function( $el ){
 
-					var input_type = getData($el,'type',null);
+					var input_type = getDataAttributeValue($el,'type');
 					if( input_type != null ){
 						return input_type;
 					}
@@ -1986,9 +1717,49 @@
 					return 'text';
 				};
 
+				/**
+				 * Return a jQuery element to select other element(s) of the $field.
+				 * An other element is the field (or fields) that is/are invalid when $field is invalid
+				 * @param	$field	{jQuery}
+				 * @return	jQuery
+				 */
+				var __getOtherElementsByField = function( $field ){
+
+					var $other_element = $();
+					var other_element = $field.data('other_element');
+
+					switch( other_element ){
+						case 'prev':
+							$other_element = $field.prev();
+							break;
+						case 'next':
+							$other_element = $field.next();
+							break;
+						default:
+							$other_element = $(other_element);
+							break;
+					}
+
+					return $other_element;
+				};
+				/**
+				 * Add the class "invalid", that highlight invalid field
+				 * @param	$field	{jQuery}	The invalid field to highlight
+				 */
+				var setInvalidField = function( $field ){
+					$field.add(__getOtherElementsByField($field)).addClass('invalid');
+				};
+				/**
+				 * Remove the class "invalid", that highlight invalid field
+				 * @param	$field	{jQuery}	The invalid field to restore
+				 */
+				var removeInvalidField = function( $field ){
+					$field.add(__getOtherElementsByField($field)).removeClass('invalid');
+				};
+
 				var ok = true;
 
-				var $elements_to_validate = $containerToValidate.find('input[type="text"],input[type="password"],input[type="number"],input[type="email"]');
+				var $elements_to_validate = $containerToValidate.find('input[type="text"],input[type="hidden"],input[type="password"],input[type="number"],input[type="email"]');
 				if( params.ignore_hidden_fields ){
 					$elements_to_validate = $elements_to_validate.not(':hidden');
 				}
@@ -2004,7 +1775,7 @@
 					if( isCmp == false ){
 						return true;
 					}else if( isCmp && _value == '' ){
-						sake_error = getDic('EMPTYFIELD');
+						sake_error = getDictionaryText('EMPTYFIELD');
 					}else{
 						if( _value == '' ){
 							return true;	// = continue;
@@ -2012,10 +1783,10 @@
 
 						// Se l'elemento non ha un valore valido (definito dall'utente)
 						if( !hasValidValue($el) ){
-							sake_error = getDic('VALUENOTACCEPTED');
+							sake_error = getDictionaryText('VALUENOTACCEPTED');
 						}
 
-						var el_subtype = getData( $el, 'subtype', 'all').toLowerCase();
+						var el_subtype = getDataAttributeValue( $el, 'subtype', 'all').toLowerCase();
 
 						if( !sake_error ){
 
@@ -2032,7 +1803,7 @@
 										// A seconda del subtype fornisco un errore più corretto
 										switch( el_subtype ){
 											case 'alphanumeric':
-												sake_error = getDic('ONLYALPHANUMERIC');
+												sake_error = getDictionaryText('ONLYALPHANUMERIC');
 												break;
 										}
 									}else{
@@ -2044,11 +1815,11 @@
 								case 'number':
 									res = KUtils.check({
 										'type':'number',
-										'subtype': getData( $el, 'format', 'all'),
+										'subtype': getDataAttributeValue( $el, 'format', 'all'),
 										'value': _value
 									});
 									if( !res ){
-										sake_error = getDic('NUMBERFIELD');
+										sake_error = getDictionaryText('NUMBERFIELD');
 									}else{
 										sake_error = testLength( $el );
 									}
@@ -2061,20 +1832,20 @@
 										'value': _value
 									});
 									if( !res ){
-										sake_error = getDic('NOSPACEFIELD');
+										sake_error = getDictionaryText('NOSPACEFIELD');
 									}
 									break;
 								// ///////////////////////////////////////////////////////////////////////////////////////////////////
 								case 'date':
 									res = KUtils.check({
 										'type':'date',
-										'subtype': getData( $el, 'format', 'all'),
+										'subtype': getDataAttributeValue( $el, 'format', 'all'),
 										'value': _value
 									});
 									if( !res ){
-										sake_error = getDic('DATEFIELD');
+										sake_error = getDictionaryText('DATEFIELD');
 									}
-									
+
 									if( (typeof $el.attr('data-from') === 'undefined') && (typeof $el.attr('data-to') === 'undefined') ){
 										break;
 									}
@@ -2109,11 +1880,11 @@
 									var to = (typeof $el.attr('data-to') !== 'undefined') ? new Date($el.attr('data-to')).getTime() : null;
 
 									if( ((from != null) && (to != null)) && ((ms < from) || (ms > to)) ){
-										sake_error = getDic('MIN_MAX_DATE').replace('__MIN__', (new Date(from)).getFormat('Y-m-d') ).replace('__MAX__', (new Date(to)).getFormat('Y-m-d') );
+										sake_error = getDictionaryText('MIN_MAX_DATE').replace('__MIN__', (new Date(from)).getFormat('Y-m-d') ).replace('__MAX__', (new Date(to)).getFormat('Y-m-d') );
 									}else if( (from != null) && (ms < from) ){
-										sake_error = getDic('MIN_DATE').replace('__MIN__', (new Date(from)).getFormat('Y-m-d') );
+										sake_error = getDictionaryText('MIN_DATE').replace('__MIN__', (new Date(from)).getFormat('Y-m-d') );
 									}else if( (to != null) && (ms > to) ){
-										sake_error = getDic('MAX_DATE').replace('__MAX__', (new Date(to)).getFormat('Y-m-d') );
+										sake_error = getDictionaryText('MAX_DATE').replace('__MAX__', (new Date(to)).getFormat('Y-m-d') );
 									}
 
 									break;
@@ -2126,7 +1897,7 @@
 									});
 
 									if( !res ){
-										sake_error = getDic('DATECREDITCARDFIELD');
+										sake_error = getDictionaryText('DATECREDITCARDFIELD');
 									}else{
 										var _exp = _value.split('/');
 										var _mm = Number(_exp[0]);
@@ -2135,7 +1906,7 @@
 										var _todayM = _today.getMonth() + 1;
 										var _todayY = _today.getFullYear();
 										if( (_todayY > _yy) || (_mm < _todayM && _yy >= _todayY) ){
-											sake_error = getDic('DATECREDITCARDEXPIRED');
+											sake_error = getDictionaryText('DATECREDITCARDEXPIRED');
 										}
 									}
 									break;
@@ -2147,7 +1918,7 @@
 										'value': _value
 									});
 									if( !res ){
-										sake_error = getDic('EMAILFIELD');
+										sake_error = getDictionaryText('EMAILFIELD');
 									}
 									break;
 								// ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2157,7 +1928,7 @@
 										'value': _value
 									});
 									if( !res ){
-										sake_error = getDic('PHONEFIELD');
+										sake_error = getDictionaryText('PHONEFIELD');
 									}
 									break;
 								// ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2174,12 +1945,12 @@
 					}
 
 					if( sake_error ){
-						$el.addClass('invalid');
+						setInvalidField($el);
 						showTT( $el, sake_error );
 						ok = false;
 						$el.trigger('sake-validate-failure', {'element': $el, 'error': sake_error});
 					}else{
-						$el.removeClass('invalid');
+						removeInvalidField($el);
 					}
 
 				}); // Fine each - input type text
@@ -2232,7 +2003,7 @@
 						point_a['width'] = w;
 						point_a['height'] = h;
 						point_a['z-index'] = -1;
-						$('#'+id_box).css(point_a).addClass('invalid');
+						setInvalidField($('#'+id_box).css(point_a));
 					};
 
 					var $box = $('#'+ id_box );
@@ -2242,11 +2013,11 @@
 
 					if( !radio_checked ){
 						show_box();
-						sakeerror = getDic('OPTIONREQUIRED');
+						sakeerror = getDictionaryText('OPTIONREQUIRED');
 					}
 					if( radio_checked && !hasValidValue( $radios ) ){
 						show_box();
-						sakeerror = getDic('VALUENOTACCEPTED');
+						sakeerror = getDictionaryText('VALUENOTACCEPTED');
 					}
 
 					if( sakeerror ){
@@ -2268,13 +2039,13 @@
 					var compulsory = isCompulsory($el);
 
 					if( compulsory && !hasValidValue($el) ){
-						var sakeerror = getDic('OPTIONREQUIRED');
-						$el.addClass('invalid');
+						var sakeerror = getDictionaryText('OPTIONREQUIRED');
+						setInvalidField($el);
 						ok = false;
 						showTT( $el, sakeerror );
 						$el.trigger('sake-validate-failure', {'element': $el, 'error': sakeerror});
 					}else{
-						$el.removeClass('invalid');
+						removeInvalidField($el);
 					}
 
 				}); //	Fine each - input type select
@@ -2316,6 +2087,61 @@
 		params = (methodsValidate['init']).apply( $el, [params] );
 		return (methodsValidate['_do']).apply( $el, [params] );
 	};
+	$.fn.validate.prototype.defaults = {
+		'showTooltip': true,
+		'tooltipSide': 'right',
+		'ignore_hidden_fields': false,
+		'showRules': false,
+		'debug': false,
+		'cached': false,
+		'rules': {}
+	};
+	$.fn.validate.prototype.language = 'it';
+	$.fn.validate.prototype.dictionary = {
+		'it': {
+			// Generic
+			'EMPTYFIELD': "Il campo non puo' essere vuoto",
+			'VALUENOTACCEPTED': 'Valore inserito non valido',
+
+			// Text
+			'ONLYALPHANUMERIC': 'Sono ammessi solo caratteri alfanumerici',
+			'MINCHARS': 'Il campo deve contenere almeno __MIN__ caratteri',
+			'MINMAXCHARS': 'Il campo deve contenere da __MIN__ a __MAX__ caratteri',
+			'NOSPACEFIELD': 'In questo campo non sono ammessi spazi',
+
+			// Numeric
+			'NUMBERFIELD': 'Sono ammessi solo numeri',
+			'MINNUM': 'Il campo deve contenere un numerno maggiore o uguale a __MIN__ ',
+			'MINMAXNUM': 'Il campo deve contenere un numero tra __MIN__ e __MAX__ ',
+
+			// Date
+			'DATEFIELD': 'Data non corretta',
+			'MIN_DATE': 'Il campo deve contenere una data maggiore o uguale a __MIN__ ',
+			'MAX_DATE': 'Il campo deve contenere una data minore o uguale a __MAX__ ',
+			'MIN_MAX_DATE': 'Il campo deve contenere una data tra __MIN__ e __MAX__ ',
+
+			// Credit card
+			'DATECREDITCARDFIELD': 'Numero carta di credito non valida',
+			'DATECREDITCARDEXPIRED': 'Carta di credo scaduta',
+
+			// Email
+			'EMAILFIELD': 'Email non valida',
+
+			// Telephone
+			'PHONEFIELD': 'Telefono non valido',
+
+			// Codice fiscale
+			'CFFIELD1': 'Codice fiscale non corretto',
+			'CFFIELD2': 'La lunghezza del codice fiscale deve essere di 16 caratteri',
+			'CFFIELD3': 'Il codice fiscale contiene un carattere non valido',
+
+			// Partita IVA
+			'PIVAFIELD': 'Partita IVA non valida',
+
+			// SELECT e RADIO
+			'OPTIONREQUIRED': "E' obbligatorio selezionare un'opzione"
+		}
+	};
 
 	/* ================================================================== */
 
@@ -2329,7 +2155,7 @@
 	 *
 	 *	@params {String|Object} params The type of will be the value or list of
 	 *         params
-	 *	@params {String} subtype A specified type (default: 'all') // it meas "all"
+	 *	@params {string} subtype A specified type (default: 'all') // it meas "all"
 	 *         of typeCheck
 	 *	@params {Mixed} valueToCheck The value to check
 	 *
@@ -2349,9 +2175,10 @@
 	 *
 	 *	@desc $.escape( string ); Escape dei caratteri speciali jQuery
 	 *
-	 *	@param str {String} String to escape
+	 *	@param {string}
+	 *            str String to escape
 	 *
-	 *	@return {String} String passed escaped
+	 *	@return {string} String passed escaped
 	 */
 	$.escape = function( str ){
 		// !"#$%&'()*+,.\/:;<=>?@[\]^`{|}~
@@ -2366,7 +2193,7 @@
 	 *
 	 *	@desc $( __ELEM__ ).escape(); Return the value of element escaped
 	 *
-	 *	@return {String} Value of element escaped
+	 *	@return {string} Value of element escaped
 	 */
 	$.fn.escape = function(){
 		return $.escape( $(this).val() );
@@ -2375,16 +2202,16 @@
 	/* ================================================================== */
 
 	/**
-	 *	$('#myelement').replace({ 'search': '{Regex}', 'replacement': '{String}' });
+	 *	$('#myelement').replace({ 'search': '{Regex}', 'replacement': '{string}' });
 	 *
 	 *	@version 1.0
 	 *	@author Kevin Lucich
 	 *
 	 *	@desc Option Values Default Description
 	 *
-	 *	@param		{String}	search		The string or regular expression to search
-	 *	@param		{String}	replacement The replacement string
-	 *	@param		{String}	modifier	The regular expression modifier to use (default: 'g')
+	 *	@param		{string}	search		The string or regular expression to search
+	 *	@param		{string}	replacement The replacement string
+	 *	@param		{string}	modifier	The regular expression modifier to use (default: 'g')
 	 *
 	 *	@return {Object} jQuery Object
 	 */
@@ -2498,168 +2325,13 @@
 	 *
 	 *	@author		Kevin Lucich
 	 *	@version	1.0
-	 *	@return		{String}	The value trimmed
+	 *	@return		{string}	The value trimmed
 	 */
 	$.fn.trim = function(){
 		var $el = this;
 		var value = $.trim($el.val());
 		$el.val( value );
 		return value;
-	};
-
-	/*	================================================================== */
-	/**
-	 *	$(el).template( where, data, appendTo )
-	 *	Copy in a template the data passed and append to element selected (where)
-	 *
-	 *	@author Kevin Lucich
-	 *	@version 1.0
-	 *	@return jQuery Object
-	 */
-	$.fn.template = function( where, data, appendTo, extraData ){
-
-		if( typeof where === 'undefined' ){
-			console.warn('Arguments missed');
-			return this;
-		}
-
-		///////////////////////////////////////////////////////////////
-
-		var __extendValue = function( params, appendTo, extraData ){
-
-			if( typeof appendTo === 'undefined' ){
-				// Default value
-				return params;
-			}
-
-			// function( $where, data, appendTo [, extraData] )
-			if( appendTo.constructor == Boolean ){
-				params['appendTo'] = appendTo;
-				if( typeof extraData !== 'undefined' && extraData.constructor == Array ){
-					params['extraData'] = extraData;
-				}
-				return params;
-			}
-
-			// function( $where, data, extraData )
-			if( appendTo.constructor == Array ){
-				params['extraData'] = appendTo;
-				return params;
-			}
-
-			return params;
-		};
-		var insertDataIntoTemplate = function( $where, datas ){
-
-			for( i in datas ){
-
-				if( datas[i] == null ){
-					continue;
-				}
-
-				var data = datas[i];
-				var $target = $template.find('[data-info="'+ i +'"]');
-
-				if( data.constructor == Function ){
-					var tmp_extraData = (params.extraData).slice(0);	// Create a copy of Array! ;-)
-					(tmp_extraData).splice(0, 0, datas);
-					data = data.apply( $target, tmp_extraData );
-					if( typeof data === 'undefined' || data == null ){
-						data = '';
-					}
-				}
-
-				if( $target.is(':input') ){
-					$target.attr('value', data ).val( data );
-				}else{
-					$target.html( data );
-				}
-			}
-
-			return $template.html();
-		};
-
-		var params = {};
-
-		switch( where.constructor ){
-
-			case jQuery:
-				//	Passo un'oggetto jQuery (selettore), i dati da inserire nel template function( $where, data [, appendTo] )
-				if( typeof data !== 'undefined' && typeof data === 'object' ){
-					params = {
-						'where': where,	// jQuery Object
-						'data': data
-					};
-				}
-				break;
-
-		/** //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
-
-			case Array:
-			case Object:
-
-				if( typeof data === 'undefined' && typeof where.data !== 'undefined' ){
-					params = where;
-				}else{
-					//	Passo un'oggetto (non jQuery) con i dati da inserire nel template, imposto il where sul "body" function( data [, appendTo] )
-					params = {
-						'where': $('body'),
-						'data': where
-					};
-				}
-
-				break;
-
-		/** //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
-
-			// function( where, data* [, appendTo] )
-			// * Object or Array
-			case String:
-				if( typeof data !== 'undefined' && typeof data === 'object' ){
-					params = {
-						'where': $(where),
-						'data': data
-					};
-				}
-				break;
-		}
-
-		params = __extendValue( params, appendTo, extraData );
-
-		var paramsDefault = {
-			'template': $(this).clone(),
-			'where': false,
-			'data': {},
-			'appendTo': true,
-			'extraData': []
-		};
-		params = KUtils.extend( true, {}, paramsDefault, params );
-
-		// get jQuery Object
-		var $template = params.template;
-		var $where = params.where;
-
-		var html_template = '';
-		switch( (params.data).constructor ){
-			case Array:
-				for( i in params.data ){
-					html_template += insertDataIntoTemplate( $where, params.data[i] );
-				}
-				break;
-			case Object:
-				html_template += insertDataIntoTemplate( $where, params.data );
-				break;
-		}
-
-		var $html_template = $(html_template);
-
-		if( params.appendTo ){
-			$where.append( $html_template );
-		}else{
-			$where.html( $html_template );
-		}
-
-		return $html_template;
 	};
 
 	/* ================================================================== */
@@ -3046,11 +2718,5 @@
 	};
 
 	window.global_sake = global_sake;
-
-	$(function(){
-		$('body').on('click','.close_sakelightbox',function(){
-			$.sakelightbox('remove', {'sakeId': $(this).attr('data-sakeId') } );
-		});
-	});
 
 })( window, jQuery );

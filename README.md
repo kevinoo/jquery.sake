@@ -1,4 +1,4 @@
-jquery.sake
+jQuery.sake
 ===========
 
 Collection of some utility for web development, extending the collection methods of the jQuery library (http://jquery.com/download/).
@@ -28,9 +28,6 @@ Return the hash of the selector's value
 
 ##### $.fn.trim()
 Replace and returns the value of *selector* with the value "trimmed"
-
-##### $.fn.template( where, data, appendTo, extraData )
-Copy in a template the data passed and append to element selected (where)
 
 ##### $.fn.realOuterWidth(includeMargin)
 Return a width of an element (also hidden)

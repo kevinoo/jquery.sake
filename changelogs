@@ -2,10 +2,13 @@
 /**
  *	jquery.sake
  *
- *	@version:	4.3.0
+ *	@version:	5.0.0
  *	@author:	Kevin Lucich
- *	@employees:	Salvatore Caputi
  *	@thanks:	Angelica - to have endured me during
+
+ 	v5.0.0
+ 		Update JS-Doc and create the defaults struct in each prototype functions
+ 		Remove obsolete functions: template, event to close old Lightbox (close_sakelightbox)
 
 	v4.3.0
 		[REMOVE] Remove obsolete function: tooltip, position, lightbox - I highly recommend Bootstrap for this function :D
