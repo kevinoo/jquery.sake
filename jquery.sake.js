@@ -1267,10 +1267,6 @@
 	};
 
 	Date.prototype.format = PrototypeDateUtils.format;
-	Date.prototype.getFormat = function(){
-		console_action('DEPRECATED','Date.prototype.getFormat');
-		return (Date.prototype.format).apply( this, arguments );
-	};
 	Date.prototype.add = PrototypeDateUtils.add;
 	Date.prototype.sub = PrototypeDateUtils.sub;
 
@@ -1369,7 +1365,7 @@
  *	jquery.sake
  *
  *	@version:	5.1.0
- *	@updated:	2018-04-05
+ *	@updated:	2018-12-05
  *	@author:	Kevin Lucich - https://www.lucichkevin.it/
  */
 ;(function(window,$){
@@ -1377,10 +1373,10 @@
 	var $document = $(document);
 
 	var global_sake = {
-		'version': '5.0.0'
+		'version': '5.1.0'
 	};
 
-	KUtils.version( {'sake':global_sake.version} );
+	KUtils.version({'sake':global_sake.version});
 
 	/**
 	 *	$( __ELEMENT__ ).scrollTo( [params] ); or $( __ELEMENT__ ).scrollTo( [speed] [, easing] );
@@ -1485,7 +1481,7 @@
 	 */
 	$.fn.validate = function( method, params ){
 
-		if( $('#sake_style').length == 0 ){
+		if( $('#sake_style').length === 0 ){
 			$('body').append('<style id="sake_style" type="text/css"> .invalid { background-color: #fdd; border-color: #f00; } </style>');
 		}
 
@@ -1498,7 +1494,7 @@
 				}
 
 				var id_sake = $el.attr('id');
-				id_sake = (typeof id_sake === 'undefined' || id_sake == '') ? 'sake_'+ (++methodsValidate.counterElements) : id_sake;
+				id_sake = (typeof id_sake === 'undefined' || id_sake === '') ? 'sake_'+ (++methodsValidate.counterElements) : id_sake;
 				$el.attr('data-idsake_validate', id_sake );
 				return id_sake;
 			},
@@ -1509,7 +1505,7 @@
 				for( var key in datasets ){
 					var v = datasets[key];
 					// Questa chiave è un'array :)
-					if( key == 'notacceptedvalues' ){
+					if( key === 'notacceptedvalues' ){
 						v = eval(v);
 					}
 					rules[ key ] = v;
@@ -1578,7 +1574,7 @@
 					switch( getInputType($el) ){
 
 						case 'text':
-							if( _min==0 ){ _min=1; }
+							if( _min===0 ){ _min=1; }
 							if( (_min != null) && (_max != null) && ( (value_input.length<_min) || (value_input.length>_max) )){
 								result = getDictionaryText('MINMAXCHARS').replace('__MIN__',_min).replace('__MAX__',_max);
 							}else if( (_min != null) && (value_input.length<_min) ){
@@ -1601,10 +1597,10 @@
 					var i, s, set1, set2, setpari, setdisp;
 
 					cf = cf.toUpperCase();
-					if( cf.length != 16 )
-						return getDictionaryText('CFFIELD2');
+					if( cf.length !== 16 )
+						return getDictionaryText('WRONG_CF_LENGTH');
 					if( /^([0-9a-z]+)$/.test(cf) )
-						return getDictionaryText('CFFIELD3');
+						return getDictionaryText('WRONG_CF_CHAR');
 
 					set1 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 					set2 = "ABCDEFGHIJABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -1617,14 +1613,14 @@
 					for( i = 0; i <= 14; i += 2 ){
 						s += setdisp.indexOf( set2.charAt( set1.indexOf( cf.charAt(i) )));
 					}
-					if( s%26 != cf.charCodeAt(15)-'A'.charCodeAt(0) ){
-						return getDictionaryText('CFFIELD1');
+					if( s%26 !== (cf.charCodeAt(15)-'A'.charCodeAt(0)) ){
+						return getDictionaryText('WRONG_CF_VALUE');
 					}
 					return false;
 				};
 				var testPIVA = function(pi){
 					if( !KUtils.check({'type':'text','subtype':'piva','value': pi}) ){
-						return getDictionaryText('PIVAFIELD');
+						return getDictionaryText('WRONG_PIVA_VALUE');
 					}
 					var i=0, s=0;
 					for( i = 0; i <= 9; i += 2 ){
@@ -1635,8 +1631,8 @@
 						if( c > 9 )  c = c - 9;
 						s += c;
 					}
-					if( ( 10 - s%10 )%10 != pi.charCodeAt(10) - '0'.charCodeAt(0) ){
-						return getDictionaryText('PIVAFIELD');
+					if( ( 10 - s%10 )%10 !== (pi.charCodeAt(10) - '0'.charCodeAt(0)) ){
+						return getDictionaryText('WRONG_PIVA_VALUE');
 					}
 
 					return '';
@@ -1685,11 +1681,12 @@
 				};
 				var showTT = function( $el, errorText ){
 
-					if( params.showTooltip == false ){
+					if( params.showTooltip === false ){
 						return;
 					}
 
 					$el.attr('title', errorText ).tooltip({
+						'html': true,
 						'title': function(){
 							return $(this).attr('title');
 						}
@@ -1772,12 +1769,12 @@
 						sake_error = '',
 						res = false;
 
-					if( isCmp == false ){
+					if( (isCmp === false) && (Boolean(_value) === false) ){
 						return true;
-					}else if( isCmp && _value == '' ){
+					}else if( isCmp && _value === '' ){
 						sake_error = getDictionaryText('EMPTYFIELD');
 					}else{
-						if( _value == '' ){
+						if( _value === '' ){
 							return true;	// = continue;
 						}
 
@@ -1897,7 +1894,7 @@
 									});
 
 									if( !res ){
-										sake_error = getDictionaryText('DATECREDITCARDFIELD');
+										sake_error = getDictionaryText('WRONG_CREDIT_CARD_NUMBER');
 									}else{
 										var _exp = _value.split('/');
 										var _mm = Number(_exp[0]);
@@ -1906,7 +1903,7 @@
 										var _todayM = _today.getMonth() + 1;
 										var _todayY = _today.getFullYear();
 										if( (_todayY > _yy) || (_mm < _todayM && _yy >= _todayY) ){
-											sake_error = getDictionaryText('DATECREDITCARDEXPIRED');
+											sake_error = getDictionaryText('CREDIT_CARD_EXPIRED');
 										}
 									}
 									break;
@@ -1918,7 +1915,7 @@
 										'value': _value
 									});
 									if( !res ){
-										sake_error = getDictionaryText('EMAILFIELD');
+										sake_error = getDictionaryText('WRONG_EMAIL_VALUE');
 									}
 									break;
 								// ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1928,7 +1925,7 @@
 										'value': _value
 									});
 									if( !res ){
-										sake_error = getDictionaryText('PHONEFIELD');
+										sake_error = getDictionaryText('WRONG_PHONE_VALUE');
 									}
 									break;
 								// ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1946,6 +1943,9 @@
 
 					if( sake_error ){
 						setInvalidField($el);
+						if( !isCmp ){
+							sake_error += "<br />("+ getDictionaryText('OPTIONAL_FIELD') +")";
+						}
 						showTT( $el, sake_error );
 						ok = false;
 						$el.trigger('sake-validate-failure', {'element': $el, 'error': sake_error});
@@ -2100,7 +2100,7 @@
 	$.fn.validate.prototype.dictionary = {
 		'it': {
 			// Generic
-			'EMPTYFIELD': "Il campo non puo' essere vuoto",
+			'EMPTYFIELD': "Il campo non può essere vuoto",
 			'VALUENOTACCEPTED': 'Valore inserito non valido',
 
 			// Text
@@ -2121,25 +2121,27 @@
 			'MIN_MAX_DATE': 'Il campo deve contenere una data tra __MIN__ e __MAX__ ',
 
 			// Credit card
-			'DATECREDITCARDFIELD': 'Numero carta di credito non valida',
-			'DATECREDITCARDEXPIRED': 'Carta di credo scaduta',
+			'WRONG_CREDIT_CARD_NUMBER': 'Numero carta di credito non valida',
+			'CREDIT_CARD_EXPIRED': 'Carta di credo scaduta',
 
 			// Email
-			'EMAILFIELD': 'Email non valida',
+			'WRONG_EMAIL_VALUE': 'Email non valida',
 
 			// Telephone
-			'PHONEFIELD': 'Telefono non valido',
+			'WRONG_PHONE_VALUE': 'Telefono non valido',
 
 			// Codice fiscale
-			'CFFIELD1': 'Codice fiscale non corretto',
-			'CFFIELD2': 'La lunghezza del codice fiscale deve essere di 16 caratteri',
-			'CFFIELD3': 'Il codice fiscale contiene un carattere non valido',
+			'WRONG_CF_VALUE': 'Codice fiscale non corretto',
+			'WRONG_CF_LENGTH': 'La lunghezza del codice fiscale deve essere di 16 caratteri',
+			'WRONG_CF_CHAR': 'Il codice fiscale contiene un carattere non valido',
 
 			// Partita IVA
-			'PIVAFIELD': 'Partita IVA non valida',
+			'WRONG_PIVA_VALUE': 'Partita IVA non valida',
 
 			// SELECT e RADIO
-			'OPTIONREQUIRED': "E' obbligatorio selezionare un'opzione"
+			'OPTIONREQUIRED': "È obbligatorio selezionare un'opzione",
+
+			'OPTIONAL_FIELD': 'non obbligatorio'
 		}
 	};
 
@@ -2367,7 +2369,7 @@
 	 *	Returns an object with field data inside the $container
 	 *
 	 *	@author		Kevin Lucich
-	 *	@version	2.0
+	 *	@version	2.1
 	 *	@return		Object
 	 */
 	$.fn.getDataInfo = function( options ){
@@ -2390,7 +2392,7 @@
 				return struct;
 			}
 
-			if( $el.hasClass('ignore-value') || (!options.include_checkbox_false_value && ($el.is(':checkbox') && !$el.is(':checked')))){
+			if( $el.hasClass('ignore-value') || ($el.is(':checkbox') && !$el.is(':checked') && ($el.attr('data-type') !== 'boolean') ) ){
 				return struct;
 			}
 

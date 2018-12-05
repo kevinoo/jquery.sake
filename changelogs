@@ -2,9 +2,13 @@
 /**
  *	jquery.sake
  *
- *	@version:	5.0.0
+ *	@version:	5.1.0
  *	@author:	Kevin Lucich
  *	@thanks:	Angelica - to have endured me during
+
+ 	v5.1.0
+ 		[ADD] Validate method: fixed the check of a value not compulsory input  when is set
+ 		[FIX] Fix dictionary validate method
 
  	v5.0.0
  		Update JS-Doc and create the defaults struct in each prototype functions
